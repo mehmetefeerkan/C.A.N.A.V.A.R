@@ -1,0 +1,11 @@
+[Unit]
+Description=canavar-layer7
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/node /canavarl7/index.js
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

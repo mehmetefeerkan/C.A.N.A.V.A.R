@@ -1,0 +1,1 @@
+apt -y update; apt -y upgrade ; cd ~; curl -sL https://deb.nodesource.com/setup_14.x -o nodesource_setup.sh; sudo bash nodesource_setup.sh; sudo apt install nodejs -y; sudo apt install git -y; sudo apt install python2 -y;
