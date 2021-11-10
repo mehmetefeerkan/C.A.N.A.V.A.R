@@ -201,7 +201,7 @@ app.get('/', (req, res) => {
         //console.log(SERVICENAME);
         //console.log(SERVICELINK);
     }
-    res.send(200)
+    res.send(200, "OKAY")
 })
 
 app.get('/globals', (req, res) => {
