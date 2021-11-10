@@ -45,8 +45,8 @@ def attack():
 
 print("Welcome To DarkMatter DDoS\n")
 url = sys.argv[1]
-    if url.count("/")==2:
-        url = url + "/"
+  if url.count("/")==2:
+    url = url + "/"
 m = re.search('http\://([^/]*)/?.*', url)
 ip = m.group(1)
 port = 80
