@@ -15,7 +15,7 @@ console.log(mtxtl);
 function checkLocalMaster() {
     var localMaster;
     try {
-        localMaster = fs.readFileSync(mtxtl, { encoding: 'utf8', flag: 'r' })
+        localMaster = fs.readFileSync("./master.txt", { encoding: 'utf8', flag: 'r' })
     } catch (err) {
         if ((err.errno === -4058) && (err.code === "ENOENT")) {
             axios.get("http://disaster.api.canavar.licentia.xyz")
