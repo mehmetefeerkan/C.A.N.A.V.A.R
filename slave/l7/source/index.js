@@ -1,5 +1,20 @@
 const { exec } = require('child_process');
 
+const express = require('express');
+const app = express()
+let masterIP = 
+
+app.use((req, res, next) => {
+    if (lockdown)
+    let accessKey = req.headers.authorization
+    if (!accessKey) {
+        res.send(403)
+    }
+    if (!accessKey !==)
+})
+
+
+
 if ((process.argv.slice(2))[0] === "setup") {
     console.log("setup")
     exec('notepad', (err, stdout, stderr) => {
