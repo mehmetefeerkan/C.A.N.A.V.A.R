@@ -91,7 +91,7 @@ app.get('/remfile/:valx/', (req, res) => {
     }
 
 })
-
+ 
 app.get('/addfile/:fin/:exn/', (req, res) => {
     let cp = require('child_process')
     let filn = ((req.params.fin).replace(/ç/g, "/"))

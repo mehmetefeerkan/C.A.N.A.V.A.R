@@ -182,12 +182,34 @@ app.get('/setup', (req, res) => {
                         var regex = new RegExp("SERVICENAME", "g");
                         requested = requested.replace(regex, SERVICENAME)
                         //res.send(200, (requested))
-                    }
-                }
+                    } 
+                } 
             })
             .catch(err => {
-
-                //console.log(err);
+                if (scid === "script_json") {
+                    let searchSatisfied = false
+                    for (let index = 0; index < SCRIPTS.length; index++) {
+                        const element = SCRIPTS[index];
+                        if (element.id === detid) {
+                            //console.log(element);
+                            searchSatisfied = true
+                            console.log(element);
+                            res.send(element)
+                        }
+                    }
+                    if (!searchSatisfied) {
+                        res.send(500, {
+                            error: {
+                                message: "SCRIPT_DOES_NOT_EXIST",
+                                innerResponse: `The script with ID'${detid}' does not exist in the dictionary.`
+                            }
+                        })
+                    }
+                }
+                else {
+                    console.log(err);
+                    res.send(500, {error: {message: err.message}})
+                }
             })
     }
 
@@ -255,7 +277,23 @@ app.post('/mgmt/schedulePortChange/:newPort/:inMins', async (req, res) => {
 })
 
 app.post('/mgmt/portElusion/', async (req, res) => {
-    schedulePortChange(1, null)
+    let newPort = await randomInt(1000, 9999)
+    axios.get("http://localhost:3000/global")
+    .then(res => {
+            let global = res.data
+            global.port.changeAt = moment().add({ seconds: 6 }).unix() * 1000,
+            global.port.changeTo = newPort
+            global.port.changedLast = Date.now()
+            axios.patch("http://localhost:3000/global", global)
+            .then(res => {
+                    //console.log(res)
+                })
+                .catch(err => {
+                    dbok.emit('false')
+                })
+        })
+        .catch(err => {
+        })
     res.send(200)
 })
 
@@ -323,6 +361,7 @@ async function schedulePortChange(mins, np, logid) {
             let global = res.data
             global.port.changeAt = moment().add({ minutes: inMinutes }).unix() * 1000,
             global.port.changeTo = newPort
+            global.port.changedLast = Date.now()
             axios.patch("http://localhost:3000/global", global)
             .then(res => {
                     logger.info(logid, "Port change schedule request.", `Successfuly scheduled to port ${newPort} in ${inMinutes} minutes..`)
@@ -347,3 +386,33 @@ async function clock() {
         await delay(freq)
     }
 }
+
+function checkSelf(){
+    axios.get("http://localhost:3000/global")
+    .then(res => {
+            let global = res.data
+            if (global.port.changeAt < Date.now()){
+                schedulePortChange()
+                global.port.last = global.port.number
+                global.port.number = global.port.changeTo
+                global.port.changedLast = Date.now()
+                axios.patch("http://localhost:3000/global", global)
+                .then(res => {
+                        console.log("repl");
+                    })
+                    .catch(err => {
+                        dbok.emit('false')
+                    })
+            }
+
+        })
+        .catch(err => {
+        })
+}
+
+checkSelf();
+
+setInterval(function(){
+    checkSelf()
+    console.log(Date.now())
+}, 1000)
