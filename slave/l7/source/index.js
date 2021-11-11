@@ -1,4 +1,5 @@
 const { exec } = require('child_process');
+//npm install express fs axios events moment delay quick.db child_process
 
 const express = require('express');
 const app = express()
