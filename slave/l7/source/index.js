@@ -116,7 +116,7 @@ settingIntegrity.on('true', () => {
             else {
                 axios.get("http://" + master + "/scripts?" + req.params.methodID)
                     .then(resp => {
-                        let methodfilename = `${__dirname}/scripts/${resp.data.filename}`
+                        let methodfilename = `/canavarl7/scripts/${resp.data.filename}`
                         if (fs.existsSync(methodfilename)) {
                             // path exists
                             console.log("exists:", methodfilename);
