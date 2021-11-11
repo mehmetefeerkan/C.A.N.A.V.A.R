@@ -135,6 +135,7 @@ settingIntegrity.on('true', () => {
                     })
                     .catch(err => {
                         res.send(500, { error: err })
+                        console.log(err);
                     })
 
             }

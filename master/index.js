@@ -259,7 +259,7 @@ app.get('/all/attacklayer7/:methodID/:victim/:time/:attackID', (req, res) => {
             console.log(res.data)
         })
         .catch(err => {
-            console.error(err.response); 
+            console.error(err); 
         })
         
     }
