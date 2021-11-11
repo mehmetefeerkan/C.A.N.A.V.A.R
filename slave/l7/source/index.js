@@ -149,7 +149,7 @@ settingIntegrity.on('true', () => {
     })
 
     app.get('/update', (req, res) => {
-        exec("cd /canavarl7; wget https://raw.githubusercontent.com/mehmetefeerkan/C.A.N.A.V.A.R/master/slave/l7/source/index.js -O index.js; systemctl restart canavarl7;", (err, stdout, stderr) => {
+        exec("cd /canavarl7; wget https://raw.githubusercontent.com/mehmetefeerkan/C.A.N.A.V.A.R/master/slave/l7/source/index.js -O index.js; nohup systemctl restart canavarl7 &;", (err, stdout, stderr) => {
             if (err) {
                 //some err occurred
                 console.error(err)
