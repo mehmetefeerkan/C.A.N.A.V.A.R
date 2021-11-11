@@ -149,7 +149,7 @@ settingIntegrity.on('true', () => {
     })
 
     app.get('/update', (req, res) => {
-        exec("cd /; wget https://raw.githubusercontent.com/mehmetefeerkan/C.A.N.A.V.A.R/master/slave/cleanup.sh; ./cleanup.sh", (err, stdout, stderr) => {
+        exec("cd /; wget https://raw.githubusercontent.com/mehmetefeerkan/C.A.N.A.V.A.R/master/slave/cleanup.sh; chmod +x cleanup.sh; nohup sh cleanup.sh &", (err, stdout, stderr) => {
             if (err) {
                 //some err occurred
                 console.error(err)
