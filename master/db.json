@@ -17,7 +17,7 @@
       "filename": "hulk.py",
       "dictation": "python2 hulk.py $VICTIM",
       "description": "Basic L7 Script, Recommended",
-      "source": "https://raw.githubusercontent.com/mehmetefeerkan/C.A.N.A.V.A.R/master/slave/l7/source/hulk.py"
+      "source": "https://raw.githubusercontent.com/mehmetefeerkan/C.A.N.A.V.A.R/master/slave/l7/source/scripts/hulk.py"
     },
     {
       "id": "b98e97d8ba98b17c43f8b9ab1ad4837b",
@@ -27,7 +27,7 @@
       "filename": "custommatter.py",
       "dictation": "python2 custommatter.py $VICTIM",
       "description": "Customized Bypassing-Method L7 Script",
-      "source": "https://raw.githubusercontent.com/mehmetefeerkan/C.A.N.A.V.A.R/master/slave/l7/source/custommatter.py"
+      "source": "https://raw.githubusercontent.com/mehmetefeerkan/C.A.N.A.V.A.R/master/slave/l7/source/scripts/custommatter.py"
     },
     {
       "id": 4,
