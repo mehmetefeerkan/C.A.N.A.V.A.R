@@ -15,7 +15,7 @@
       "lang": "python",
       "process": "python2",
       "filename": "hulk.py",
-      "dictation": "python2 hulk.py $VICTIM",
+      "dictation": "python2 scripts/hulk.py $VICTIM",
       "description": "Basic L7 Script, Recommended",
       "source": "https://raw.githubusercontent.com/mehmetefeerkan/C.A.N.A.V.A.R/master/slave/l7/source/scripts/hulk.py"
     },
@@ -25,7 +25,7 @@
       "lang": "python",
       "process": "python2",
       "filename": "custommatter.py",
-      "dictation": "python2 custommatter.py $VICTIM",
+      "dictation": "python2 scripts/custommatter.py $VICTIM",
       "description": "Customized Bypassing-Method L7 Script",
       "source": "https://raw.githubusercontent.com/mehmetefeerkan/C.A.N.A.V.A.R/master/slave/l7/source/scripts/custommatter.py"
     },
