@@ -36,7 +36,7 @@ let AGENTLINK = null
 let SERVICELINK = null
 let SERVICENAME = null
 let SCRIPTS = null
-
+let activeMachines = []
 const dbok = new EventEmitter()
 
 function logID() {
@@ -222,6 +222,13 @@ app.get('/', (req, res) => {
         //console.log(SCRIPTS);
         //console.log(SERVICENAME);
         //console.log(SERVICELINK);
+    }
+    res.send(200, "OKAY")
+})
+
+app.get('/heartbeat', (req, res) => {
+    if (!activeMachines.includes(req.headers['x-forwarded-for'] || req.connection.remoteAddress)){
+        activeMachines.push(req.headers['x-forwarded-for'] || req.connection.remoteAddress)
     }
     res.send(200, "OKAY")
 })
@@ -414,5 +421,6 @@ checkSelf();
 
 setInterval(function(){
     checkSelf()
+    console.log(activeMachines);
     console.log(Date.now())
-}, 1000)
+}, 4000)

