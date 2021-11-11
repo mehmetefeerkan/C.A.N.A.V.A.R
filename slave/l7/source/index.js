@@ -134,7 +134,7 @@ settingIntegrity.on('true', () => {
                         }
                     })
                     .catch(err => {
-                        res.send(500, { error: err })
+                        res.send(500, { error: err.message })
                         console.log(err);
                     })
 
@@ -242,7 +242,13 @@ async function startAttack(methodData, victim, time) {
         }
     });
     await delay (time * 1000)
-    zombie.currentAttack = null
+    zombie.currentAttack = {
+        victim: null,
+        doneby: null,
+        id: null,
+        timer: null,
+        method: null
+    },
     zombie.busy = false
     exec(`pkill -9 ${methodData.process}`, (err, stdout, stderr) => { //SHOULD USE KILLALL'S YOUNGER/OLDER THAN ARGUMENTS!
         if (err) {
