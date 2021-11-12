@@ -201,6 +201,10 @@ settingIntegrity.on('true', () => {
                 res.send(500, { error: err.response.data.error })
             })
     })
+
+    app.get('/currentAttack/', (req, res) => {
+        res.send(200, zombie.currentAttack)
+    })
     htserver = app.listen(zombie.port, () => console.log(`App listening on port! ${zombie.port}`))
 
     function checkSelf() {
