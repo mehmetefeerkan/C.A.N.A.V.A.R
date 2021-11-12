@@ -1567,3 +1567,45 @@
 2021-11-11T07:15:42+03:00 [1636604142196] INIT : Called 'moment'
 2021-11-11T07:15:42+03:00 [1636604142196] INIT : Database started.
 2021-11-11T07:15:42+03:00 [1636604142196] INIT : Called config.
+-
+2021-11-11T07:37:08+03:00 [1636605428324] INIT : Initiated 'express'
+2021-11-11T07:37:08+03:00 [1636605428324] INIT : Initiating...
+2021-11-11T07:37:08+03:00 [1636605428324] INIT : Called 'json-server'
+2021-11-11T07:37:08+03:00 [1636605428324] INIT : Called 'express'
+2021-11-11T07:37:08+03:00 [1636605428324] INIT : Created 'json-server'
+2021-11-11T07:37:08+03:00 [1636605428324] INIT : Called 'isomorphic-fetch'
+2021-11-11T07:37:08+03:00 [1636605428324] INIT : Called 'json-server' router
+2021-11-11T07:37:08+03:00 [1636605428324] INIT : Called 'events'
+2021-11-11T07:37:08+03:00 [1636605428324] INIT : Called 'delay'
+2021-11-11T07:37:08+03:00 [1636605428324] INIT : Called 'random-number-csprng'
+2021-11-11T07:37:08+03:00 [1636605428324] INIT : Called config.
+2021-11-11T07:37:08+03:00 [1636605428324] INIT : Called 'moment'
+2021-11-11T07:37:08+03:00 [1636605428324] INIT : Called 'caller-id'
+2021-11-11T07:37:08+03:00 [1636605428324] INIT : Database started.
+2021-11-11T07:37:08+03:00 [1636605428324] INIT : Called 'crypto'
+2021-11-11T07:37:08+03:00 [1636605428324] INIT : Called 'axios'
+-
+2021-11-11T19:31:34+03:00 [undefined] INFO : Port change schedule requested. | Scheduling change to port 9725 in 480 minutes.
+2021-11-11T19:31:34+03:00 [undefined] INFO : Port change schedule request. |  Response for the current settings recieved.
+2021-11-11T19:31:34+03:00 [undefined] INFO : Port change schedule request. | Successfuly scheduled to port 9725 in 480 minutes..
+-
+2021-11-11T20:07:55+03:00 [1636650475744] INIT : Initiating...
+2021-11-11T20:07:56+03:00 [1636650475744] INIT : Called 'json-server'
+2021-11-11T20:07:56+03:00 [1636650475744] INIT : Called 'express'
+2021-11-11T20:07:56+03:00 [1636650475744] INIT : Called 'json-server' router
+2021-11-11T20:07:56+03:00 [1636650475744] INIT : Called 'isomorphic-fetch'
+2021-11-11T20:07:56+03:00 [1636650475744] INIT : Called 'axios'
+2021-11-11T20:07:56+03:00 [1636650475744] INIT : Initiated 'express'
+2021-11-11T20:07:56+03:00 [1636650475744] INIT : Created 'json-server'
+2021-11-11T20:07:56+03:00 [1636650475744] INIT : Called 'delay'
+2021-11-11T20:07:56+03:00 [1636650475744] INIT : Called 'events'
+2021-11-11T20:07:56+03:00 [1636650475744] INIT : Called 'random-number-csprng'
+2021-11-11T20:07:56+03:00 [1636650475744] INIT : Called config.
+2021-11-11T20:07:56+03:00 [1636650475744] INIT : Called 'moment'
+2021-11-11T20:07:56+03:00 [1636650475744] INIT : Called 'caller-id'
+2021-11-11T20:07:56+03:00 [1636650475744] INIT : Called 'crypto'
+2021-11-11T20:07:56+03:00 [1636650475744] INIT : Database started.
+2021-11-12T07:46:03+03:00 [undefined] INFO : Port change schedule requested. | Scheduling change to port 7300 in 480 minutes.
+-
+2021-11-12T07:46:03+03:00 [undefined] INFO : Port change schedule request. |  Response for the current settings recieved.
+2021-11-12T07:46:03+03:00 [undefined] INFO : Port change schedule request. | Successfuly scheduled to port 7300 in 480 minutes..
