@@ -418,6 +418,9 @@ app.post('/mgmt/vcontrol', (req, res) => {
 
 app.post('/mgmt/portElusion/', async (req, res) => {
     let newPort = await randomInt(1000, 9999)
+    let currentPort = GLOBALS.port.number
+    console.log(GLOBALS);
+    GLOBALS.port.last = currentPort
     console.log(GLOBALS);
     GLOBALS.port.changedLast = Date.now()
     console.log(GLOBALS);
