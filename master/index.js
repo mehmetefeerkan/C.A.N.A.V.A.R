@@ -1,4 +1,5 @@
 //npm install express json-server isomorphic-fetch axios events delay random-number-csprng moment crypto
+process.chdir(__dirname)
 let initSign = `${Date.now()}`
 const logger = require('./logger.js').log
 logger.init(initSign, "Initiating...")
