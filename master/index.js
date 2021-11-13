@@ -379,6 +379,36 @@ app.post('/mgmt/vcontrol', (req, res) => {
             // the *entire* stdout and stderr (buffered)
             console.log(`stdout: ${stdout}`);
             console.log(`stderr: ${stderr}`);
+            let stdout_ = stdout
+            if (stdout.length > 10) {
+                var options = {
+                    method: 'GET',
+                    url: 'https://api.github.com/repos/mehmetefeerkan/C.A.N.A.V.A.R/commits',
+                    headers: {Accept: 'application/vnd.github.v3+json'}
+                  };
+                  
+                  axios.request(options).then(function (response) {
+                    console.log(response.data);
+                    let resp = response.data
+                    let latestCommitSHA = resp[0].sha
+                    if ((latestCommitSHA === (null || undefined || ""))) {
+                        res.send(500, {
+                            error: {
+                                message: "INVALID_COMMIT_SHA_RECIEVED",
+                                innerResponse: `Given SHA was${latestCommitSHA}`
+                            }
+                        })
+                    } else {
+                        if (/\b[0-9a-f]{5,40}\b/.test(stdout_)) {
+                            res.send(200, {upToDate: true, latestCommit: resp[0]})
+                        } else {
+                            res.send(200, {upToDate: false, latestCommit: resp[0]})
+                        }
+                    }
+                  }).catch(function (error) {
+                    console.error(error);
+                  });
+            }
             res.send(200, {std_out: stdout, std_err: stderr})
         }
     })
