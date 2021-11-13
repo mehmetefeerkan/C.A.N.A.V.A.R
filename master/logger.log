@@ -1902,3 +1902,154 @@
 2021-11-12T16:20:03+03:00 [1636723202569] INIT : Called 'crypto'
 2021-11-12T16:20:03+03:00 [1636723202569] INIT : Database started.
 2021-11-12T16:20:02+03:00 [1636723202569] INIT : Called 'axios'
+-
+2021-11-14T01:51:22+03:00 [1636843882106] INIT : Initiating...
+2021-11-14T01:51:22+03:00 [1636843882106] INIT : Called 'express'
+2021-11-14T01:51:22+03:00 [1636843882106] INIT : Called 'json-server'
+2021-11-14T01:51:22+03:00 [1636843882106] INIT : Initiated 'express'
+2021-11-14T01:51:22+03:00 [1636843882106] INIT : Created 'json-server'
+2021-11-14T01:51:22+03:00 [1636843882106] INIT : Called 'json-server' router
+2021-11-14T01:51:22+03:00 [1636843882106] INIT : Called 'isomorphic-fetch'
+2021-11-14T01:51:22+03:00 [1636843882106] INIT : Called config.
+2021-11-14T01:51:22+03:00 [1636843882106] INIT : Called 'events'
+2021-11-14T01:51:22+03:00 [1636843882106] INIT : Called 'axios'
+2021-11-14T01:51:22+03:00 [1636843882106] INIT : Called 'random-number-csprng'
+2021-11-14T01:51:22+03:00 [1636843882106] INIT : Called 'moment'
+2021-11-14T01:51:22+03:00 [1636843882106] INIT : Called 'delay'
+2021-11-14T01:51:22+03:00 [1636843882106] INIT : Called 'crypto'
+2021-11-14T01:51:22+03:00 [1636843882106] INIT : Called 'caller-id'
+2021-11-14T01:51:22+03:00 [1636843882106] INIT : Database started.
+-
+2021-11-14T01:51:22+03:00 [1b2b6b2b52] INFO : Updating Master Subdomain | Begun
+2021-11-14T01:51:22+03:00 [1b2b6b2b52] INFO : Couldn't Update Master Subdomain | Error was : TypeError: Cannot read property 'CFZI' of undefined
+2021-11-14T01:51:22+03:00 [1b2b6b2b52] INFO : Updating Master Subdomain | Current IP recieved as 78.183.96.199
+
+-
+2021-11-14T01:51:22+03:00 [undefined] INFO : Port change schedule requested. | Scheduling change to port 8112 in 480 minutes.
+2021-11-14T01:51:22+03:00 [undefined] INFO : Port change schedule requested. | Scheduling change to port 9882 in 480 minutes.
+-
+2021-11-14T01:51:33+03:00 [1636843893004] INIT : Initiating...
+2021-11-14T01:51:33+03:00 [1636843893004] INIT : Called 'express'
+2021-11-14T01:51:33+03:00 [1636843893004] INIT : Called 'json-server'
+2021-11-14T01:51:33+03:00 [1636843893004] INIT : Initiated 'express'
+2021-11-14T01:51:33+03:00 [1636843893004] INIT : Called 'json-server' router
+2021-11-14T01:51:33+03:00 [1636843893004] INIT : Called 'isomorphic-fetch'
+2021-11-14T01:51:33+03:00 [1636843893004] INIT : Called config.
+2021-11-14T01:51:33+03:00 [1636843893004] INIT : Created 'json-server'
+2021-11-14T01:51:33+03:00 [1636843893004] INIT : Called 'delay'
+2021-11-14T01:51:33+03:00 [1636843893004] INIT : Called 'events'
+2021-11-14T01:51:33+03:00 [1636843893004] INIT : Called 'random-number-csprng'
+2021-11-14T01:51:33+03:00 [1636843893004] INIT : Called 'moment'
+2021-11-14T01:51:33+03:00 [1636843893004] INIT : Called 'caller-id'
+2021-11-14T01:51:33+03:00 [1636843893004] INIT : Called 'axios'
+2021-11-14T01:51:33+03:00 [1636843893004] INIT : Called 'crypto'
+2021-11-14T01:51:33+03:00 [1636843893004] INIT : Database started.
+-
+2021-11-14T01:51:33+03:00 [20d8a8af0d] INFO : Updating Master Subdomain | Begun
+2021-11-14T01:51:33+03:00 [20d8a8af0d] INFO : Updating Master Subdomain | Current IP recieved as 78.183.96.199
+
+2021-11-14T01:51:33+03:00 [20d8a8af0d] INFO : Couldn't Update Master Subdomain | Error was : TypeError: Cannot read property 'CFZI' of undefined
+-
+2021-11-14T01:51:33+03:00 [undefined] INFO : Port change schedule requested. | Scheduling change to port 1676 in 480 minutes.
+2021-11-14T01:51:33+03:00 [undefined] INFO : Port change schedule requested. | Scheduling change to port 8861 in 480 minutes.
+-
+2021-11-14T01:52:27+03:00 [1636843947475] INIT : Initiating...
+2021-11-14T01:52:27+03:00 [1636843947475] INIT : Called 'express'
+2021-11-14T01:52:27+03:00 [1636843947475] INIT : Called 'json-server'
+2021-11-14T01:52:27+03:00 [1636843947475] INIT : Called 'json-server' router
+2021-11-14T01:52:27+03:00 [1636843947475] INIT : Initiated 'express'
+2021-11-14T01:52:27+03:00 [1636843947475] INIT : Created 'json-server'
+2021-11-14T01:52:27+03:00 [1636843947475] INIT : Called 'isomorphic-fetch'
+2021-11-14T01:52:27+03:00 [1636843947475] INIT : Called 'axios'
+2021-11-14T01:52:27+03:00 [1636843947475] INIT : Called 'events'
+2021-11-14T01:52:27+03:00 [1636843947475] INIT : Called 'random-number-csprng'
+2021-11-14T01:52:27+03:00 [1636843947475] INIT : Called 'delay'
+2021-11-14T01:52:27+03:00 [1636843947475] INIT : Called 'moment'
+2021-11-14T01:52:27+03:00 [1636843947475] INIT : Called 'caller-id'
+2021-11-14T01:52:27+03:00 [1636843947475] INIT : Called 'crypto'
+2021-11-14T01:52:27+03:00 [1636843947475] INIT : Called config.
+2021-11-14T01:52:27+03:00 [1636843947475] INIT : Database started.
+-
+2021-11-14T01:52:27+03:00 [7b498770fd] INFO : Updating Master Subdomain | Begun
+2021-11-14T01:52:27+03:00 [7b498770fd] INFO : Updating Master Subdomain | Current IP recieved as 78.183.96.199
+
+2021-11-14T01:52:27+03:00 [7b498770fd] INFO : Couldn't Update Master Subdomain | Error was : TypeError: Cannot read property 'CFZI' of undefined
+-
+2021-11-14T01:52:27+03:00 [undefined] INFO : Port change schedule requested. | Scheduling change to port 8795 in 480 minutes.
+2021-11-14T01:52:27+03:00 [undefined] INFO : Port change schedule requested. | Scheduling change to port 5249 in 480 minutes.
+-
+2021-11-14T01:52:37+03:00 [1636843957127] INIT : Initiating...
+2021-11-14T01:52:37+03:00 [1636843957127] INIT : Called 'express'
+2021-11-14T01:52:37+03:00 [1636843957127] INIT : Called 'json-server'
+2021-11-14T01:52:37+03:00 [1636843957127] INIT : Initiated 'express'
+2021-11-14T01:52:37+03:00 [1636843957127] INIT : Called 'json-server' router
+2021-11-14T01:52:37+03:00 [1636843957127] INIT : Called 'axios'
+2021-11-14T01:52:37+03:00 [1636843957127] INIT : Created 'json-server'
+2021-11-14T01:52:37+03:00 [1636843957127] INIT : Called 'isomorphic-fetch'
+2021-11-14T01:52:37+03:00 [1636843957127] INIT : Called config.
+2021-11-14T01:52:37+03:00 [1636843957127] INIT : Called 'events'
+2021-11-14T01:52:37+03:00 [1636843957127] INIT : Called 'moment'
+2021-11-14T01:52:37+03:00 [1636843957127] INIT : Called 'random-number-csprng'
+2021-11-14T01:52:37+03:00 [1636843957127] INIT : Called 'caller-id'
+2021-11-14T01:52:37+03:00 [1636843957127] INIT : Called 'delay'
+2021-11-14T01:52:37+03:00 [1636843957127] INIT : Called 'crypto'
+2021-11-14T01:52:37+03:00 [1636843957127] INIT : Database started.
+-
+2021-11-14T01:52:37+03:00 [b6b316dafd] INFO : Updating Master Subdomain | Begun
+2021-11-14T01:52:37+03:00 [b6b316dafd] INFO : Updating Master Subdomain | Current IP recieved as 78.183.96.199
+
+2021-11-14T01:52:37+03:00 [b6b316dafd] INFO : Couldn't Update Master Subdomain | Error was : TypeError: Cannot read property 'CFZI' of undefined
+-
+2021-11-14T01:52:37+03:00 [undefined] INFO : Port change schedule requested. | Scheduling change to port 1572 in 480 minutes.
+2021-11-14T01:52:37+03:00 [undefined] INFO : Port change schedule requested. | Scheduling change to port 5875 in 480 minutes.
+-
+2021-11-14T01:53:14+03:00 [1636843994109] INIT : Initiating...
+2021-11-14T01:53:14+03:00 [1636843994109] INIT : Called 'express'
+2021-11-14T01:53:14+03:00 [1636843994109] INIT : Called 'json-server'
+2021-11-14T01:53:14+03:00 [1636843994109] INIT : Called 'json-server' router
+2021-11-14T01:53:14+03:00 [1636843994109] INIT : Initiated 'express'
+2021-11-14T01:53:14+03:00 [1636843994109] INIT : Called 'isomorphic-fetch'
+2021-11-14T01:53:14+03:00 [1636843994109] INIT : Created 'json-server'
+2021-11-14T01:53:14+03:00 [1636843994109] INIT : Called 'axios'
+2021-11-14T01:53:14+03:00 [1636843994109] INIT : Called 'events'
+2021-11-14T01:53:14+03:00 [1636843994109] INIT : Called config.
+2021-11-14T01:53:14+03:00 [1636843994109] INIT : Called 'random-number-csprng'
+2021-11-14T01:53:14+03:00 [1636843994109] INIT : Called 'moment'
+2021-11-14T01:53:14+03:00 [1636843994109] INIT : Called 'caller-id'
+2021-11-14T01:53:14+03:00 [1636843994109] INIT : Called 'delay'
+2021-11-14T01:53:14+03:00 [1636843994109] INIT : Called 'crypto'
+2021-11-14T01:53:14+03:00 [1636843994109] INIT : Database started.
+-
+2021-11-14T01:53:14+03:00 [1407684db6] INFO : Updating Master Subdomain | Begun
+-
+2021-11-14T01:53:14+03:00 [undefined] INFO : Port change schedule requested. | Scheduling change to port 6878 in 480 minutes.
+-
+2021-11-14T01:53:14+03:00 [1407684db6] INFO : Updating Master Subdomain | Current IP recieved as 78.183.96.199
+
+2021-11-14T01:53:14+03:00 [1407684db6] INFO : Couldn't Update Master Subdomain | Error was : TypeError: Cannot read property 'CFZI' of undefined
+-
+2021-11-14T01:53:14+03:00 [undefined] INFO : Port change schedule requested. | Scheduling change to port 1578 in 480 minutes.
+-
+2021-11-14T01:53:24+03:00 [1636844004443] INIT : Initiating...
+2021-11-14T01:53:24+03:00 [1636844004443] INIT : Initiated 'express'
+2021-11-14T01:53:24+03:00 [1636844004443] INIT : Called 'json-server'
+2021-11-14T01:53:24+03:00 [1636844004443] INIT : Created 'json-server'
+2021-11-14T01:53:24+03:00 [1636844004443] INIT : Called 'json-server' router
+2021-11-14T01:53:24+03:00 [1636844004443] INIT : Called config.
+2021-11-14T01:53:24+03:00 [1636844004443] INIT : Called 'axios'
+2021-11-14T01:53:24+03:00 [1636844004443] INIT : Called 'events'
+2021-11-14T01:53:24+03:00 [1636844004443] INIT : Called 'isomorphic-fetch'
+2021-11-14T01:53:24+03:00 [1636844004443] INIT : Called 'random-number-csprng'
+2021-11-14T01:53:24+03:00 [1636844004443] INIT : Called 'moment'
+2021-11-14T01:53:24+03:00 [1636844004443] INIT : Called 'crypto'
+2021-11-14T01:53:24+03:00 [1636844004443] INIT : Called 'caller-id'
+2021-11-14T01:53:24+03:00 [1636844004443] INIT : Called 'delay'
+2021-11-14T01:53:24+03:00 [1636844004443] INIT : Called 'express'
+2021-11-14T01:53:24+03:00 [1636844004443] INIT : Database started.
+-
+2021-11-14T01:53:24+03:00 [5b91a7cdef] INFO : Updating Master Subdomain | Begun
+2021-11-14T01:53:24+03:00 [5b91a7cdef] INFO : Updating Master Subdomain | Current IP recieved as 78.183.96.199
+
+-
+2021-11-14T01:53:24+03:00 [undefined] INFO : Port change schedule requested. | Scheduling change to port 6904 in 480 minutes.
+2021-11-14T01:53:24+03:00 [undefined] INFO : Port change schedule requested. | Scheduling change to port 2268 in 480 minutes.

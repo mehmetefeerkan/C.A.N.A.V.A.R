@@ -1,6 +1,7 @@
 //npm install express json-server isomorphic-fetch axios events delay random-number-csprng moment crypto
 process.chdir(__dirname)
-require('dotenv').config()
+const dotenv_ = require('dotenv')
+const dotenv = dotenv_.config().parsed
 const { exec } = require('child_process');
 let initSign = `${Date.now()}`
 const logger = require('./logger.js').log
@@ -34,7 +35,6 @@ const crypto = require('crypto')
 logger.init(initSign, "Called 'crypto'")
 const callerId = require('caller-id')
 logger.init(initSign, "Called 'caller-id'")
-
 let initLogID = crypto.randomBytes(5).toString('hex')
 
 let initiated = false
@@ -561,9 +561,9 @@ function updateMasterSubdomain() {
             logger.info(traceid, "Updating Master Subdomain", `Current IP recieved as ${currentIP}`)
             var options = {
                 method: 'PUT',
-                url: `https://api.cloudflare.com/client/v4/zones/${process.ENV.CFZI}/dns_records/${process.ENV.CFDR}`,
+                url: `https://api.cloudflare.com/client/v4/zones/${dotenv.CFZI}/dns_records/${dotenv.CFDR}`,
                 headers: {
-                    Authorization: 'Bearer ' + process.ENV.CFPT,
+                    Authorization: 'Bearer ' + dotenv.CFPT,
                     'Content-Type': 'application/json'
                 },
                 data: {
