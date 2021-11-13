@@ -233,7 +233,7 @@ app.get('/', (req, res) => {
 
 app.get('/heartbeat', (req, res) => {
     let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress
-    let ip = ip.toString().replace('::ffff:', '');
+    ip = ip.toString().replace('::ffff:', '');
     if (!activeMachines.includes(ip)) {
         activeMachines.push(ip)
     }
