@@ -355,6 +355,28 @@ app.post('/mgmt/schedulePortChange/:newPort/:inMins', async (req, res) => {
         res.send(200)
     }
 })
+app.post('/mgmt/schedulePortChangeSeconds', async (req, res) => {
+    schedulePortChangeSeconds(20, parseInt(await randomInt(1000, 9999)), "test")
+})
+
+async function schedulePortChangeSeconds(secs, np, logid) {
+    let inMinutes = secs || config.defaultPortReplenishTimeMin
+    let newPort = np || await randomInt(1000, 9999)
+    logger.info(logid, "Port change schedule requested.", `Scheduling change to port ${newPort} in ${inMinutes} minutes.`)
+    GLOBALS.port.changeAt = moment().add({ seconds: inMinutes }).unix() * 1000,
+        GLOBALS.port.changeTo = newPort
+    GLOBALS.port.changedLast = Date.now()
+    axios.patch("http://localhost:3000/global", GLOBALS)
+        .then(res => {
+            logger.info(logid, "Port change schedule request.", `Successfuly scheduled to port ${newPort} in ${inMinutes} minutes..`)
+            //console.log(res)
+        })
+        .catch(err => {
+            logger.error(logid, "Port change schedule failed.", `${err.message}`)
+            dbok.emit('false')
+        })
+
+}
 
 app.post('/mgmt/update', (req, res) => {
     res.send(200)
@@ -520,13 +542,13 @@ function checkSelf() {
         .then(res => {
             let global = res.data
             if (global.port.changeAt < Date.now()) {
-                schedulePortChange()
                 global.port.last = global.port.number
                 global.port.number = global.port.changeTo
                 CURRENTPORT = global.port.changeTo
                 global.port.changedLast = Date.now()
                 axios.patch("http://localhost:3000/global", global)
                     .then(res => {
+                        schedulePortChange()
                         console.log("repl");
                     })
                     .catch(err => {
