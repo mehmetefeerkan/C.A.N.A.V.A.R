@@ -541,15 +541,22 @@ function checkSelf() {
     axios.get("http://localhost:3000/global")
         .then(res => {
             let global = GLOBALS
+            console.log(global);
             if (global.port.changeAt <= Date.now()) {
+                console.log(global);
                 global.port.last = global.port.number
+                console.log(global);
                 global.port.number = global.port.changeTo
+                console.log(global);
                 CURRENTPORT = global.port.changeTo
+                console.log(global);
                 global.port.changedLast = Date.now()
+                console.log(global);
                 axios.patch("http://localhost:3000/global", global)
-                    .then(res => {
-                        schedulePortChange()
-                        console.log("repl");
+                .then(res => {
+                    schedulePortChange()
+                    console.log("repl");
+                    console.log(global);
                     })
                     .catch(err => {
                         dbok.emit('false')
