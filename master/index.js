@@ -540,7 +540,7 @@ async function clock() {
 function checkSelf() {
     axios.get("http://localhost:3000/global")
         .then(res => {
-            console.log(global);
+            console.log(GLOBALS);
             if (GLOBALS.port.changeAt <= Date.now()) {
                 console.log(GLOBALS);
                 GLOBALS.port.last = global.port.number
@@ -578,7 +578,7 @@ setInterval(function () {
 }, 10000)
 setInterval(function () {
     refreshGlobals()
-}, 5000)
+}, 1000)
 function refreshGlobals() {
     axios.get("http://localhost:3000/global")
         .then(res => {
