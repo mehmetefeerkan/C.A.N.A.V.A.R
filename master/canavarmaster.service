@@ -1,0 +1,12 @@
+[Unit]
+Description=canavar-master
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/node /C.A.N.A.V.A.R/master/index.js
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+

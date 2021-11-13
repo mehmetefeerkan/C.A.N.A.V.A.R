@@ -348,6 +348,19 @@ app.post('/mgmt/schedulePortChange/:newPort/:inMins', async (req, res) => {
     }
 })
 
+app.post('/mgmt/update', (req, res) => {
+    exec("cd /C.A.N.A.V.A.R/; git pull; nohup systemctl restart canavarl7 &;", (err, stdout, stderr) => {
+        if (err) {
+            //some err occurred
+            console.error(err)
+        } else {
+            // the *entire* stdout and stderr (buffered)
+            console.log(`stdout: ${stdout}`);
+            console.log(`stderr: ${stderr}`);
+        }
+    })
+})
+
 app.post('/mgmt/portElusion/', async (req, res) => {
     let newPort = await randomInt(1000, 9999)
     GLOBALS.port.changeAt = moment().add({ seconds: 6 }).unix() * 1000,
