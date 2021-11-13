@@ -368,7 +368,7 @@ app.post('/mgmt/update', (req, res) => {
         }
     })
 })
-
+//auto-update & keep latest machines in json-server cache for faster magazine change?
 app.post('/mgmt/vcontrol', (req, res) => {
     exec("cd /C.A.N.A.V.A.R/ ; git show -1 --stat  ", (err, stdout, stderr) => {
         if (err) {
@@ -400,9 +400,9 @@ app.post('/mgmt/vcontrol', (req, res) => {
                         })
                     } else {
                         if (stdout_.includes(latestCommitSHA)) {
-                            res.send(200, {upToDate: true, latestCommit: resp[0]})
+                            res.send(200, {upToDate: true, latestCommit: resp[0], currentCommitData: stdout_ })
                         } else {
-                            res.send(200, {upToDate: false, latestCommit: resp[0]})
+                            res.send(200, {upToDate: false, latestCommit: resp[0], currentCommitData: stdout_ })
                         }
                     }
                   }).catch(function (error) {
