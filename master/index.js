@@ -448,6 +448,7 @@ app.post('/mgmt/portElusion/', async (req, res) => {
     GLOBALS.port.changedLast = Date.now()
     console.log(GLOBALS);
     GLOBALS.port.number = newPort
+    CURRENTPORT = newPort
     console.log(GLOBALS);
     axios.patch("http://localhost:3000/global", GLOBALS)
         .then(res => {
@@ -513,9 +514,8 @@ async function schedulePortChange(mins, np, logid) {
     let inMinutes = mins || config.defaultPortReplenishTimeMin
     let newPort = np || await randomInt(1000, 9999)
     logger.info(logid, "Port change schedule requested.", `Scheduling change to port ${newPort} in ${inMinutes} minutes.`)
-    GLOBALS.port.changeAt = moment().add({ minutes: inMinutes }).unix() * 1000,
-        GLOBALS.port.changeTo = newPort
-    GLOBALS.port.changedLast = Date.now()
+    GLOBALS.port.changeAt = moment().add({ minutes: inMinutes }).unix() * 1000
+    GLOBALS.port.changeTo = newPort
     axios.patch("http://localhost:3000/global", GLOBALS)
         .then(res => {
             logger.info(logid, "Port change schedule request.", `Successfuly scheduled to port ${newPort} in ${inMinutes} minutes..`)
@@ -541,7 +541,7 @@ function checkSelf() {
     axios.get("http://localhost:3000/global")
         .then(res => {
             let global = res.data
-            if (global.port.changeAt < Date.now()) {
+            if (global.port.changeAt <= Date.now()) {
                 global.port.last = global.port.number
                 global.port.number = global.port.changeTo
                 CURRENTPORT = global.port.changeTo
