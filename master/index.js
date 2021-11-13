@@ -540,6 +540,7 @@ function checkSelf() {
 }
 
 checkSelf();
+refreshGlobals()
 
 setInterval(function () {
     checkSelf()
