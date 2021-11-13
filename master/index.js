@@ -554,6 +554,7 @@ function checkSelf() {
                 console.log(global);
                 axios.patch("http://localhost:3000/global", global)
                 .then(res => {
+                    refreshGlobals()
                     schedulePortChange()
                     console.log("repl");
                     console.log(global);
