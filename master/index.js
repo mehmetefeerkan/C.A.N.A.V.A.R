@@ -355,7 +355,7 @@ app.post('/mgmt/schedulePortChange/:newPort/:inMins', async (req, res) => {
 
 app.post('/mgmt/update', (req, res) => {
     res.send(200)
-    exec("cd /C.A.N.A.V.A.R/; git pull; cd master ; npm install; nohup systemctl restart canavarmaster &; ", (err, stdout, stderr) => {
+    exec("cd /C.A.N.A.V.A.R/ ; git pull; cd master ; npm install; nohup systemctl restart canavarmaster &; ", (err, stdout, stderr) => {
         if (err) {
             //some err occurred
             console.error(err)
