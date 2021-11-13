@@ -2053,3 +2053,28 @@
 -
 2021-11-14T01:53:24+03:00 [undefined] INFO : Port change schedule requested. | Scheduling change to port 6904 in 480 minutes.
 2021-11-14T01:53:24+03:00 [undefined] INFO : Port change schedule requested. | Scheduling change to port 2268 in 480 minutes.
+-
+2021-11-14T01:55:15+03:00 [1636844114997] INIT : Environment variables recieved as : {"CFPT":"NNsVE_tNyU68FX-YvZd7xAA0Ufk6W_wojtbv9toR","CFZI":"377ef5d31219f8a62cb501fdb7b23242","CFDR":"dd56cac4cd2fab807b2d39af952b142d"}
+2021-11-14T01:55:15+03:00 [1636844114997] INIT : Initiating...
+2021-11-14T01:55:15+03:00 [1636844114997] INIT : Initiated 'express'
+2021-11-14T01:55:15+03:00 [1636844114997] INIT : Created 'json-server'
+2021-11-14T01:55:15+03:00 [1636844114997] INIT : Called 'json-server' router
+2021-11-14T01:55:15+03:00 [1636844114997] INIT : Called 'isomorphic-fetch'
+2021-11-14T01:55:15+03:00 [1636844114997] INIT : Called 'axios'
+2021-11-14T01:55:15+03:00 [1636844114997] INIT : Called 'express'
+2021-11-14T01:55:15+03:00 [1636844114997] INIT : Called 'json-server'
+2021-11-14T01:55:15+03:00 [1636844114997] INIT : Called 'events'
+2021-11-14T01:55:15+03:00 [1636844114997] INIT : Called 'random-number-csprng'
+2021-11-14T01:55:15+03:00 [1636844114997] INIT : Called config.
+2021-11-14T01:55:15+03:00 [1636844114997] INIT : Called 'moment'
+2021-11-14T01:55:15+03:00 [1636844114997] INIT : Called 'caller-id'
+2021-11-14T01:55:15+03:00 [1636844114997] INIT : Database started.
+2021-11-14T01:55:15+03:00 [1636844114997] INIT : Called 'crypto'
+2021-11-14T01:55:15+03:00 [1636844114997] INIT : Called 'delay'
+-
+2021-11-14T01:55:15+03:00 [11ee21c85e] INFO : Updating Master Subdomain | Begun
+2021-11-14T01:55:15+03:00 [11ee21c85e] INFO : Updating Master Subdomain | Current IP recieved as 78.183.96.199
+
+-
+2021-11-14T01:55:15+03:00 [undefined] INFO : Port change schedule requested. | Scheduling change to port 2418 in 480 minutes.
+2021-11-14T01:55:15+03:00 [undefined] INFO : Port change schedule requested. | Scheduling change to port 9383 in 480 minutes.

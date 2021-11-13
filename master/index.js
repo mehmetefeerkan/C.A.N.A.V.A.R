@@ -6,6 +6,7 @@ const { exec } = require('child_process');
 let initSign = `${Date.now()}`
 const logger = require('./logger.js').log
 logger.init(initSign, "Initiating...")
+logger.init(initSign, "Environment variables recieved as : " + JSON.stringify(dotenv))
 const express = require('express')
 logger.init(initSign, "Called 'express'")
 const app = express()
