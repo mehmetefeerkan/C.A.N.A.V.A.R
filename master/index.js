@@ -418,9 +418,13 @@ app.post('/mgmt/vcontrol', (req, res) => {
 
 app.post('/mgmt/portElusion/', async (req, res) => {
     let newPort = await randomInt(1000, 9999)
+    console.log(GLOBALS);
     GLOBALS.port.changeAt = moment().add({ seconds: 6 }).unix() * 1000,
-        GLOBALS.port.changeTo = newPort
+    console.log(GLOBALS);
+    GLOBALS.port.changeTo = newPort
+    console.log(GLOBALS);
     GLOBALS.port.changedLast = Date.now()
+    console.log(GLOBALS);
     axios.patch("http://localhost:3000/global", GLOBALS)
         .then(res => {
             //console.log(res)
