@@ -1,5 +1,6 @@
 //npm install express json-server isomorphic-fetch axios events delay random-number-csprng moment crypto
 process.chdir(__dirname)
+require('dotenv').config()
 const { exec } = require('child_process');
 let initSign = `${Date.now()}`
 const logger = require('./logger.js').log
@@ -359,12 +360,12 @@ app.post('/mgmt/update', (req, res) => {
         if (err) {
             //some err occurred
             console.error(err)
-            res.send(500, {std_err: err})
+            res.send(500, { std_err: err })
         } else {
             // the *entire* stdout and stderr (buffered)
             console.log(`stdout: ${stdout}`);
             console.log(`stderr: ${stderr}`);
-            res.send(200, {std_out: stdout, std_err: stderr})
+            res.send(200, { std_out: stdout, std_err: stderr })
         }
     })
 })
@@ -374,7 +375,7 @@ app.post('/mgmt/vcontrol', (req, res) => {
         if (err) {
             //some err occurred
             console.error(err)
-            res.send(200, {std_err: err})
+            res.send(200, { std_err: err })
         } else {
             // the *entire* stdout and stderr (buffered)
             console.log(`stdout: ${stdout}`);
@@ -384,10 +385,10 @@ app.post('/mgmt/vcontrol', (req, res) => {
                 var options = {
                     method: 'GET',
                     url: 'https://api.github.com/repos/mehmetefeerkan/C.A.N.A.V.A.R/commits',
-                    headers: {Accept: 'application/vnd.github.v3+json'}
-                  };
-                  
-                  axios.request(options).then(function (response) {
+                    headers: { Accept: 'application/vnd.github.v3+json' }
+                };
+
+                axios.request(options).then(function (response) {
                     console.log(response.data);
                     let resp = response.data
                     let latestCommitSHA = resp[0].sha
@@ -400,14 +401,14 @@ app.post('/mgmt/vcontrol', (req, res) => {
                         })
                     } else {
                         if (stdout_.includes(latestCommitSHA)) {
-                            res.send(200, {upToDate: true, latestCommit: resp[0], currentCommitData: stdout_ })
+                            res.send(200, { upToDate: true, latestCommit: resp[0], currentCommitData: stdout_ })
                         } else {
-                            res.send(200, {upToDate: false, latestCommit: resp[0], currentCommitData: stdout_ })
+                            res.send(200, { upToDate: false, latestCommit: resp[0], currentCommitData: stdout_ })
                         }
                     }
-                  }).catch(function (error) {
+                }).catch(function (error) {
                     console.error(error);
-                  });
+                });
             }
             //res.send(200, {std_out: stdout, std_err: stderr})x
         }
@@ -460,6 +461,7 @@ function initiate() {
         .catch(err => {
             console.error(err);
         })
+    updateMasterSubdomain()
 }
 
 async function changePort(newport, logid) {
@@ -482,7 +484,7 @@ async function schedulePortChange(mins, np, logid) {
     let newPort = np || await randomInt(1000, 9999)
     logger.info(logid, "Port change schedule requested.", `Scheduling change to port ${newPort} in ${inMinutes} minutes.`)
     GLOBALS.port.changeAt = moment().add({ minutes: inMinutes }).unix() * 1000,
-    GLOBALS.port.changeTo = newPort
+        GLOBALS.port.changeTo = newPort
     GLOBALS.port.changedLast = Date.now()
     axios.patch("http://localhost:3000/global", GLOBALS)
         .then(res => {
@@ -549,7 +551,45 @@ function refreshGlobals() {
         })
 }
 
+function updateMasterSubdomain() {
+    let traceid = logID()
+    logger.info(traceid, "Updating Master Subdomain", `Begun`)
+    axios.get("http://icanhazip.com")
+        .then(res => {
+            console.log(res.data)
+            let currentIP = res.data
+            logger.info(traceid, "Updating Master Subdomain", `Current IP recieved as ${currentIP}`)
+            var options = {
+                method: 'PUT',
+                url: `https://api.cloudflare.com/client/v4/zones/${process.ENV.CFZI}/dns_records/${process.ENV.CFDR}`,
+                headers: {
+                    Authorization: 'Bearer ' + process.ENV.CFPT,
+                    'Content-Type': 'application/json'
+                },
+                data: {
+                    type: 'A',
+                    name: 'master.api.canavar.licentia.xyz',
+                    content: currentIP,
+                    ttl: 1,
+                    proxied: true
+                }
+            };
+            axios.request(options).then(function (response) {
+                console.log(response.data);
+                logger.info(traceid, "Updated Master Subdomain", `Updated the subdomain to IP ${currentIP}`)
+            }).catch(function (error) {
+                logger.info(traceid, "Couldn't Update Master Subdomain", `Tried to update the subdomain to IP ${currentIP}`)
+                console.error(error);
+            });
+        })
+        .catch(err => {
+            console.error(err);
+            logger.info(traceid, "Couldn't Update Master Subdomain", `Error was : ${err}`)
+        })
+
+}
 
 setInterval(function () {
     activeMachines = []
+    updateMasterSubdomain()
 }, 60000)

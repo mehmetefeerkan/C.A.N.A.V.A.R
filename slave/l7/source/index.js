@@ -42,6 +42,7 @@ function checkLocalMaster() {
             })
             .catch(err => {
                 console.error(err);
+                checkLocalMaster()
             })
     } else {
         if (localMaster.includes(".")) {
