@@ -540,24 +540,23 @@ async function clock() {
 function checkSelf() {
     axios.get("http://localhost:3000/global")
         .then(res => {
-            let global = GLOBALS
             console.log(global);
-            if (global.port.changeAt <= Date.now()) {
-                console.log(global);
-                global.port.last = global.port.number
-                console.log(global);
-                global.port.number = global.port.changeTo
-                console.log(global);
+            if (GLOBALS.port.changeAt <= Date.now()) {
+                console.log(GLOBALS);
+                GLOBALS.port.last = global.port.number
+                console.log(GLOBALS);
+                GLOBALS.port.number = global.port.changeTo
+                console.log(GLOBALS);
                 CURRENTPORT = global.port.changeTo
-                console.log(global);
+                console.log(GLOBALS);
                 global.port.changedLast = Date.now()
-                console.log(global);
-                axios.patch("http://localhost:3000/global", global)
+                GLOBALS.log(GLOBALS);
+                axios.patch("http://localhost:3000/global", GLOBALS)
                 .then(res => {
                     refreshGlobals()
                     schedulePortChange()
                     console.log("repl");
-                    console.log(global);
+                    console.log(GLOBALS);
                     })
                     .catch(err => {
                         dbok.emit('false')
