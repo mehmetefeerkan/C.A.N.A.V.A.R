@@ -399,7 +399,7 @@ app.post('/mgmt/vcontrol', (req, res) => {
                             }
                         })
                     } else {
-                        if (/\b[0-9a-f]{5,40}\b/.test(stdout_)) {
+                        if (latestCommitSHA.test(stdout_)) {
                             res.send(200, {upToDate: true, latestCommit: resp[0]})
                         } else {
                             res.send(200, {upToDate: false, latestCommit: resp[0]})
