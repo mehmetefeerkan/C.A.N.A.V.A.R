@@ -540,7 +540,7 @@ async function clock() {
 function checkSelf() {
     axios.get("http://localhost:3000/global")
         .then(res => {
-            let global = res.data
+            let global = GLOBALS
             if (global.port.changeAt <= Date.now()) {
                 global.port.last = global.port.number
                 global.port.number = global.port.changeTo
