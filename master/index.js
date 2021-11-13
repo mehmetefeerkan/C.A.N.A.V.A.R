@@ -370,7 +370,6 @@ app.post('/mgmt/update', (req, res) => {
 })
 
 app.post('/mgmt/vcontrol', (req, res) => {
-    res.send(200)
     exec("cd /C.A.N.A.V.A.R/ ; git show -1 --stat  ", (err, stdout, stderr) => {
         if (err) {
             //some err occurred
