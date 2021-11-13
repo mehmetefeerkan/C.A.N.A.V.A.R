@@ -356,7 +356,7 @@ app.post('/mgmt/schedulePortChange/:newPort/:inMins', async (req, res) => {
     }
 })
 app.post('/mgmt/schedulePortChangeSeconds', async (req, res) => {
-    schedulePortChangeSeconds(20, parseInt(await randomInt(1000, 9999)), "test")
+    schedulePortChangeSeconds(5, parseInt(await randomInt(1000, 9999)), "test")
 })
 
 async function schedulePortChangeSeconds(secs, np, logid) {
