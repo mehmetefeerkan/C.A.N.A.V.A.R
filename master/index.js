@@ -31,7 +31,9 @@ const crypto = require('crypto')
 logger.init(initSign, "Called 'crypto'")
 const callerId = require('caller-id')
 logger.init(initSign, "Called 'caller-id'")
+
 let initLogID = crypto.randomBytes(5).toString('hex')
+
 let initiated = false
 let AGENTLINK = null
 let SERVICELINK = null
@@ -230,8 +232,10 @@ app.get('/', (req, res) => {
 })
 
 app.get('/heartbeat', (req, res) => {
-    if (!activeMachines.includes(req.headers['x-forwarded-for'] || req.connection.remoteAddress)) {
-        activeMachines.push(req.headers['x-forwarded-for'] || req.connection.remoteAddress)
+    let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress
+    let ip = ip.toString().replace('::ffff:', '');
+    if (!activeMachines.includes(ip)) {
+        activeMachines.push(ip)
     }
     res.send(200, "OKAY")
 })
