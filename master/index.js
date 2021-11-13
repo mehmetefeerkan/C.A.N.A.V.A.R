@@ -315,6 +315,7 @@ app.get('/all/update', (req, res) => {
     res.send(200, "OKAY")
 })
 app.get('/globals', (req, res) => {
+    GLOBALS.port.leftForChange = ((GLOBALS.port.changeAt) - (Date.now()))
     res.send(200, GLOBALS)
 })
 app.get('/machines/active', (req, res) => {
