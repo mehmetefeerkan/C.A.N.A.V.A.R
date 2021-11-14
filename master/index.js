@@ -718,6 +718,7 @@ function initiate() {
         activeMachinesList = []
         updateMasterSubdomain()
     }, 60000)
+    initiated = true
 }
 
 async function changePort(newport, logid) {
