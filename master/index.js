@@ -270,7 +270,7 @@ app.post('/heartbeat', (req, res) => {
     let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress
     ip = ip.toString().replace('::ffff:', '');
     console.log(req.body);
-    if (!activeMachinesList.includes(ip)) {
+    if (activeMachinesList.includes(ip)) {
         let currentMachineData = req.body.machine
         activeMachinesList.push(ip)
         axios.post(`http://localhost:3000/machines/`, {currentMachineData})
