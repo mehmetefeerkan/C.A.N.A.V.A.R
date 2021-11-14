@@ -587,7 +587,7 @@ async function adaptPort() {
                 console.log("repl");
                 console.log(GLOBALS);
                 globalLock = false;
-            })
+            }) 
             .catch(err => {
                 dbok.emit('false')
                 console.log(err);
