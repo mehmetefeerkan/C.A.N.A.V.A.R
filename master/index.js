@@ -83,51 +83,51 @@ let GLOBALS = {
 
 
 let gfunc = {
-    whole = function () { return GLOBALS },
+    whole: function () { return GLOBALS },
     latestGlobalsWrite: null,
     port: {
         number: {
-            get = function (a) {
+            get: function (a) {
                 return (GLOBALS.port.number)
             },
-            write = function (a) {
+            write: function (a) {
                 gfunc.latestGlobalsWrite = Date.now()
                 return (GLOBALS.port.number = a)
             }
         },
         changeAt: {
-            get = function (a) {
+            get: function (a) {
 
                 return (GLOBALS.port.changeAt)
             },
-            write = function (a) {
+            write: function (a) {
                 gfunc.latestGlobalsWrite = Date.now()
                 return (GLOBALS.port.changeAt = a)
             }
         },
         changedLast: {
-            get = function (a) {
+            get: function (a) {
                 return (GLOBALS.port.changedLast)
             },
-            write = function (a) {
+            write: function (a) {
                 gfunc.latestGlobalsWrite = Date.now()
                 return (GLOBALS.port.changedLast = a)
             }
         },
         changeTo: {
-            get = function (a) {
+            get: function (a) {
                 return (GLOBALS.port.changeTo)
             },
-            write = function (a) {
+            write: function (a) {
                 gfunc.latestGlobalsWrite = Date.now()
                 return (GLOBALS.port.changeTo = a)
             }
         },
         last: {
-            get = function (a) {
+            get: function (a) {
                 return (GLOBALS.port.last)
             },
-            write = function (a) {
+            write: function (a) {
                 gfunc.latestGlobalsWrite = Date.now()
                 return (GLOBALS.port.last = a)
             }
@@ -135,47 +135,47 @@ let gfunc = {
     },
     restart: {
         scheduled: {
-            get = function (a) {
+            get: function (a) {
                 return (GLOBALS.port.scheduled)
             },
-            write = function (a) {
+            write: function (a) {
                 gfunc.latestGlobalsWrite = Date.now()
                 return (GLOBALS.port.scheduled = a)
             }
         },
         at: {
-            get = function (a) {
+            get: function (a) {
                 return (GLOBALS.port.at)
             },
-            write = function (a) {
+            write: function (a) {
                 gfunc.latestGlobalsWrite = Date.now()
                 return (GLOBALS.port.at = a)
             }
         },
         last: {
-            get = function (a) {
+            get: function (a) {
                 return (GLOBALS.port.last)
             },
-            write = function (a) {
+            write: function (a) {
                 gfunc.latestGlobalsWrite = Date.now()
                 return (GLOBALS.port.last = a)
             }
         }
     },
     lockdown: {
-        get = function (a) {
+        get: function (a) {
             return (GLOBALS.port.lockdown)
         },
-        write = function (a) {
+        write: function (a) {
             gfunc.latestGlobalsWrite = Date.now()
             return (GLOBALS.port.lockdown = a)
         }
     },
     accessKey: {
-        get = function (a) {
+        get: function (a) {
             return (GLOBALS.port.accessKey)
         },
-        write = function (a) {
+        write: function (a) {
             gfunc.latestGlobalsWrite = Date.now()
             return (GLOBALS.port.accessKey = a)
         }
