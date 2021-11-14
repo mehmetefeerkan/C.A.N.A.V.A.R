@@ -81,7 +81,7 @@ let Globals = {
     latestGlobalsDump: null,
 }
 let Global = {
-    set = {}
+    set: {}
 }
 Global.set = (function (a) {
     Globals.latestGlobalsWrite = Date.now()
