@@ -572,9 +572,9 @@ async function adaptPort() {
         console.log("GEÇMİŞ AMINA KOYAYIM")
         console.log(JSON.stringify(GLOBALS));
         console.log(GLOBALS.port);
-        GLOBALS.port.last = global.port.number
+        GLOBALS.port.last = GLOBALS.port.number
         console.log(JSON.stringify(GLOBALS));
-        GLOBALS.port.number = global.port.changeTo
+        GLOBALS.port.number = GLOBALS.port.changeTo
         console.log(JSON.stringify(GLOBALS));
         CURRENTPORT = GLOBALS.port.changeTo
         console.log(JSON.stringify(GLOBALS));
