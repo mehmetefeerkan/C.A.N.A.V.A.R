@@ -271,8 +271,7 @@ app.post('/heartbeat', (req, res) => {
     ip = ip.toString().replace('::ffff:', '');
     console.log(req.body);
     if (!activeMachinesList.includes(ip)) {
-        let currentMachineData_ = req.body.machine
-        let currentMachineData = currentMachineData_.machine
+        let currentMachineData = req.body.machine
         activeMachinesList.push(ip)
         axios.post(`http://localhost:3000/machines/`, {currentMachineData})
             .then(res => {
@@ -288,8 +287,7 @@ app.post('/heartbeat', (req, res) => {
                 })
             })
     } else {
-        let currentMachineData_ = req.body.machine
-        let currentMachineData = currentMachineData_.machine
+        let currentMachineData = req.body.machine
         axios.patch(`http://localhost:3000/machines/${ip}`, {currentMachineData})
             .then(res => {
                 res.send(200)
@@ -304,7 +302,6 @@ app.post('/heartbeat', (req, res) => {
                 })
             })
     }
-    res.send(200, "OKAY")
 })
 
 app.get('/all/installscript/:scriptid', (req, res) => {
