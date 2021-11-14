@@ -324,7 +324,7 @@ app.get('/globals', (req, res) => {
 app.get('/machines/active', (req, res) => {
     res.send(200, activeMachines)
 })
-app.get('machines/testReachability/', (req, res) => {
+app.get('/machines/testReachability/', async (req, res) => {
     let reachable = []
     let unreachable = []
     let timeout_ = 5
