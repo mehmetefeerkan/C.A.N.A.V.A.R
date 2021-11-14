@@ -557,7 +557,7 @@ function checkSelf() {
     globalLock = true;
     axios.get("http://localhost:3000/global")
         .then(res => {
-            console.log(GLOBALS);
+            console.log("attempting");
             if (GLOBALS.port.changeAt <= Date.now()) {
                 console.log(GLOBALS);
                 GLOBALS.port.last = global.port.number
