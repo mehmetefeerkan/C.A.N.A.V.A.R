@@ -56,21 +56,25 @@ function logID() {
 }
 
 server.use((req, res, next) => {
-    console.log(req.hostname);
-    if (req.method === "POST") {
-        if ((req.headers.accesskey)) {
-            if ((config.pk).includes(req.headers.accesskey)) {
-                //console.log("approve");
-                next()
+    if (req.hostname === "localhost"){
+        next()
+    } else {
+        if (req.method === "POST") {
+            if ((req.headers.accesskey)) {
+                if ((config.pk).includes(req.headers.accesskey)) {
+                    //console.log("approve");
+                    next()
+                } else {
+                    res.send(403)
+                }
             } else {
                 res.send(403)
             }
         } else {
-            res.send(403)
+            next();
         }
-    } else {
-        next();
     }
+    
 })
 
 app.use((req, res, next) => {
