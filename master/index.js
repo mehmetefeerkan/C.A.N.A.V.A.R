@@ -38,8 +38,31 @@ const callerId = require('caller-id');
 const { await } = require('signale');
 logger.init(initSign, "Called 'caller-id'")
 const bodyParser = require('body-parser');
+const si = require('systeminformation');
 
 let initLogID = crypto.randomBytes(5).toString('hex')
+let systemInfo = {
+    static: null,
+    dynamic: {
+        cpu: {
+            brand: null,
+            speed: null,
+            voltage: null
+        },
+        mem: {
+            total: null,
+            free: null,
+            used: null,
+            active: null,
+            available: null
+        },
+        load: null,
+        net: null
+    }
+}
+si.getDynamicData(function (data) {
+    systemInfo.dynamic.all = data
+})
 
 let initiated = false
 let AGENTLINK = null
@@ -476,6 +499,29 @@ app.post('/mgmt/schedulePortChange/:newPort/:inMins', async (req, res) => {
         res.send(200)
     }
 })
+
+app.get('/mgmt/systemInfo', async (req, res) => {
+    let systemInfo_ = systemInfo
+    si.mem(function (memdata) {
+        systemInfo_.dynamic.mem.total = memdata.total
+        systemInfo_.dynamic.mem.free = memdata.free
+        systemInfo_.dynamic.mem.used = memdata.used
+        systemInfo_.dynamic.mem.active = memdata.active
+        systemInfo_.dynamic.mem.available = memdata.available
+        si.cpu(function (cpudata) {
+            systemInfo_.dynamic.cpu.voltage = cpudata.voltage
+            systemInfo_.dynamic.cpu.speed = cpudata.speed
+            systemInfo_.dynamic.cpu.brand = cpudata.brand
+            si.currentLoad(function (data) {
+                systemInfo_.dynamic.load = data
+                si.networkStats(function (data) {
+                    systemInfo_.dynamic.net = data
+                    res.send(200, systemInfo_)
+                })
+            })
+        })
+    })
+})
 app.post('/mgmt/schedulePortChangeSeconds', async (req, res) => {
     schedulePortChangeTest(5, parseInt(await randomInt(1000, 9999)), "test")
 })
@@ -564,7 +610,7 @@ app.post('/mgmt/vcontrol', (req, res) => {
 })
 
 app.post('/mgmt/portElusion/', async (req, res) => {
-    
+
     globalLock = true;
     let newPort = await randomInt(1000, 9999)
     let currentPort = GLOBALS.port.number
@@ -593,7 +639,7 @@ app.listen(80, () => console.log(`App listening on port ${"80"}!`))
 
 function initiate() {
     console.log("Begin init.");
-    async function dbMachineCleanup(){
+    async function dbMachineCleanup() {
         axios.get("http://localhost:3000/machines/")
             .then(res => {
                 console.log(res.data)

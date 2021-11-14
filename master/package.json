@@ -17,7 +17,8 @@
     "nodemon": "^2.0.14",
     "random-number-csprng": "^1.0.2",
     "request": "^2.88.2",
-    "signale": "^1.4.0"
+    "signale": "^1.4.0",
+    "systeminformation": "^5.9.12"
   },
   "devDependencies": {},
   "scripts": {
