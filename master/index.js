@@ -260,7 +260,7 @@ app.get('/all/installscript/:scriptid', (req, res) => {
     }
     res.send(200, "OKAY")
 })
-app.get('/all/installscript/:module', (req, res) => {
+app.get('/all/npminstall/:module', (req, res) => {
     clen = activeMachines.length
     for (let index = 0; index < clen; index++) {
         console.log(`Asking ${activeMachines[index]}:${CURRENTPORT}`);
