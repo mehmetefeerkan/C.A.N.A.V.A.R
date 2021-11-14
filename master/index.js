@@ -76,7 +76,7 @@ let GLOBALS = {
         last: null
     },
     lockdown: true,
-    accessKey: foobar
+    accessKey: null
 
 }
 
