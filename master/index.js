@@ -489,7 +489,7 @@ function initiate() {
         .catch(err => {
             console.error(err);
         })
-        globalLock = true;
+    globalLock = true;
     axios.get("http://localhost:3000/global")
         .then(res => {
             CURRENTPORT = res.data.port.number
@@ -558,33 +558,7 @@ function checkSelf() {
     globalLock = true;
     axios.get("http://localhost:3000/global")
         .then(res => {
-            console.log("attempting");
-            if (GLOBALS.port.changeAt <= Date.now()) {
-                console.log("GEÇMİŞ AMINA KOYAYIM")
-                console.log(JSON.stringify(GLOBALS));
-                GLOBALS.port.last = global.port.number
-                console.log(JSON.stringify(GLOBALS));
-                GLOBALS.port.number = global.port.changeTo
-                console.log(JSON.stringify(GLOBALS));
-                CURRENTPORT = GLOBALS.port.changeTo
-                console.log(JSON.stringify(GLOBALS));
-                global.port.changedLast = Date.now()
-                console.log(JSON.stringify(GLOBALS));
-                GLOBALS.log(GLOBALS);
-                axios.patch("http://localhost:3000/global", GLOBALS)
-                .then(res => {
-                    refreshGlobals()
-                    schedulePortChange()
-                    console.log("repl");
-                    console.log(GLOBALS);
-                    globalLock = false;
-                    })
-                    .catch(err => {
-                        dbok.emit('false')
-                        console.log(err);
-                        globalLock = false;
-                    })
-            }
+            adaptPort()
             globalLock = false;
 
         })
@@ -592,7 +566,35 @@ function checkSelf() {
             globalLock = false;
         })
 }
-
+async function adaptPort() {
+    console.log("attempting");
+    if (GLOBALS.port.changeAt <= Date.now()) {
+        console.log("GEÇMİŞ AMINA KOYAYIM")
+        console.log(JSON.stringify(GLOBALS));
+        GLOBALS.port.last = global.port.number
+        console.log(JSON.stringify(GLOBALS));
+        GLOBALS.port.number = global.port.changeTo
+        console.log(JSON.stringify(GLOBALS));
+        CURRENTPORT = GLOBALS.port.changeTo
+        console.log(JSON.stringify(GLOBALS));
+        global.port.changedLast = Date.now()
+        console.log(JSON.stringify(GLOBALS));
+        GLOBALS.log(GLOBALS);
+        axios.patch("http://localhost:3000/global", GLOBALS)
+            .then(res => {
+                refreshGlobals()
+                schedulePortChange()
+                console.log("repl");
+                console.log(GLOBALS);
+                globalLock = false;
+            })
+            .catch(err => {
+                dbok.emit('false')
+                console.log(err);
+                globalLock = false;
+            })
+    }
+}
 checkSelf();
 refreshGlobals()
 
@@ -604,14 +606,14 @@ setInterval(function () {
     refreshGlobals()
 }, 1000)
 function refreshGlobals() {
-    if (globalLock === false){
+    if (globalLock === false) {
         axios.get("http://localhost:3000/global")
-        .then(res => {
-            GLOBALS = res.data
-        })
-        .catch(err => {
-            GLOBALS = GLOBALS
-        })    
+            .then(res => {
+                GLOBALS = res.data
+            })
+            .catch(err => {
+                GLOBALS = GLOBALS
+            })
     }
 }
 
