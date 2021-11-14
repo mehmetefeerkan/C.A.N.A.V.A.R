@@ -317,6 +317,7 @@ app.get('/all/update', (req, res) => {
 app.get('/globals', (req, res) => {
     GLOBALS.port.leftForChange = ((GLOBALS.port.changeAt) - (Date.now()))
     GLOBALS.port.shouldChange = (GLOBALS.port.changeAt <= Date.now())
+    GLOBALS.port.shouldChange = (GLOBALS.port.changeAt <= Date.now())
     res.send(200, GLOBALS)
 })
 app.get('/machines/active', (req, res) => {
@@ -579,6 +580,7 @@ function checkSelf() {
                     })
                     .catch(err => {
                         dbok.emit('false')
+                        console.log(err);
                         globalLock = false;
                     })
             }
