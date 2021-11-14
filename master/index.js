@@ -269,6 +269,7 @@ app.get('/globals', (req, res) => {
 app.post('/heartbeat', (req, res) => {
     let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress
     ip = ip.toString().replace('::ffff:', '');
+    console.log(req.body);
     if (!activeMachinesList.includes(ip)) {
         let currentMachineData_ = req.body.zombie
         let currentMachineData = currentMachineData_.zombie_
