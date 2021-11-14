@@ -1,4 +1,7 @@
 //npm install express json-server isomorphic-fetch axios events delay random-number-csprng moment crypto
+process.on('uncaughtException', function(err) {
+    console.log('Caught exception: ' + err);
+  });
 process.chdir(__dirname)
 const dotenv_ = require('dotenv')
 const dotenv = dotenv_.config().parsed
