@@ -571,6 +571,7 @@ async function adaptPort() {
     if (GLOBALS.port.changeAt <= Date.now()) {
         console.log("GEÇMİŞ AMINA KOYAYIM")
         console.log(JSON.stringify(GLOBALS));
+        console.log(GLOBALS.port);
         GLOBALS.port.last = global.port.number
         console.log(JSON.stringify(GLOBALS));
         GLOBALS.port.number = global.port.changeTo
