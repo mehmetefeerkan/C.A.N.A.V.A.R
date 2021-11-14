@@ -34,7 +34,8 @@ const moment = require('moment')
 logger.init(initSign, "Called 'moment'")
 const crypto = require('crypto')
 logger.init(initSign, "Called 'crypto'")
-const callerId = require('caller-id')
+const callerId = require('caller-id');
+const { await } = require('signale');
 logger.init(initSign, "Called 'caller-id'")
 let initLogID = crypto.randomBytes(5).toString('hex')
 
@@ -322,6 +323,36 @@ app.get('/globals', (req, res) => {
 })
 app.get('/machines/active', (req, res) => {
     res.send(200, activeMachines)
+})
+app.get('machines/testReachability/', (req, res) => {
+    let reachable = []
+    let unreachable = []
+    let timeout_ = 5
+    if (!isNaN(req.params.timeout)){
+        if (req.params.timeout <= 10)
+        timeout_ = parseInt(req.params.timeout)
+    }
+    for (let index = 0; index < clen; index++) {
+        console.log(`Asking ${activeMachines[index]}:${CURRENTPORT}`);
+        axios.get(`http://${activeMachines[index]}:${CURRENTPORT}/status`, {
+            timeout: timeout_ * 1000,
+        })
+            .then(res => {
+                reachable.push(activeMachines[index])
+            })
+            .catch(err => {
+                unreachable.push(activeMachines[index])
+            })
+    }
+    await delay(((timeout_ + 1) * 1000))
+    res.send(200, {
+        reachable: {
+            count: reachable.length, all: reachable
+        },
+        unreachable: {
+            count: unreachable.length, all: unreachable
+        },
+    })
 })
 
 app.post('/mgmt/changePort/:newPort', async (req, res) => {
