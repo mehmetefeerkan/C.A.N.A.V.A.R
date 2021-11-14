@@ -361,20 +361,23 @@ app.post('/mgmt/schedulePortChangeSeconds', async (req, res) => {
 })
 
 async function schedulePortChangeSeconds(secs, np, logid) {
+    globalLock = true;
     let inMinutes = secs || config.defaultPortReplenishTimeMin
     let newPort = np || await randomInt(1000, 9999)
     logger.info(logid, "Port change schedule requested.", `Scheduling change to port ${newPort} in ${inMinutes} minutes.`)
-    GLOBALS.port.changeAt = moment().add({ seconds: inMinutes }).unix() * 1000,
-        GLOBALS.port.changeTo = newPort
+    GLOBALS.port.changeAt = moment().add({ seconds: inMinutes }).unix() * 1000
+    GLOBALS.port.changeTo = newPort
     GLOBALS.port.changedLast = Date.now()
     axios.patch("http://localhost:3000/global", GLOBALS)
         .then(res => {
             logger.info(logid, "Port change schedule request.", `Successfuly scheduled to port ${newPort} in ${inMinutes} minutes..`)
             //console.log(res)
+            globalLock = false;
         })
         .catch(err => {
             logger.error(logid, "Port change schedule failed.", `${err.message}`)
             dbok.emit('false')
+            globalLock = false;
         })
 
 }
@@ -441,6 +444,7 @@ app.post('/mgmt/vcontrol', (req, res) => {
 })
 
 app.post('/mgmt/portElusion/', async (req, res) => {
+    globalLock = true;
     let newPort = await randomInt(1000, 9999)
     let currentPort = GLOBALS.port.number
     console.log(GLOBALS);
@@ -455,9 +459,11 @@ app.post('/mgmt/portElusion/', async (req, res) => {
         .then(res => {
             //console.log(res)
             schedulePortChange()
+            globalLock = false;
         })
         .catch(err => {
             dbok.emit('false')
+            globalLock = false;
         })
     res.send(200)
 })
@@ -482,6 +488,7 @@ function initiate() {
         .catch(err => {
             console.error(err);
         })
+        globalLock = true;
     axios.get("http://localhost:3000/global")
         .then(res => {
             CURRENTPORT = res.data.port.number
@@ -489,14 +496,17 @@ function initiate() {
                 //console.log("Scheduling port change.");
                 schedulePortChange()
             }
+            globalLock = false;
         })
         .catch(err => {
             console.error(err);
+            globalLock = false;
         })
     updateMasterSubdomain()
 }
 
 async function changePort(newport, logid) {
+    globalLock = true;
     logger.info(logid, "Changing port.", "Response for the current settings recieved.")
     GLOBALS.port.number = parseInt(newport)
     CURRENTPORT = parseInt(newport)
@@ -504,14 +514,17 @@ async function changePort(newport, logid) {
         .then(res => {
             logger.info(logid, "Changed port.", `Successfuly switched to port ${res.data.port.number}.`)
             //console.log(res)
+            globalLock = false;
         })
         .catch(err => {
             logger.error(logid, "Couldn't change port. Patch failed.", `${err.message}`)
             dbok.emit('false')
+            globalLock = false;
         })
 }
 
 async function schedulePortChange(mins, np, logid) {
+    globalLock = true;
     let inMinutes = mins || config.defaultPortReplenishTimeMin
     let newPort = np || await randomInt(1000, 9999)
     logger.info(logid, "Port change schedule requested.", `Scheduling change to port ${newPort} in ${inMinutes} minutes.`)
@@ -521,10 +534,12 @@ async function schedulePortChange(mins, np, logid) {
         .then(res => {
             logger.info(logid, "Port change schedule request.", `Successfuly scheduled to port ${newPort} in ${inMinutes} minutes..`)
             //console.log(res)
+            globalLock = false;
         })
         .catch(err => {
             logger.error(logid, "Port change schedule failed.", `${err.message}`)
             dbok.emit('false')
+            globalLock = false;
         })
 
 }
@@ -539,6 +554,7 @@ async function clock() {
 }
 
 function checkSelf() {
+    globalLock = true;
     axios.get("http://localhost:3000/global")
         .then(res => {
             console.log(GLOBALS);
@@ -558,14 +574,18 @@ function checkSelf() {
                     schedulePortChange()
                     console.log("repl");
                     console.log(GLOBALS);
+                    globalLock = false;
                     })
                     .catch(err => {
                         dbok.emit('false')
+                        globalLock = false;
                     })
             }
+            globalLock = false;
 
         })
         .catch(err => {
+            globalLock = false;
         })
 }
 
@@ -574,20 +594,21 @@ refreshGlobals()
 
 setInterval(function () {
     checkSelf()
-    console.log(activeMachines);
-    console.log(Date.now())
+    console.log("Self-check...");
 }, 10000)
 setInterval(function () {
     refreshGlobals()
 }, 1000)
 function refreshGlobals() {
-    axios.get("http://localhost:3000/global")
+    if (globalLock === false){
+        axios.get("http://localhost:3000/global")
         .then(res => {
             GLOBALS = res.data
         })
         .catch(err => {
             GLOBALS = GLOBALS
-        })
+        })    
+    }
 }
 
 function updateMasterSubdomain() {
