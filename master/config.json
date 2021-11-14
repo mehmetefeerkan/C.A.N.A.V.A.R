@@ -1,0 +1,6 @@
+{
+    "pk": ["foobar"],
+    "clockclock": 1000,
+    "defaultPortReplenishTimeMin": 480,
+    "log": true
+}

@@ -22,7 +22,7 @@ const fetch = require('isomorphic-fetch')
 logger.init(initSign, "Called 'isomorphic-fetch'")
 const axios = require('axios').default;
 logger.init(initSign, "Called 'axios'")
-const config = require('./config.json')
+let config = require('./config.json')
 logger.init(initSign, "Called config.")
 const EventEmitter = require('events')
 logger.init(initSign, "Called 'events'")
@@ -212,7 +212,10 @@ server.use(middlewares)
 server.use(router)
 server.listen(3000, () => {
     //console.log('JSON Server is running')
-    axios.get("http://localhost:3000/global", { timeout: 4000 })
+    axios.get("http://localhost:3000/settings")
+        .then(res => {
+            config = res.data
+            axios.get("http://localhost:3000/global", { timeout: 4000 })
         .then(res => {
             gn = res.data
             Globals.port.number           =             gn.port.number    
@@ -233,6 +236,11 @@ server.listen(3000, () => {
             dbok.emit('true')
             Globals = Globals
         })
+        })
+        .catch(err => {
+
+        })
+    
 })
 
 dbok.on('true', () => {
