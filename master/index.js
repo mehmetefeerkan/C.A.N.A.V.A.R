@@ -324,7 +324,7 @@ app.get('/globals', (req, res) => {
 app.get('/machines/active', (req, res) => {
     res.send(200, activeMachines)
 })
-app.get('/machines/testReachability/', async (req, res) => {
+app.get('/machines/testReachability/:timeout', async (req, res) => {
     let clen = activeMachines.length
     let reachable = []
     let unreachable = []
