@@ -86,10 +86,10 @@ Globals.set = (function (a) {
     let gset = {
         dump: function () {
             let bogusGlobals = Globals
-            bogusGlobals.set = {}
+            bogusGlobals.set = "nulla"
             axios.patch("http://localhost:3000/global", {bogusGlobals})
             .then(res => {
-                latestGlobalsDump = Data.now()
+                Globals.latestGlobalsDump = Date.now()
             })
             .catch(err => {
             })
