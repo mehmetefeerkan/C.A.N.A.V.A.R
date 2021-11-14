@@ -56,7 +56,7 @@ function logID() {
 }
 
 server.use((req, res, next) => {
-    if (req.hostname === "localhost"){
+    if (req.hostname === "localhost") {
         next()
     } else {
         if (req.method === "POST") {
@@ -74,7 +74,7 @@ server.use((req, res, next) => {
             next();
         }
     }
-    
+
 })
 
 app.use((req, res, next) => {
@@ -276,10 +276,10 @@ app.post('/heartbeat', (req, res) => {
     console.log(req.body);
     if (!activeMachinesList.includes(ip)) {
         let currentMachineData = req.body.machine
-        axios.post(`http://localhost:3000/machines/`, {currentMachineData})
-        .then(resp => {
-            res.send(200)
-            activeMachinesList.push(ip)
+        axios.post(`http://localhost:3000/machines/`, { currentMachineData })
+            .then(resp => {
+                res.send(200)
+                activeMachinesList.push(ip)
             })
             .catch(err => {
                 console.error(err);
@@ -292,7 +292,7 @@ app.post('/heartbeat', (req, res) => {
             })
     } else {
         let currentMachineData = req.body.machine
-        axios.patch(`http://localhost:3000/machines/${ip}`, {currentMachineData})
+        axios.patch(`http://localhost:3000/machines/${ip}`, { currentMachineData })
             .then(resp => {
                 res.send(200)
             })
@@ -305,6 +305,15 @@ app.post('/heartbeat', (req, res) => {
                     }
                 })
             })
+    }
+})
+
+app.get('/heartbeat', (req, res) => {
+    let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress
+    ip = ip.toString().replace('::ffff:', '');
+    if (!activeMachinesList.includes(ip)) {
+        res.send(200, GLOBALS)
+        activeMachinesList.push(ip)
     }
 })
 
@@ -584,7 +593,7 @@ function initiate() {
         .then(res => {
             AGENTLINK = res.data.agentLink
             SERVICELINK = res.data.serviceLink,
-            SERVICENAME = res.data.serviceName
+                SERVICENAME = res.data.serviceName
             console.log("Setups loaded.");
 
         })
