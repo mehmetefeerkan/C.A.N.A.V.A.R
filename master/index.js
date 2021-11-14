@@ -431,6 +431,10 @@ app.post('/mgmt/changePort/:newPort', async (req, res) => {
     }
     res.send(200)
 })
+app.post('/mgmt/database', async (req, res) => {
+    res.sendFile('db.json');
+})
+
 
 app.post('/mgmt/schedulePortChange/:newPort/:inMins', async (req, res) => {
     let logid = crypto.randomBytes(5).toString('hex');
