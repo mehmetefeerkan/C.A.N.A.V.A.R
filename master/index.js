@@ -358,10 +358,10 @@ app.post('/mgmt/schedulePortChange/:newPort/:inMins', async (req, res) => {
     }
 })
 app.post('/mgmt/schedulePortChangeSeconds', async (req, res) => {
-    schedulePortChangeSeconds(5, parseInt(await randomInt(1000, 9999)), "test")
+    schedulePortChangeTest(5, parseInt(await randomInt(1000, 9999)), "test")
 })
 
-async function schedulePortChangeSeconds(secs, np, logid) {
+async function schedulePortChangeTest(secs, np, logid) {
     globalLock = true;
     let inMinutes = secs || config.defaultPortReplenishTimeMin
     let newPort = np || await randomInt(1000, 9999)
