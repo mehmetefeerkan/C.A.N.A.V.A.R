@@ -232,9 +232,11 @@ server.listen(3000, () => {
             Globals.latestGlobalsWrite    =             gn.latestGlobalsWrite           
             Globals.latestGlobalsDump     =             gn.latestGlobalsDump          
             dbok.emit('true')
+            console.log(Globals);
         })
         .catch(err => {
             dbok.emit('true')
+            "GLOBALS ARE FUCKED."
             Globals = Globals
         })
         })
