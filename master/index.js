@@ -405,7 +405,7 @@ app.post('/heartbeat', (req, res) => {
         let currentMachineData = req.body.machine
         axios.post(`http://localhost:3000/machines/`, { id: ip, currentMachineData })
             .then(resp => {
-                res.send(200)
+                res.send(200, Globals)
                 activemachinesindb.push(ip)
             })
             .catch(err => {
@@ -421,7 +421,7 @@ app.post('/heartbeat', (req, res) => {
         let currentMachineData = req.body.machine
         axios.patch(`http://localhost:3000/machines/${ip}`, { currentMachineData })
             .then(resp => {
-                res.send(200)
+                res.send(200, Globals)
             })
             .catch(err => {
                 console.error(err);
