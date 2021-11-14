@@ -60,23 +60,6 @@ let systemInfo = {
     }
 }
 
-let GLOBALS = {
-    port: {
-        number: null,
-        changeAt: null,
-        changedLast: null,
-        changeTo: null,
-        last: null
-    },
-    restart: {
-        scheduled: false,
-        at: null,
-        last: null
-    },
-    lockdown: true,
-    accessKey: foobar
-
-}
 
 
 let GLOBALS = {
