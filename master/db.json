@@ -47,6 +47,13 @@
       "source": "https://raw.githubusercontent.com/mehmetefeerkan/C.A.N.A.V.A.R/master/slave/l7/source/scripts/hulk.py"
     }
   ],
+  "settings": {
+    "pk": ["foobar"],
+    "clockclock": 1000,
+    "defaultPortReplenishTimeMin": 480,
+    "log": true,
+    "globalsDumpIntervalMin": 2 
+},
   "global": {
     "port": {
       "number": 8973,
