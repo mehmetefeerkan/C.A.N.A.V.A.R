@@ -577,7 +577,7 @@ async function schedulePortChange(mins, np, logid) {
 
 }
 
-clock()
+//clock()
 
 async function clock() {
     let freq = config.clockclock
@@ -634,9 +634,11 @@ setInterval(function () {
     checkSelf()
     console.log("Self-check...");
 }, 10000)
+
 setInterval(function () {
     refreshGlobals()
-}, 1000)
+}, 5000)
+
 function refreshGlobals() {
     if (globalLock === false) {
         axios.get("http://localhost:3000/global")
