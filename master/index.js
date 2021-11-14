@@ -48,6 +48,7 @@ let SERVICENAME = null
 let SCRIPTS = null
 let CURRENTPORT = null
 let activeMachinesList = []
+let activeMachinesList_inDB = []
 let GLOBALS = {}
 const dbok = new EventEmitter()
 
@@ -274,12 +275,12 @@ app.post('/heartbeat', (req, res) => {
     let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress
     ip = ip.toString().replace('::ffff:', '');
     console.log(req.body);
-    if (!activeMachinesList.includes(ip)) {
+    if (!activeMachinesList_inDB.includes(ip)) {
         let currentMachineData = req.body.machine
         axios.post(`http://localhost:3000/machines/`, { currentMachineData })
             .then(resp => {
                 res.send(200)
-                activeMachinesList.push(ip)
+                activeMachinesList_inDB.push(ip)
             })
             .catch(err => {
                 console.error(err);
