@@ -123,8 +123,8 @@ server.listen(3000, () => {
 dbok.on('true', () => {
     if (!initiated) {
         logger.init(initSign, "Database started.")
-    } else {
         initiate()
+    } else {
         logger.info(logID(), "Database started", "Database started.")
     }
     //console.log('started')
