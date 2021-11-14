@@ -132,6 +132,8 @@ Globals.set = (function (a) {
     return gset
 })();
 
+console.log(Globals.set);
+
 
 
 
@@ -803,7 +805,7 @@ function initiate() {
 
     setInterval(() => {
         Globals.set.dump()
-    }, config.globalsDumpIntervalMin);
+    }, config.globalsDumpIntervalMin * 3600);
 
     initiated = true
 }
