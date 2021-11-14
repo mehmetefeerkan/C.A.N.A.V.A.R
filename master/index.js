@@ -87,7 +87,7 @@ Globals.set = (function (a) {
         dump: function () {
             let bogusGlobals = Globals
             bogusGlobals.set = {}
-            axios.get("http://localhost:3000/global", {bogusGlobals})
+            axios.patch("http://localhost:3000/global", {bogusGlobals})
             .then(res => {
                 latestGlobalsDump = Data.now()
             })
@@ -214,8 +214,8 @@ server.use(router)
 server.listen(3000, () => {
     //console.log('JSON Server is running')
     axios.get("http://localhost:3000/settings")
-        .then(res => {
-            config = res.data
+        .then(resx => {
+            config = resx.data
             axios.get("http://localhost:3000/global", { timeout: 4000 })
         .then(res => {
             gn = res.data
