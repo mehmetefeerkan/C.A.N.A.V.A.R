@@ -277,7 +277,7 @@ app.post('/heartbeat', (req, res) => {
     if (!activeMachinesList.includes(ip)) {
         let currentMachineData = req.body.machine
         axios.post(`http://localhost:3000/machines/`, {currentMachineData})
-        .then(res => {
+        .then(resp => {
             res.send(200)
             activeMachinesList.push(ip)
             })
@@ -293,7 +293,7 @@ app.post('/heartbeat', (req, res) => {
     } else {
         let currentMachineData = req.body.machine
         axios.patch(`http://localhost:3000/machines/${ip}`, {currentMachineData})
-            .then(res => {
+            .then(resp => {
                 res.send(200)
             })
             .catch(err => {
