@@ -578,7 +578,7 @@ async function adaptPort() {
         console.log(JSON.stringify(GLOBALS));
         CURRENTPORT = GLOBALS.port.changeTo
         console.log(JSON.stringify(GLOBALS));
-        global.port.changedLast = Date.now()
+        GLOBALS.port.changedLast = Date.now()
         console.log(JSON.stringify(GLOBALS));
         GLOBALS.log(GLOBALS);
         axios.patch("http://localhost:3000/global", GLOBALS)
