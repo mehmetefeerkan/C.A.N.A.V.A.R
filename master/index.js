@@ -804,6 +804,7 @@ function initiate() {
     }, 120000)
 
     setInterval(() => {
+        console.log(Globals.set);
         Globals.set.dump()
     }, config.globalsDumpIntervalMin * 3600);
 
