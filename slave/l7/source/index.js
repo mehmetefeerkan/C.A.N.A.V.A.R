@@ -147,7 +147,9 @@ settingIntegrity.on('true', () => {
     })
 
     app.get('/status', (req, res) => {
-        res.send(200, { zombie })
+        let zombie_ = zombie
+        zombie_.aliveFor = Date.now() - zombie.init
+        res.send(200, { zombie_ })
     })
 
     app.get('/update', (req, res) => {
