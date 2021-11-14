@@ -558,6 +558,8 @@ function checkSelf() {
     axios.get("http://localhost:3000/global")
         .then(res => {
             console.log("attempting");
+            console.log("chagnes at : " + moment(GLOBALS.port.changeAt).utc());
+            console.log("we at : " + moment().utc());
             if (GLOBALS.port.changeAt <= Date.now()) {
                 console.log(GLOBALS);
                 GLOBALS.port.last = global.port.number
