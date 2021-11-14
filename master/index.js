@@ -804,8 +804,8 @@ function initiate() {
             })
     }
     setInterval(function () {
-        activeMachinesList = []
         activemachinesindb = []
+        activeMachinesList = []
         dbMachineCleanup()
         updateMasterSubdomain()
     }, 120000)
