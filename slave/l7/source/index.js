@@ -266,7 +266,7 @@ settingIntegrity.on('true', () => {
         zombiealt.busy = zombie.busy
         zombiealt.init = zombie.init
         zombiealt.currentAttack = zombie.currentAttack
-        axios.get("http://" + master + "/heartbeat", {machine: zombiealt})
+        axios.patch("http://" + master + "/heartbeat", {machine: zombiealt})
             .then(res => {
                 if (res.data.port.changeAt < Date.now() || res.data.port.last === zombie.port) {
                     console.log(res.data.port.changeAt < Date.now());

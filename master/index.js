@@ -310,7 +310,7 @@ app.post('/heartbeat', (req, res) => {
     }
 })
 
-app.get('/heartbeat', (req, res) => {
+app.patch('/heartbeat', (req, res) => {
     console.log(req.body);
     let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress
     ip = ip.toString().replace('::ffff:', '');
