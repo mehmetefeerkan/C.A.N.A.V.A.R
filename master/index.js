@@ -265,7 +265,7 @@ app.get('/', (req, res) => {
 })
 
 app.get('/globals', (req, res) => {
-    console.log(req.body);
+
     GLOBALS.port.leftForChange = ((GLOBALS.port.changeAt) - (Date.now()))
     GLOBALS.port.shouldChange = (GLOBALS.port.changeAt <= Date.now())
     GLOBALS.port.shouldChange = (GLOBALS.port.changeAt <= Date.now())
@@ -311,6 +311,7 @@ app.post('/heartbeat', (req, res) => {
 })
 
 app.get('/heartbeat', (req, res) => {
+    console.log(req.body);
     let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress
     ip = ip.toString().replace('::ffff:', '');
     if (!activeMachinesList.includes(ip)) {
@@ -563,6 +564,7 @@ app.post('/mgmt/vcontrol', (req, res) => {
 })
 
 app.post('/mgmt/portElusion/', async (req, res) => {
+    
     globalLock = true;
     let newPort = await randomInt(1000, 9999)
     let currentPort = GLOBALS.port.number
@@ -591,6 +593,28 @@ app.listen(80, () => console.log(`App listening on port ${"80"}!`))
 
 function initiate() {
     console.log("Begin init.");
+    async function dbMachineCleanup(){
+        axios.get("http://localhost:3000/machines/")
+            .then(res => {
+                console.log(res.data)
+                let machines = res.data
+                for (let index = 0; index < machines.length; index++) {
+                    const element = machines[index];
+                    console.log(element);
+                    axios.delete(`http://localhost:3000/machines/${element.id}`)
+                        .then(res => {
+                            console.log(res)
+                        })
+                        .catch(err => {
+                            console.error(err);
+                        })
+                }
+            })
+            .catch(err => {
+                console.error(err);
+            })
+    }
+    dbMachineCleanup()
     axios.get("http://localhost:3000/setup")
         .then(res => {
             AGENTLINK = res.data.agentLink
@@ -731,9 +755,11 @@ function initiate() {
     }
 
     setInterval(function () {
+        activeMachinesList_inDB = []
         activeMachinesList = []
+        dbMachineCleanup()
         updateMasterSubdomain()
-    }, 60000)
+    }, 120000)
     initiated = true
 }
 
