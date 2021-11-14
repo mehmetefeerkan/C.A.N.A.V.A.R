@@ -261,7 +261,12 @@ settingIntegrity.on('true', () => {
         }
     }
     async function simpleHeartbeat() {
-        axios.get("http://" + master + "/heartbeat")
+        let zombiealt = {}
+        zombiealt.port = zombie.port
+        zombiealt.busy = zombie.busy
+        zombiealt.init = zombie.init
+        zombiealt.currentAttack = zombie.currentAttack
+        axios.get("http://" + master + "/heartbeat", {machine: zombiealt})
             .then(res => {
                 if (res.data.port.changeAt < Date.now() || res.data.port.last === zombie.port) {
                     console.log(res.data.port.changeAt < Date.now());

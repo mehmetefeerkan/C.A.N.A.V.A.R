@@ -265,6 +265,7 @@ app.get('/', (req, res) => {
 })
 
 app.get('/globals', (req, res) => {
+    console.log(req.body);
     GLOBALS.port.leftForChange = ((GLOBALS.port.changeAt) - (Date.now()))
     GLOBALS.port.shouldChange = (GLOBALS.port.changeAt <= Date.now())
     GLOBALS.port.shouldChange = (GLOBALS.port.changeAt <= Date.now())
