@@ -583,7 +583,8 @@ function initiate() {
         .then(res => {
             AGENTLINK = res.data.agentLink
             SERVICELINK = res.data.serviceLink,
-                SERVICENAME = res.data.serviceName
+            SERVICENAME = res.data.serviceName
+            console.log("Setups loaded.");
 
         })
         .catch(err => {
@@ -592,6 +593,7 @@ function initiate() {
     axios.get("http://localhost:3000/scripts")
         .then(res => {
             SCRIPTS = res.data
+            console.log("Scripts loaded.");
         })
         .catch(err => {
             console.error(err);
@@ -600,8 +602,10 @@ function initiate() {
     axios.get("http://localhost:3000/global")
         .then(res => {
             CURRENTPORT = res.data.port.number
+            console.log("Current port loaded.");
             if ((res.data).port.changeAt < moment().utc()) {
                 //console.log("Scheduling port change.");
+                console.log("Scheduled port change because of expired port on the database.");
                 schedulePortChange()
             }
             globalLock = false;
