@@ -77,11 +77,13 @@ let Globals = {
     },
     lockdown: true,
     accessKey: "foobar",
-    set: null,
     latestGlobalsWrite: null,
     latestGlobalsDump: null,
 }
-Globals.set = (function (a) {
+let Global = {
+    set = {}
+}
+Global.set = (function (a) {
     Globals.latestGlobalsWrite = Date.now()
     let gset = {
         dump: function () {
@@ -132,7 +134,7 @@ Globals.set = (function (a) {
     return gset
 })();
 
-console.log(Globals.set);
+console.log(Global.set);
 
 
 
@@ -626,9 +628,9 @@ async function schedulePortChangeTest(secs, np, logid) {
     let inMinutes = secs || config.defaultPortReplenishTimeMin
     let newPort = np || await randomInt(1000, 9999)
     logger.info(logid, "Port change schedule requested.", `Scheduling change to port ${newPort} in ${inMinutes} minutes.`)
-    Globals.set.port.changeAt(moment().add({ seconds: inMinutes }).unix() * 1000)
-    Globals.port.changeTo(newPort)
-    Globals.port.changedLast(Date.now())
+    Global.set.port.changeAt(moment().add({ seconds: inMinutes }).unix() * 1000)
+    Global.set.port.changeTo(newPort)
+    Global.set.port.changedLast(Date.now())
     globalLock = false;
 }
 
@@ -696,9 +698,9 @@ app.post('/mgmt/vcontrol', (req, res) => {
 app.post('/mgmt/portElusion/', async (req, res) => {
     globalLock = true;
     let newPort = await randomInt(1000, 9999)
-    Globals.set.port.last(Globals.port.number)
-    Globals.set.port.changedLast(Date.now())
-    Globals.set.port.number(newPort)
+    Global.set.port.last(Globals.port.number)
+    Global.set.port.changedLast(Date.now())
+    Global.set.port.number(newPort)
     res.send(200)
     globalLock = false;
 })
@@ -756,9 +758,9 @@ function initiate() {
     async function adaptPort() {
         console.log("attempting");
         if (Globals.port.changeAt <= Date.now()) {
-            Globals.set.port.last(Globals.port.number)
-            Globals.set.port.number(Globals.port.changeTo)
-            Globals.set.port.changedLast(Date.now())
+            Global.set.port.last(Globals.port.number)
+            Global.set.port.number(Globals.port.changeTo)
+            Global.set.port.changedLast(Date.now())
         }
     }
     adaptPort()
@@ -806,8 +808,8 @@ function initiate() {
     }, 120000)
 
     setInterval(() => {
-        console.log(Globals.set);
-        Globals.set.dump()
+        console.log(Global.set);
+        Global.set.dump()
     }, config.globalsDumpIntervalMin * 3600);
 
     initiated = true
@@ -816,9 +818,9 @@ function initiate() {
 async function changePort(newport, logid) {
     globalLock = true;
     logger.info(logid, "Changing port.", "Response for the current settings recieved.")
-    Globals.set.port.last(Globals.port.number)
-    Globals.set.port.number(newport)
-    Globals.set.port.changedLast(Date.now())
+    Global.set.port.last(Globals.port.number)
+    Global.set.port.number(newport)
+    Global.set.port.changedLast(Date.now())
     logger.info(logid, "Changed port.", `Successfuly switched to port ${Globals.port.number}.`)
     globalLock = false;
 }
@@ -828,8 +830,8 @@ async function schedulePortChange(mins, np, logid) {
     let inMinutes = mins || config.defaultPortReplenishTimeMin
     let newPort = np || await randomInt(1000, 9999)
     logger.info(logid, "Port change schedule requested.", `Scheduling change to port ${newPort} in ${inMinutes} minutes.`)
-    Globals.set.port.changeAt(moment().add({ minutes: inMinutes }).unix() * 1000)
-    Globals.set.port.changeTo(newPort)
+    Global.set.port.changeAt(moment().add({ minutes: inMinutes }).unix() * 1000)
+    Global.set.port.changeTo(newPort)
     logger.info(logid, "Port change schedule request.", `Successfuly scheduled to port ${newPort} in ${inMinutes} minutes..`)
     globalLock = false;
 
