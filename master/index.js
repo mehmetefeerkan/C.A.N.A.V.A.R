@@ -278,13 +278,13 @@ app.post('/heartbeat', (req, res) => {
             activeMachinesList.push(ip)
             })
             .catch(err => {
-                console.error(err);
+                /*console.error(err);
                 res.send(500, {
                     error: {
                         message: "DATABASE_ERR",
                         innerResponse: err.message
                     }
-                })
+                })*/
             })
     } else {
         let currentMachineData = req.body.machine
