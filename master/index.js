@@ -561,7 +561,7 @@ function checkSelf() {
             console.log("attempting");
             if (GLOBALS.port.changeAt <= Date.now()) {
                 console.log("GEÇMİŞ AMINA KOYAYIM")
-                console.log(GLOBALS);
+                console.log(JSON.stringify(GLOBALS));
                 GLOBALS.port.last = global.port.number
                 console.log(GLOBALS);
                 GLOBALS.port.number = global.port.changeTo
