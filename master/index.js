@@ -99,7 +99,15 @@ server.use(middlewares)
 server.use(router)
 server.listen(3000, () => {
     //console.log('JSON Server is running')
-    dbok.emit('true')
+    axios.get("http://localhost:3000/global", {timeout: 4000})
+    .then(res => {
+        GLOBALS = res.data
+        dbok.emit('true')
+    })
+    .catch(err => {
+        dbok.emit('true')
+        GLOBALS = GLOBALS
+    })
     initiate()
 })
 
