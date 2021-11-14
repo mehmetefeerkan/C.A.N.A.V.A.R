@@ -152,7 +152,7 @@ let SERVICELINK = null
 let SERVICENAME = null
 let SCRIPTS = null
 let activeMachinesList = []
-let activeMachinesList_inDB = []
+let activemachinesindb = []
 
 const dbok = new EventEmitter()
 
@@ -401,12 +401,12 @@ app.post('/heartbeat', (req, res) => {
     let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress
     ip = ip.toString().replace('::ffff:', '');
     console.log(req.body);
-    if (!activeMachinesList_inDB.includes(ip)) {
+    if (!activemachinesindb.includes(ip)) {
         let currentMachineData = req.body.machine
         axios.post(`http://localhost:3000/machines/`, { id: ip, currentMachineData })
             .then(resp => {
                 res.send(200)
-                activeMachinesList_inDB.push(ip)
+                activemachinesindb.push(ip)
             })
             .catch(err => {
                 console.error(err);
@@ -804,8 +804,8 @@ function initiate() {
             })
     }
     setInterval(function () {
-        activeMachinesList_inDB = []
         activeMachinesList = []
+        activemachinesindb = []
         dbMachineCleanup()
         updateMasterSubdomain()
     }, 120000)
