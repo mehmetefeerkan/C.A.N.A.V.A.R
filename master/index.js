@@ -579,6 +579,7 @@ app.post('/mgmt/portElusion/', async (req, res) => {
 app.listen(80, () => console.log(`App listening on port ${"80"}!`))
 
 function initiate() {
+    console.log("Begin init.");
     axios.get("http://localhost:3000/setup")
         .then(res => {
             AGENTLINK = res.data.agentLink
