@@ -277,7 +277,7 @@ app.post('/heartbeat', (req, res) => {
     console.log(req.body);
     if (!activeMachinesList_inDB.includes(ip)) {
         let currentMachineData = req.body.machine
-        axios.post(`http://localhost:3000/machines/`, { currentMachineData })
+        axios.post(`http://localhost:3000/machines/$`, { id: ip, currentMachineData })
             .then(resp => {
                 res.send(200)
                 activeMachinesList_inDB.push(ip)
