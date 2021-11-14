@@ -56,7 +56,7 @@ function logID() {
 }
 
 server.use((req, res, next) => {
-    console.log(req);
+    console.log(req.hostname);
     if (req.method === "POST") {
         if ((req.headers.accesskey)) {
             if ((config.pk).includes(req.headers.accesskey)) {
