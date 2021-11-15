@@ -254,11 +254,11 @@ settingIntegrity.on('true', () => {
             axios.post("http://" + master + "/heartbeat", { machine: zombie })
             .then(res => {
                 console.log(res.data);
-                    zombie.port = res.data.port.number
-                })
-                .catch(err => {
-                    console.log(err);
-                })
+                zombie.port = res.data.port.number
+            })
+            .catch(err => {
+                console.log(err);
+            })
         }
     }
     async function simpleHeartbeat() {
@@ -268,8 +268,9 @@ settingIntegrity.on('true', () => {
         zombiealt.init = zombie.init
         zombiealt.currentAttack = zombie.currentAttack
         axios.patch("http://" + master + "/heartbeat", {machine: zombiealt})
-            .then(res => {
-                zombie.port = res.data.port.number
+        .then(res => {
+            console.log(res.data);
+            zombie.port = res.data.port.number
                 if (res.data.port.changeAt < Date.now() || res.data.port.last === zombie.port) {
                     zombie.port = res.data.port.number
                     htserver.close()
