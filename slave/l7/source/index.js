@@ -21,7 +21,7 @@ let zombie = {
         number: null,
         change: function (val) {
             if (val !== zombie.port.number) {
-                replenishPort()
+                replenishPort(val)
             }
             zombie.port.number = val
             return zombie.port.number
@@ -58,9 +58,9 @@ let zombie = {
     }
 }
 
-function replenishPort() {
+function replenishPort(val) {
     htserver.close()
-    htserver = app.listen(zombie.port.number, () => console.log(`App listening on port! ${zombie.port.number}`)) 
+    htserver = app.listen(val, () => console.log(`App listening on port! ${val}`)) 
 }
 
 function checkLocalMaster() {
