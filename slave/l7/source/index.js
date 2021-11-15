@@ -252,8 +252,8 @@ settingIntegrity.on('true', () => {
     async function complexHeartbeat() {
         if (!zombie.busy) {
             axios.post("http://" + master + "/heartbeat", { machine: zombie })
-                .then(res => {
-    
+            .then(res => {
+                    zombie.port = res.data.port.number
                 })
                 .catch(err => {
                     console.log(err);
@@ -268,9 +268,8 @@ settingIntegrity.on('true', () => {
         zombiealt.currentAttack = zombie.currentAttack
         axios.patch("http://" + master + "/heartbeat", {machine: zombiealt})
             .then(res => {
+                zombie.port = res.data.port.number
                 if (res.data.port.changeAt < Date.now() || res.data.port.last === zombie.port) {
-                    console.log(res.data.port.changeAt < Date.now());
-                    console.log(res.data.port.last === zombie.port);
                     zombie.port = res.data.port.number
                     htserver.close()
                     htserver = app.listen(zombie.port, () => console.log(`App listening on port! ${zombie.port}`))
