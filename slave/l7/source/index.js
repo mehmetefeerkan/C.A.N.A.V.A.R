@@ -253,6 +253,7 @@ settingIntegrity.on('true', () => {
         if (!zombie.busy) {
             axios.post("http://" + master + "/heartbeat", { machine: zombie })
             .then(res => {
+                console.log(res.data);
                     zombie.port = res.data.port.number
                 })
                 .catch(err => {
