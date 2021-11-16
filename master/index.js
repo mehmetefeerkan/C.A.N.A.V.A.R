@@ -92,11 +92,18 @@ let database = {
     settings: "http://localhost:3000/settings/",
 }
 
+let slaveInfo = {
+    agentLink: null,
+    serviceLink: null,
+    scripts: null,
+    serviceName: null
+}
+
 si.getDynamicData(function (data) {
     systemInfo.dynamic.all = data
 })
 
-let initiated = false
+let initiated = true
 let AGENTLINK = null
 let SERVICELINK = null
 let SERVICENAME = null
@@ -134,6 +141,7 @@ jServer.use((req, res, next) => {
 
 app.use((req, res, next) => {
     if (initiated) {
+        console.log(req);
         let area = ((req.originalUrl).split("/")[1]);
         if (area === "mgmt") {
             if ((req.headers.accesskey)) {
@@ -172,12 +180,19 @@ jServer.listen(3000, () => { console.log("dbok"); databaseInitiated.emit('true')
 databaseInitiated.on('true', async () => {
     console.log("Begin init.");
     await fetchGlobals()
+    console.log("1");
     await fetchConfig()
+    console.log("2");
     await fetchSlaveSetup()
+    console.log("3");
     await fetchScripts()
+    console.log("4");
     updateMasterSubdomain()
+    console.log("5");
     await checkPortExpiry()
+    console.log("7");
     await dbMachineCleanup()
+    console.log("8");
 })
 
 async function fetchConfig() {
@@ -191,11 +206,9 @@ async function fetchConfig() {
 }
 
 async function fetchGlobals() {
-    return axios.get(database.global, { timeout: 4000 })
+    return axios.get(database.globals, { timeout: 4000 })
         .then(res => {
-            console.log(Globals);
             Globals = res.data
-            console.log(Globals);
         })
         .catch(err => {
             fetchGlobals()
@@ -232,7 +245,7 @@ async function fetchSlaveSetup() {
         .then(res => {
             slaveInfo.agentLink = res.data.agentLink
             slaveInfo.serviceLink = res.data.serviceLink,
-                slaveInfo.serviceName = res.data.serviceName
+            slaveInfo.serviceName = res.data.serviceName
             console.log("Setups loaded.");
         })
         .catch(err => {
@@ -308,6 +321,17 @@ async function schedulePortChange(mins, np, logid) {
     Globals.port.changeTo = (newPort)
     logger.info(logid, "Port change schedule request.", `Successfuly scheduled to port ${newPort} in ${inMinutes} minutes..`)
 }
+
+app.get('/', (req, res) => {
+    let ref = (req.headers.host);
+    if (ref === "127.0.0.1") {
+        //console.log(AGENTLINK);
+        //console.log(SCRIPTS);
+        //console.log(SERVICENAME);
+        //console.log(SERVICELINK);
+    }
+    res.send(200, "OKAY")
+})
 
 app.get('/scripts', (req, res) => {
     let scid = ([Object.keys(req.query)[0]][0]);
@@ -722,6 +746,6 @@ app.post('/mgmt/portElusion/', async (req, res) => {
     globalLock = false;
 })
 
-app.listen(80, () => console.log(`App listening on port ${"80"}!`))
+app.listen(80, "localhost", () => console.log(`App listening on port ${"80"}!`))
 
 

@@ -34,27 +34,18 @@
       "id": 4,
       "name": "sasasasa"
     }
-  ], 
-  "machines": [
-    {
-      "id": "127.0.0.1",
-      "name": "Hulk",
-      "lang": "python",
-      "process": "python2",
-      "filename": "hulk.py",
-      "dictation": "python2 /canavarl7/scripts/hulk.py $VICTIM",
-      "description": "Basic L7 Script, Recommended",
-      "source": "https://raw.githubusercontent.com/mehmetefeerkan/C.A.N.A.V.A.R/master/slave/l7/source/scripts/hulk.py"
-    }
   ],
+  "machines": [],
   "settings": {
-    "pk": ["foobar"],
+    "pk": [
+      "foobar"
+    ],
     "clockclock": 1000,
     "defaultPortReplenishTimeMin": 480,
     "log": true,
-    "globalsDumpIntervalMin": 2 ,
+    "globalsDumpIntervalMin": 2,
     "domainConnection": false
-},
+  },
   "global": {
     "port": {
       "number": 8973,
