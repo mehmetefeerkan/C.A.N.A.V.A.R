@@ -1,5 +1,4 @@
-const config = require('./config.json')
-const activeLogging = config.log
+const activeLogging = true
 function consoleLog(d) { if (activeLogging) { console.log(d) } }
 const {Signale} = require('signale');
 let timestampType = "UTC"

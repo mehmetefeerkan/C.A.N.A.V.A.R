@@ -1,7 +1,7 @@
 //npm install express json-server isomorphic-fetch axios events delay random-number-csprng moment crypto
-process.on('uncaughtException', function(err) {
+process.on('uncaughtException', function (err) {
     console.log('Caught exception: ' + err);
-  });
+});
 process.chdir(__dirname)
 const dotenv_ = require('dotenv')
 const dotenv = dotenv_.config().parsed
@@ -16,7 +16,7 @@ const app = express()
 logger.init(initSign, "Initiated 'express'")
 const jsonServer = require('json-server')
 logger.init(initSign, "Called 'json-server'")
-const server = jsonServer.create()
+const jServer = jsonServer.create()
 logger.init(initSign, "Created 'json-server'")
 const router = jsonServer.router('db.json')
 logger.init(initSign, "Called 'json-server' router")
@@ -79,68 +79,18 @@ let Globals = {
         last: null
     },
     lockdown: true,
-    accessKey: "foobar",
+    accessKey: null,
     latestGlobalsWrite: null,
     latestGlobalsDump: null,
 }
-let Global = {
-    set: {}
+
+let database = {
+    globals: "http://localhost:3000/global/",
+    setup: "http://localhost:3000/setup/",
+    scripts: "http://localhost:3000/scripts/",
+    machines: "http://localhost:3000/machines/",
+    settings: "http://localhost:3000/settings/",
 }
-Global.set = (function (a) {
-    Globals.latestGlobalsWrite = Date.now()
-    let gset = {
-        dump: function () {
-            let bogusGlobals = Globals
-            bogusGlobals.set = "nulla"
-            axios.patch("http://localhost:3000/global", {bogusGlobals})
-            .then(res => {
-                Globals.latestGlobalsDump = Date.now()
-            })
-            .catch(err => {
-            })
-        },
-        port: {
-            number: function (a) {
-                return (Globals.port.number = a)
-            },
-            changeAt: function (a) {
-                return (Globals.port.changeAt = a)
-            },
-            changedLast: function (a) {
-                return (Globals.port.changedLast = a)
-            },
-            changeTo: function (a) {
-                return (Globals.port.changeTo = a)
-            },
-            last: function (a) {
-                return (Globals.port.last = a)
-            },
-        },
-        restart: {
-            scheduled: function (a) {
-                return (Globals.restart.scheduled = a)
-            },
-            at: function (a) {
-                return (Globals.restart.at = a)
-            },
-            last: function (a) {
-                return (Globals.restart.last = a)
-            },
-        },
-        lockdown: function (a) {
-            return (Globals.lockdown = a)
-        },
-        accessKey: function (a) {
-            return (Globals.accessKey = a)
-        },
-    }
-    return gset
-})();
-
-console.log(Global.set);
-
-
-
 
 si.getDynamicData(function (data) {
     systemInfo.dynamic.all = data
@@ -154,13 +104,13 @@ let SCRIPTS = null
 let activeMachinesList = []
 let activemachinesindb = []
 
-const dbok = new EventEmitter()
+const databaseInitiated = new EventEmitter()
 
 function logID() {
     return crypto.randomBytes(5).toString('hex');
 }
 
-server.use((req, res, next) => {
+jServer.use((req, res, next) => {
     if (req.hostname === "localhost") {
         next()
     } else {
@@ -214,68 +164,156 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(bodyParser.raw());
 
-server.use(middlewares)
-server.use(router)
-server.listen(3000, () => {
-    //console.log('JSON Server is running')
-    axios.get("http://localhost:3000/settings")
+jServer.use(middlewares)
+jServer.use(router)
+
+jServer.listen(3000, () => { console.log("dbok"); databaseInitiated.emit('true') })
+
+databaseInitiated.on('true', async () => {
+    console.log("Begin init.");
+    await fetchGlobals()
+    await fetchConfig()
+    await fetchSlaveSetup()
+    await fetchScripts()
+    updateMasterSubdomain()
+    await checkPortExpiry()
+    await dbMachineCleanup()
+})
+
+async function fetchConfig() {
+    return axios.get(database.settings)
         .then(resx => {
             config = resx.data
-            axios.get("http://localhost:3000/global", { timeout: 4000 })
+        })
+        .catch(err => {
+
+        })
+}
+
+async function fetchGlobals() {
+    return axios.get(database.global, { timeout: 4000 })
         .then(res => {
-            gn = res.data
-            Globals.port.number           =             gn.port.number    
-            Globals.port.changeAt         =             gn.port.changeAt      
-            Globals.port.changedLast      =             gn.port.changedLast         
-            Globals.port.changeTo         =             gn.port.changeTo      
-            Globals.port.last             =             gn.port.last  
-            Globals.restart.scheduled     =             gn.restart.scheduled          
-            Globals.restart.at            =             gn.restart.at   
-            Globals.restart.last          =             gn.restart.last     
-            Globals.lockdown              =             gn.lockdown 
-            Globals.accessKey             =             gn.accessKey  
-            Globals.latestGlobalsWrite    =             gn.latestGlobalsWrite           
-            Globals.latestGlobalsDump     =             gn.latestGlobalsDump          
-            dbok.emit('true')
+            console.log(Globals);
+            Globals = res.data
             console.log(Globals);
         })
         .catch(err => {
-            dbok.emit('true')
-            "GLOBALS ARE FUCKED."
-            Globals = Globals
+            fetchGlobals()
         })
+}
+
+async function dbMachineCleanup() {
+    return axios.get(database.machines)
+        .then(async (res) => {
+            let machines = res.data
+            async function delall() {
+                for (let index = 0; index < machines.length; index++) {
+                    const element = machines[index];
+                    await axios.delete(`${database.machines}${element.id}`)
+                        .then(res => {
+                            console.log("del");
+                            //console.log(res)
+                        })
+                        .catch(err => {
+                            console.error(err);
+                        })
+                }
+            }
+            await delall()
+            return
         })
         .catch(err => {
-
+            console.error(err);
         })
-    
-})
+}
 
-dbok.on('true', () => {
-    if (!initiated) {
-        logger.init(initSign, "Database started.")
-        initiate()
-    } else {
-        logger.info(logID(), "Database started", "Database started.")
-    }
-    //console.log('started')
+async function fetchSlaveSetup() {
+    return axios.get(database.setup)
+        .then(res => {
+            slaveInfo.agentLink = res.data.agentLink
+            slaveInfo.serviceLink = res.data.serviceLink,
+                slaveInfo.serviceName = res.data.serviceName
+            console.log("Setups loaded.");
+        })
+        .catch(err => {
+            console.error(err);
+        })
+}
 
-})
-dbok.on('false', () => {
-    //console.log('FUCK')
-    if (!initiated) {
-        logger.init(initSign, "Database couldn't start.")
+async function fetchScripts() {
+    return axios.get(database.scripts)
+        .then(res => {
+            slaveInfo.scripts = res.data
+            console.log("Scripts loaded.");
+        })
+        .catch(err => {
+            console.error(err);
+        })
+}
+
+function updateMasterSubdomain() {
+    let traceid = logID()
+    if (config.domainConnection) {
+        logger.info(traceid, "Updating Master Subdomain", `Begun`)
+        axios.get("http://icanhazip.com")
+            .then(res => {
+                console.log(res.data)
+                let currentIP = res.data
+                logger.info(traceid, "Updating Master Subdomain", `Current IP recieved as ${currentIP}`)
+                var options = {
+                    method: 'PUT',
+                    url: `https://api.cloudflare.com/client/v4/zones/${dotenv.CFZI}/dns_records/${dotenv.CFDR}`,
+                    headers: { Authorization: 'Bearer ' + dotenv.CFPT, 'Content-Type': 'application/json' },
+                    data: { type: 'A', name: 'master.api.canavar.licentia.xyz', content: currentIP, ttl: 1, proxied: true }
+                };
+                axios.request(options).then(function (response) {
+                    console.log(response.data);
+                    logger.info(traceid, "Updated Master Subdomain", `Updated the subdomain to IP ${currentIP}`)
+                }).catch(function (error) {
+                    logger.info(traceid, "Couldn't Update Master Subdomain", `Tried to update the subdomain to IP ${currentIP}`)
+                    console.error(error);
+                });
+            })
+            .catch(err => {
+                console.error(err);
+                logger.info(traceid, "Couldn't Update Master Subdomain", `Error was : ${err}`)
+            })
     } else {
-        logger.error(logID(), "Database error", "Database error.")
-        process.exit(0)
+        logger.info(traceid, "Updating Master Subdomain", `Aborted because config prevents automatic subdomain heartbeats.`)
     }
-})
+}
+
+async function checkPortExpiry() {
+    console.log(Globals);
+    if (Globals.port.changeAt <= Date.now()) {
+        Globals.port.last = (Globals.port.number)
+        Globals.port.number = (Globals.port.changeTo)
+        Globals.port.changedLast = (Date.now())
+    }
+}
+
+async function changePort(newport, logid) {
+    logger.info = (logid, "Changing port.", "Response for the current settings recieved.")
+    Globals.port.last = (Globals.port.number)
+    Globals.port.number = (newport)
+    Globals.port.changedLast = (Date.now())
+    logger.info(logid, "Changed port.", `Successfuly switched to port ${Globals.port.number}.`)
+}
+
+async function schedulePortChange(mins, np, logid) {
+    let inMinutes = mins || config.defaultPortReplenishTimeMin
+    let newPort = np || await randomInt(1000, 9999)
+    logger.info(logid, "Port change schedule requested.", `Scheduling change to port ${newPort} in ${inMinutes} minutes.`)
+    Globals.port.changeAt = (moment().add({ minutes: inMinutes }).unix() * 1000)
+    Globals.port.changeTo = (newPort)
+    logger.info(logid, "Port change schedule request.", `Successfuly scheduled to port ${newPort} in ${inMinutes} minutes..`)
+}
 
 app.get('/scripts', (req, res) => {
     let scid = ([Object.keys(req.query)[0]][0]);
     //console.log(scid);
     if (scid === undefined) {
-        axios.get("http://localhost:3000/scripts")
+        axios.get(database.scripts)
             .then(response => {
                 res.send(200, response.data)
             })
@@ -283,7 +321,7 @@ app.get('/scripts', (req, res) => {
                 console.error(err);
             })
     } else {
-        axios.get("http://localhost:3000/scripts/" + scid)
+        axios.get(database.scripts + scid)
             .then(response => {
                 res.send(200, response.data)
             })
@@ -303,7 +341,7 @@ app.get('/setup', (req, res) => {
     let detid = ([Object.keys(req.query)[1]][0]);
     //console.log(scid, detid);
     if (scid === undefined) {
-        axios.get("http://localhost:3000/setup")
+        axios.get(database.setup)
             .then(response => {
                 res.send(200, response.data)
             })
@@ -311,7 +349,7 @@ app.get('/setup', (req, res) => {
                 console.error(err);
             })
     } else {
-        axios.get("http://localhost:3000/setup/")
+        axios.get(database.setup)
             .then(response => {
                 let requested = (response.data)[scid]
                 if (requested.includes("$")) {
@@ -379,16 +417,6 @@ app.get('/setup', (req, res) => {
 
 })
 
-app.get('/', (req, res) => {
-    let ref = (req.headers.host);
-    if (ref === "127.0.0.1") {
-        //console.log(AGENTLINK);
-        //console.log(SCRIPTS);
-        //console.log(SERVICENAME);
-        //console.log(SERVICELINK);
-    }
-    res.send(200, "OKAY")
-})
 
 app.get('/globals', (req, res) => {
 
@@ -403,7 +431,7 @@ app.post('/heartbeat', (req, res) => {
     console.log(req.body);
     if (!activemachinesindb.includes(ip)) {
         let currentMachineData = req.body.machine
-        axios.post(`http://localhost:3000/machines/`, { id: ip, currentMachineData })
+        axios.post(database.settings, { id: ip, currentMachineData })
             .then(resp => {
                 res.send(200, Globals)
                 activemachinesindb.push(ip)
@@ -419,7 +447,7 @@ app.post('/heartbeat', (req, res) => {
             })
     } else {
         let currentMachineData = req.body.machine
-        axios.patch(`http://localhost:3000/machines/${ip}`, { currentMachineData })
+        axios.patch(`${database.machines}${ip}`, { currentMachineData })
             .then(resp => {
                 res.send(200, Globals)
             })
@@ -577,10 +605,10 @@ app.post('/mgmt/changePort/:newPort', async (req, res) => {
     }
     res.send(200)
 })
+
 app.post('/mgmt/database', async (req, res) => {
     res.sendFile(__dirname + '/db.json');
 })
-
 
 app.post('/mgmt/schedulePortChange/:newPort/:inMins', async (req, res) => {
     let logid = crypto.randomBytes(5).toString('hex');
@@ -622,20 +650,6 @@ app.get('/mgmt/systemInfo', async (req, res) => {
         })
     })
 })
-app.post('/mgmt/schedulePortChangeSeconds', async (req, res) => {
-    schedulePortChangeTest(5, parseInt(await randomInt(1000, 9999)), "test")
-})
-
-async function schedulePortChangeTest(secs, np, logid) {
-    globalLock = true;
-    let inMinutes = secs || config.defaultPortReplenishTimeMin
-    let newPort = np || await randomInt(1000, 9999)
-    logger.info(logid, "Port change schedule requested.", `Scheduling change to port ${newPort} in ${inMinutes} minutes.`)
-    Global.set.port.changeAt(moment().add({ seconds: inMinutes }).unix() * 1000)
-    Global.set.port.changeTo(newPort)
-    Global.set.port.changedLast(Date.now())
-    globalLock = false;
-}
 
 app.post('/mgmt/update', (req, res) => {
     res.send(200)
@@ -652,7 +666,7 @@ app.post('/mgmt/update', (req, res) => {
         }
     })
 })
-//auto-update & keep latest machines in json-server cache for faster magazine change?
+
 app.post('/mgmt/vcontrol', (req, res) => {
     exec("cd /C.A.N.A.V.A.R/ ; git show -1 --stat  ", (err, stdout, stderr) => {
         if (err) {
@@ -709,138 +723,5 @@ app.post('/mgmt/portElusion/', async (req, res) => {
 })
 
 app.listen(80, () => console.log(`App listening on port ${"80"}!`))
-
-function initiate() {
-    console.log("Begin init.");
-    async function dbMachineCleanup() {
-        axios.get("http://localhost:3000/machines/")
-            .then(res => {
-                console.log(res.data)
-                let machines = res.data
-                for (let index = 0; index < machines.length; index++) {
-                    const element = machines[index];
-                    console.log(element);
-                    axios.delete(`http://localhost:3000/machines/${element.id}`)
-                        .then(res => {
-                            console.log(res)
-                        })
-                        .catch(err => {
-                            console.error(err);
-                        })
-                }
-            })
-            .catch(err => {
-                console.error(err);
-            })
-    }
-    dbMachineCleanup()
-    axios.get("http://localhost:3000/setup")
-        .then(res => {
-            AGENTLINK = res.data.agentLink
-            SERVICELINK = res.data.serviceLink,
-                SERVICENAME = res.data.serviceName
-            console.log("Setups loaded.");
-
-        })
-        .catch(err => {
-            console.error(err);
-        })
-    axios.get("http://localhost:3000/scripts")
-        .then(res => {
-            SCRIPTS = res.data
-            console.log("Scripts loaded.");
-        })
-        .catch(err => {
-            console.error(err);
-        })
-    if (Globals.port.changeAt < moment().utc()) {
-        console.log("Scheduled port change because of the expired port on the database.");
-        schedulePortChange()
-    }
-    updateMasterSubdomain()
-    async function adaptPort() {
-        console.log("attempting");
-        if (Globals.port.changeAt <= Date.now()) {
-            Global.set.port.last(Globals.port.number)
-            Global.set.port.number(Globals.port.changeTo)
-            Global.set.port.changedLast(Date.now())
-        }
-    }
-    adaptPort()
-    function updateMasterSubdomain() {
-        let traceid = logID()
-        logger.info(traceid, "Updating Master Subdomain", `Begun`)
-        axios.get("http://icanhazip.com")
-            .then(res => {
-                console.log(res.data)
-                let currentIP = res.data
-                logger.info(traceid, "Updating Master Subdomain", `Current IP recieved as ${currentIP}`)
-                var options = {
-                    method: 'PUT',
-                    url: `https://api.cloudflare.com/client/v4/zones/${dotenv.CFZI}/dns_records/${dotenv.CFDR}`,
-                    headers: {
-                        Authorization: 'Bearer ' + dotenv.CFPT,
-                        'Content-Type': 'application/json'
-                    },
-                    data: {
-                        type: 'A',
-                        name: 'master.api.canavar.licentia.xyz',
-                        content: currentIP,
-                        ttl: 1,
-                        proxied: true
-                    }
-                };
-                axios.request(options).then(function (response) {
-                    console.log(response.data);
-                    logger.info(traceid, "Updated Master Subdomain", `Updated the subdomain to IP ${currentIP}`)
-                }).catch(function (error) {
-                    logger.info(traceid, "Couldn't Update Master Subdomain", `Tried to update the subdomain to IP ${currentIP}`)
-                    console.error(error);
-                });
-            })
-            .catch(err => {
-                console.error(err);
-                logger.info(traceid, "Couldn't Update Master Subdomain", `Error was : ${err}`)
-            })
-    }
-    setInterval(function () {
-        activemachinesindb = []
-        activeMachinesList = []
-        dbMachineCleanup()
-        updateMasterSubdomain()
-    }, 120000)
-
-    setInterval(() => {
-        console.log(Global.set);
-        Global.set.dump()
-    }, config.globalsDumpIntervalMin * 3600);
-
-    initiated = true
-}
-
-async function changePort(newport, logid) {
-    globalLock = true;
-    logger.info(logid, "Changing port.", "Response for the current settings recieved.")
-    Global.set.port.last(Globals.port.number)
-    Global.set.port.number(newport)
-    Global.set.port.changedLast(Date.now())
-    logger.info(logid, "Changed port.", `Successfuly switched to port ${Globals.port.number}.`)
-    globalLock = false;
-}
-
-async function schedulePortChange(mins, np, logid) {
-    globalLock = true;
-    let inMinutes = mins || config.defaultPortReplenishTimeMin
-    let newPort = np || await randomInt(1000, 9999)
-    logger.info(logid, "Port change schedule requested.", `Scheduling change to port ${newPort} in ${inMinutes} minutes.`)
-    Global.set.port.changeAt(moment().add({ minutes: inMinutes }).unix() * 1000)
-    Global.set.port.changeTo(newPort)
-    logger.info(logid, "Port change schedule request.", `Successfuly scheduled to port ${newPort} in ${inMinutes} minutes..`)
-    globalLock = false;
-
-
-}
-
-//clock()
 
 

@@ -52,7 +52,8 @@
     "clockclock": 1000,
     "defaultPortReplenishTimeMin": 480,
     "log": true,
-    "globalsDumpIntervalMin": 2 
+    "globalsDumpIntervalMin": 2 ,
+    "domainConnection": false
 },
   "global": {
     "port": {
