@@ -96,7 +96,24 @@ let slaveInfo = {
     agentLink: null,
     serviceLink: null,
     scripts: null,
-    serviceName: null
+    serviceName: null,
+}
+
+let Machines = {
+    all: {
+
+    },
+    has: function(mid) {
+        if (Machines[mid]) {
+            return true
+        }
+    },
+    dump: function(mid) {
+        
+    },
+    clean: function() {
+        Machines.all = {}
+    }
 }
 
 si.getDynamicData(function (data) {
@@ -141,7 +158,6 @@ jServer.use((req, res, next) => {
 
 app.use((req, res, next) => {
     if (initiated) {
-        console.log(req);
         let area = ((req.originalUrl).split("/")[1]);
         if (area === "mgmt") {
             if ((req.headers.accesskey)) {
@@ -452,10 +468,18 @@ app.get('/globals', (req, res) => {
 app.post('/heartbeat', (req, res) => {
     let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress
     ip = ip.toString().replace('::ffff:', '');
-    console.log(req.body);
-    if (!activemachinesindb.includes(ip)) {
+    //console.log(req.body);
+    let machine = req.body.machine
+    Machines.all[ip] = {
+        id: ip,
+        machine
+    }
+    console.log(Machines.all[ip]);
+    res.send(200, Globals)
+
+    /*if (!activemachinesindb.includes(ip)) {
         let currentMachineData = req.body.machine
-        axios.post(database.settings, { id: ip, currentMachineData })
+        axios.post(database.machines, { id: ip, currentMachineData })
             .then(resp => {
                 res.send(200, Globals)
                 activemachinesindb.push(ip)
@@ -484,17 +508,20 @@ app.post('/heartbeat', (req, res) => {
                     }
                 })
             })
-    }
+    }*/
 })
 
 app.patch('/heartbeat', (req, res) => {
-    console.log(req.body);
     let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress
     ip = ip.toString().replace('::ffff:', '');
-    if (!activeMachinesList.includes(ip)) {
-        res.send(200, Globals)
-        activeMachinesList.push(ip)
+    //console.log(req.body);
+    let machine = req.body.machine
+    Machines.all[ip] = {
+        id: ip,
+        machine
     }
+    console.log(Machines.all[ip]);
+    res.send(200, Globals)
 })
 
 app.get('/all/installscript/:scriptid', (req, res) => {
