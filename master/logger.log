@@ -2682,3 +2682,117 @@
 2021-11-17T19:47:26+03:00 [1637167645994] INIT : Called 'caller-id'
 -
 2021-11-17T19:47:26+03:00 [92c224500b] INFO : Updating Master Subdomain | Aborted because config prevents automatic subdomain heartbeats.
+-
+2021-11-17T19:55:15+03:00 [1637168115193] INIT : Initiating...
+2021-11-17T19:55:15+03:00 [1637168115193] INIT : Environment variables recieved as : {"CFPT":"NNsVE_tNyU68FX-YvZd7xAA0Ufk6W_wojtbv9toR","CFZI":"377ef5d31219f8a62cb501fdb7b23242","CFDR":"dd56cac4cd2fab807b2d39af952b142d"}
+2021-11-17T19:55:15+03:00 [1637168115193] INIT : Called 'express'
+2021-11-17T19:55:15+03:00 [1637168115193] INIT : Initiated 'express'
+2021-11-17T19:55:15+03:00 [1637168115193] INIT : Called 'json-server'
+2021-11-17T19:55:15+03:00 [1637168115193] INIT : Created 'json-server'
+2021-11-17T19:55:15+03:00 [1637168115193] INIT : Called 'json-server' router
+2021-11-17T19:55:15+03:00 [1637168115193] INIT : Called 'isomorphic-fetch'
+2021-11-17T19:55:15+03:00 [1637168115193] INIT : Called 'axios'
+2021-11-17T19:55:15+03:00 [1637168115193] INIT : Called config.
+2021-11-17T19:55:15+03:00 [1637168115193] INIT : Called 'events'
+2021-11-17T19:55:15+03:00 [1637168115193] INIT : Called 'delay'
+2021-11-17T19:55:15+03:00 [1637168115193] INIT : Called 'random-number-csprng'
+2021-11-17T19:55:15+03:00 [1637168115193] INIT : Called 'moment'
+2021-11-17T19:55:15+03:00 [1637168115193] INIT : Called 'caller-id'
+2021-11-17T19:55:15+03:00 [1637168115193] INIT : Called 'crypto'
+-
+2021-11-17T19:55:16+03:00 [a6049c10cd] INFO : Updating Master Subdomain | Aborted because config prevents automatic subdomain heartbeats.
+-
+2021-11-17T19:56:18+03:00 [1637168178146] INIT : Initiating...
+2021-11-17T19:56:18+03:00 [1637168178146] INIT : Environment variables recieved as : {"CFPT":"NNsVE_tNyU68FX-YvZd7xAA0Ufk6W_wojtbv9toR","CFZI":"377ef5d31219f8a62cb501fdb7b23242","CFDR":"dd56cac4cd2fab807b2d39af952b142d"}
+2021-11-17T19:56:18+03:00 [1637168178146] INIT : Called 'express'
+2021-11-17T19:56:18+03:00 [1637168178146] INIT : Initiated 'express'
+2021-11-17T19:56:18+03:00 [1637168178146] INIT : Called 'json-server'
+2021-11-17T19:56:18+03:00 [1637168178146] INIT : Created 'json-server'
+2021-11-17T19:56:18+03:00 [1637168178146] INIT : Called 'json-server' router
+2021-11-17T19:56:18+03:00 [1637168178146] INIT : Called 'isomorphic-fetch'
+2021-11-17T19:56:18+03:00 [1637168178146] INIT : Called 'axios'
+2021-11-17T19:56:18+03:00 [1637168178146] INIT : Called config.
+2021-11-17T19:56:18+03:00 [1637168178146] INIT : Called 'events'
+2021-11-17T19:56:18+03:00 [1637168178146] INIT : Called 'delay'
+2021-11-17T19:56:18+03:00 [1637168178146] INIT : Called 'random-number-csprng'
+2021-11-17T19:56:18+03:00 [1637168178146] INIT : Called 'moment'
+2021-11-17T19:56:18+03:00 [1637168178146] INIT : Called 'crypto'
+2021-11-17T19:56:18+03:00 [1637168178146] INIT : Called 'caller-id'
+-
+2021-11-17T19:56:19+03:00 [ef5b1f8bf7] INFO : Updating Master Subdomain | Aborted because config prevents automatic subdomain heartbeats.
+-
+2021-11-17T19:57:34+03:00 [1637168254142] INIT : Initiating...
+2021-11-17T19:57:34+03:00 [1637168254142] INIT : Environment variables recieved as : {"CFPT":"NNsVE_tNyU68FX-YvZd7xAA0Ufk6W_wojtbv9toR","CFZI":"377ef5d31219f8a62cb501fdb7b23242","CFDR":"dd56cac4cd2fab807b2d39af952b142d"}
+2021-11-17T19:57:34+03:00 [1637168254142] INIT : Called 'json-server'
+2021-11-17T19:57:34+03:00 [1637168254142] INIT : Called 'express'
+2021-11-17T19:57:34+03:00 [1637168254142] INIT : Initiated 'express'
+2021-11-17T19:57:34+03:00 [1637168254142] INIT : Created 'json-server'
+2021-11-17T19:57:34+03:00 [1637168254142] INIT : Called 'isomorphic-fetch'
+2021-11-17T19:57:34+03:00 [1637168254142] INIT : Called 'json-server' router
+2021-11-17T19:57:34+03:00 [1637168254142] INIT : Called 'events'
+2021-11-17T19:57:34+03:00 [1637168254142] INIT : Called config.
+2021-11-17T19:57:34+03:00 [1637168254142] INIT : Called 'random-number-csprng'
+2021-11-17T19:57:34+03:00 [1637168254142] INIT : Called 'moment'
+2021-11-17T19:57:34+03:00 [1637168254142] INIT : Called 'crypto'
+2021-11-17T19:57:34+03:00 [1637168254142] INIT : Called 'caller-id'
+2021-11-17T19:57:34+03:00 [1637168254142] INIT : Called 'delay'
+2021-11-17T19:57:34+03:00 [1637168254142] INIT : Called 'axios'
+-
+2021-11-17T19:57:35+03:00 [d1b7c52b9f] INFO : Updating Master Subdomain | Aborted because config prevents automatic subdomain heartbeats.
+-
+2021-11-17T19:58:02+03:00 [1637168281988] INIT : Initiating...
+2021-11-17T19:58:02+03:00 [1637168281988] INIT : Environment variables recieved as : {"CFPT":"NNsVE_tNyU68FX-YvZd7xAA0Ufk6W_wojtbv9toR","CFZI":"377ef5d31219f8a62cb501fdb7b23242","CFDR":"dd56cac4cd2fab807b2d39af952b142d"}
+2021-11-17T19:58:02+03:00 [1637168281988] INIT : Called 'express'
+2021-11-17T19:58:02+03:00 [1637168281988] INIT : Called 'json-server'
+2021-11-17T19:58:02+03:00 [1637168281988] INIT : Created 'json-server'
+2021-11-17T19:58:02+03:00 [1637168281988] INIT : Called 'json-server' router
+2021-11-17T19:58:02+03:00 [1637168281988] INIT : Called 'isomorphic-fetch'
+2021-11-17T19:58:02+03:00 [1637168281988] INIT : Called 'axios'
+2021-11-17T19:58:02+03:00 [1637168281988] INIT : Called config.
+2021-11-17T19:58:02+03:00 [1637168281988] INIT : Called 'events'
+2021-11-17T19:58:02+03:00 [1637168281988] INIT : Called 'delay'
+2021-11-17T19:58:02+03:00 [1637168281988] INIT : Called 'random-number-csprng'
+2021-11-17T19:58:02+03:00 [1637168281988] INIT : Called 'moment'
+2021-11-17T19:58:02+03:00 [1637168281988] INIT : Called 'crypto'
+2021-11-17T19:58:02+03:00 [1637168281988] INIT : Called 'caller-id'
+2021-11-17T19:58:02+03:00 [1637168281988] INIT : Initiated 'express'
+-
+2021-11-17T19:58:02+03:00 [e9d337e306] INFO : Updating Master Subdomain | Aborted because config prevents automatic subdomain heartbeats.
+-
+2021-11-17T19:58:31+03:00 [1637168311522] INIT : Initiating...
+2021-11-17T19:58:31+03:00 [1637168311522] INIT : Environment variables recieved as : {"CFPT":"NNsVE_tNyU68FX-YvZd7xAA0Ufk6W_wojtbv9toR","CFZI":"377ef5d31219f8a62cb501fdb7b23242","CFDR":"dd56cac4cd2fab807b2d39af952b142d"}
+2021-11-17T19:58:31+03:00 [1637168311522] INIT : Initiated 'express'
+2021-11-17T19:58:31+03:00 [1637168311522] INIT : Called 'json-server'
+2021-11-17T19:58:31+03:00 [1637168311522] INIT : Created 'json-server'
+2021-11-17T19:58:31+03:00 [1637168311522] INIT : Called 'isomorphic-fetch'
+2021-11-17T19:58:31+03:00 [1637168311522] INIT : Called 'json-server' router
+2021-11-17T19:58:31+03:00 [1637168311522] INIT : Called 'express'
+2021-11-17T19:58:31+03:00 [1637168311522] INIT : Called 'axios'
+2021-11-17T19:58:31+03:00 [1637168311522] INIT : Called 'events'
+2021-11-17T19:58:31+03:00 [1637168311522] INIT : Called 'random-number-csprng'
+2021-11-17T19:58:31+03:00 [1637168311522] INIT : Called 'delay'
+2021-11-17T19:58:31+03:00 [1637168311522] INIT : Called 'moment'
+2021-11-17T19:58:31+03:00 [1637168311522] INIT : Called 'crypto'
+2021-11-17T19:58:31+03:00 [1637168311522] INIT : Called 'caller-id'
+2021-11-17T19:58:31+03:00 [1637168311522] INIT : Called config.
+-
+2021-11-17T19:58:32+03:00 [cb7cf12430] INFO : Updating Master Subdomain | Aborted because config prevents automatic subdomain heartbeats.
+-
+2021-11-17T19:59:05+03:00 [1637168345010] INIT : Initiating...
+2021-11-17T19:59:05+03:00 [1637168345010] INIT : Environment variables recieved as : {"CFPT":"NNsVE_tNyU68FX-YvZd7xAA0Ufk6W_wojtbv9toR","CFZI":"377ef5d31219f8a62cb501fdb7b23242","CFDR":"dd56cac4cd2fab807b2d39af952b142d"}
+2021-11-17T19:59:05+03:00 [1637168345010] INIT : Initiated 'express'
+2021-11-17T19:59:05+03:00 [1637168345010] INIT : Called 'express'
+2021-11-17T19:59:05+03:00 [1637168345010] INIT : Called 'json-server'
+2021-11-17T19:59:05+03:00 [1637168345010] INIT : Created 'json-server'
+2021-11-17T19:59:05+03:00 [1637168345010] INIT : Called 'json-server' router
+2021-11-17T19:59:05+03:00 [1637168345010] INIT : Called 'isomorphic-fetch'
+2021-11-17T19:59:05+03:00 [1637168345010] INIT : Called 'events'
+2021-11-17T19:59:05+03:00 [1637168345010] INIT : Called 'delay'
+2021-11-17T19:59:05+03:00 [1637168345010] INIT : Called 'random-number-csprng'
+2021-11-17T19:59:05+03:00 [1637168345010] INIT : Called 'moment'
+2021-11-17T19:59:05+03:00 [1637168345010] INIT : Called 'caller-id'
+2021-11-17T19:59:05+03:00 [1637168345010] INIT : Called 'axios'
+2021-11-17T19:59:05+03:00 [1637168345010] INIT : Called 'crypto'
+2021-11-17T19:59:05+03:00 [1637168345010] INIT : Called config.
+-
+2021-11-17T19:59:06+03:00 [415e23626e] INFO : Updating Master Subdomain | Aborted because config prevents automatic subdomain heartbeats.

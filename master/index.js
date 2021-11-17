@@ -574,6 +574,11 @@ app.get('/all/update', (req, res) => {
 app.get('/machines/', (req, res) => {
     res.send(200, Machines.all)
 })
+app.get('/machines/list', (req, res) => {
+    let macar = []
+    for (const key in Machines.all) { macar.push(Machines.all[key]) }
+    res.send(200, macar)
+})
 app.get('/machines/:machid', (req, res) => {
     res.send(200, Machines.get([req.params.machid]))
 })
