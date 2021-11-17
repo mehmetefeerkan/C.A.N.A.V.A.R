@@ -64,7 +64,9 @@ function replenishPort(val) {
 }
 
 function checkLocalMaster() {
+    let fails = 0
     let localMaster = db.get('master.ip')
+    if (fails > 5) { localMaster = null }
     if ((localMaster === null) || (localMaster === "null") || (localMaster === "") || localMaster === undefined) {
         console.log("No local master found. Falling back to disaster API.");
         axios.get("http://disaster.api.canavar.licentia.xyz")
@@ -77,6 +79,7 @@ function checkLocalMaster() {
             })
             .catch(err => {
                 console.error(err);
+                fails++
                 checkLocalMaster()
             })
     } else {
