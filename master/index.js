@@ -163,7 +163,6 @@ jServer.use((req, res, next) => {
 })
 
 app.use((req, res, next) => {
-    console.log(req);
     if (initiated) {
         let area = ((req.originalUrl).split("/")[1]);
         if (area === "mgmt") {
@@ -203,19 +202,13 @@ jServer.listen(3000, () => { console.log("dbok"); databaseInitiated.emit('true')
 databaseInitiated.on('true', async () => {
     console.log("Begin init.");
     await fetchGlobals()
-    console.log("1");
     await fetchConfig()
-    console.log("2");
     await fetchSlaveSetup()
-    console.log("3");
     await fetchScripts()
-    console.log("4");
     updateMasterSubdomain()
-    console.log("5");
     await checkPortExpiry()
-    console.log("7");
     await dbMachineCleanup()
-    console.log("8");
+    console.log("End init.");
 })
 
 async function fetchConfig() {
@@ -504,7 +497,6 @@ app.patch('/heartbeat', (req, res) => {
         machine
     }
     res.send(200, Globals)
-    console.log(req.body);
 })
 
 app.get('/all/installscript/:scriptid', (req, res) => {
