@@ -517,7 +517,7 @@ app.get('/all/installscript/:scriptid', async (req, res) => {
     for (let index = 0; index < (machines.all).length; index++) {
         let currentMachine = ((machines.all)[index])
         machines.asked.push(currentMachine)
-        axios.get(`http://${activeMachinesList[index]}:${Globals.port.number}/installScript/${req.params.scriptid}`)
+        axios.get(`http://${currentMachine.id}:${Globals.port.number}/installScript/${req.params.scriptid}`)
             .then(res => {
                 console.log(res.data)
                 machines.responded.push(currentMachine)
