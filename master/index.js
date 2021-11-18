@@ -163,6 +163,7 @@ jServer.use((req, res, next) => {
 })
 
 app.use((req, res, next) => {
+    console.log(req);
     if (initiated) {
         let area = ((req.originalUrl).split("/")[1]);
         if (area === "mgmt") {
