@@ -354,7 +354,7 @@ app.get('/scripts', (req, res) => {
     if (scid === undefined) {
         res.send(200, slaveInfo.scripts)
     } else {
-        let allScripts = slaveInfo.script
+        let allScripts = slaveInfo.scripts
         for (let index = 0; index < allScripts.length; index++) {
             const cScript = allScripts[index];
             if (cScript.id === scid) {
