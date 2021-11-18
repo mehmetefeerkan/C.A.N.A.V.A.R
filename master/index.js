@@ -390,8 +390,8 @@ app.get('/setup', (req, res) => {
                 res.send(200, (requested))
             } else if (scid === "download_script") {
                 let searchSatisfied = false
-                for (let index = 0; index < SCRIPTS.length; index++) {
-                    const element = SCRIPTS[index];
+                for (let index = 0; index < (slaveInfo.scripts).length; index++) {
+                    const element = (slaveInfo.scripts)[index];
                     if (element.id === detid) {
                         //console.log(element);
                         searchSatisfied = true
@@ -507,17 +507,28 @@ app.patch('/heartbeat', (req, res) => {
 })
 
 app.get('/all/installscript/:scriptid', (req, res) => {
-    for (let index = 0; index < Machines.count(); index++) {
+    //axios.get(`http://${activeMachinesList[index]}:${Globals.port.number}/installScript/${req.params.scriptid}`)
+    let machines = {
+        all: Machines.list(),
+        asked: [],
+        responded: [],
+        busy: []
+    }
+    for (let index = 0; index < (machines.all).length; index++) {
+        let currentMachine = ((machines.all)[index])
+        machines.asked.push(currentMachine)
         axios.get(`http://${activeMachinesList[index]}:${Globals.port.number}/installScript/${req.params.scriptid}`)
             .then(res => {
                 console.log(res.data)
+                machines.responded.push(currentMachine)
             })
             .catch(err => {
-                console.error(err);
+                console.error(err.response.data);
+                machines.busy.push(currentMachine)
             })
-
     }
-    res.send(200, "OKAY")
+    await delay(3000)
+    res.send(200, { asked: machines.asked.length, responded: machines.responded.length, busy: machines.responded.busy, data: machines })
 })
 app.get('/all/npminstall/:module', (req, res) => {
     for (let index = 0; index < Machines.count(); index++) {
