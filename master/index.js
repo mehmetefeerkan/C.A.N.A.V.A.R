@@ -740,6 +740,6 @@ app.post('/mgmt/portElusion/', async (req, res) => {
     globalLock = false;
 })
 
-app.listen(80, "localhost", () => console.log(`App listening on port ${"80"}!`))
+app.listen(80, () => console.log(`App listening on port ${"80"}!`))
 
 
