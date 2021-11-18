@@ -38,7 +38,6 @@ logger.init(initSign, "Called 'moment'")
 const crypto = require('crypto')
 logger.init(initSign, "Called 'crypto'")
 const callerId = require('caller-id');
-const { await } = require('signale');
 logger.init(initSign, "Called 'caller-id'")
 const bodyParser = require('body-parser');
 const si = require('systeminformation');
@@ -446,7 +445,6 @@ app.get('/setup', (req, res) => {
 
 
 app.get('/globals', (req, res) => {
-
     Globals.port.leftForChange = ((Globals.port.changeAt) - (Date.now()))
     Globals.port.shouldChange = (Globals.port.changeAt <= Date.now())
     res.send(200, Globals)
@@ -505,6 +503,7 @@ app.patch('/heartbeat', (req, res) => {
         machine
     }
     res.send(200, Globals)
+    console.log(req.body);
 })
 
 app.get('/all/installscript/:scriptid', (req, res) => {
