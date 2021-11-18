@@ -506,7 +506,7 @@ app.patch('/heartbeat', (req, res) => {
     res.send(200, Globals)
 })
 
-app.get('/all/installscript/:scriptid', (req, res) => {
+app.get('/all/installscript/:scriptid', async (req, res) => {
     //axios.get(`http://${activeMachinesList[index]}:${Globals.port.number}/installScript/${req.params.scriptid}`)
     let machines = {
         all: Machines.list(),
