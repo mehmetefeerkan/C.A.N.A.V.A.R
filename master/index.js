@@ -1,4 +1,4 @@
-//npm install express json-server isomorphic-fetch axios events delay random-number-csprng moment crypto dotenv
+//npm install express json-server axios events delay random-number-csprng moment crypto dotenv
 process.on('uncaughtException', function (err) {
     console.log('Caught exception: ' + err);
 });
@@ -9,7 +9,6 @@ const { exec } = require('child_process');
 let initSign = `${Date.now()}`
 const logger = require('./logger.js').log
 logger.init(initSign, "Initiating...")
-//logger.init(initSign, "Environment variables recieved as : " + JSON.stringify(dotenv))
 const express = require('express')
 logger.init(initSign, "Called 'express'")
 const app = express()
@@ -21,12 +20,8 @@ logger.init(initSign, "Created 'json-server'")
 const router = jsonServer.router('db.json')
 logger.init(initSign, "Called 'json-server' router")
 const middlewares = jsonServer.defaults()
-const fetch = require('isomorphic-fetch')
-logger.init(initSign, "Called 'isomorphic-fetch'")
 const axios = require('axios').default;
 logger.init(initSign, "Called 'axios'")
-let config = require('./config.json')
-logger.init(initSign, "Called config.")
 const EventEmitter = require('events')
 logger.init(initSign, "Called 'events'")
 const delay = require('delay')
@@ -37,11 +32,18 @@ const moment = require('moment')
 logger.init(initSign, "Called 'moment'")
 const crypto = require('crypto')
 logger.init(initSign, "Called 'crypto'")
-const callerId = require('caller-id');
 logger.init(initSign, "Called 'caller-id'")
 const bodyParser = require('body-parser');
 const si = require('systeminformation');
 
+let config = {
+    pk: [
+      "foobar"
+    ],
+    log: null,
+    dumpTimerDelay: null,
+    domainConnection: null
+}
 
 let systemInfo = {
     static: null,
@@ -97,7 +99,7 @@ let slaveInfo = {
 }
 
 let stats = {
-    
+
 }
 
 let Machines = {
@@ -215,60 +217,60 @@ databaseInitiated.on('true', async () => {
 })
 
 let fetch = {
-    globals: async function(){
+    globals: async function () {
         return axios.get(database.globals, { timeout: 4000 })
-        .then(res => {
-            Globals = res.data
-        })
-        .catch(err => {
-            fetch.globals()
-        })
+            .then(res => {
+                Globals = res.data
+            })
+            .catch(err => {
+                fetch.globals()
+            })
     },
-    config: async function() {
+    config: async function () {
         return axios.get(database.settings)
-        .then(resx => {
-            config = resx.data
-        })
-        .catch(err => {
-            fetch.config()
-        })
+            .then(resx => {
+                config = resx.data
+            })
+            .catch(err => {
+                fetch.config()
+            })
     },
-    slaveSetup: async function() {
+    slaveSetup: async function () {
         return axios.get(database.setup)
-        .then(res => {
-            slaveInfo.setup = res.data
-            for (const key in slaveInfo.setup) {
-                let k = key
-                let aa = (stitchSetupLines(k, (slaveInfo.setup)))
-                if (aa) {
-                    ((slaveInfo.setup)[k]) = aa
+            .then(res => {
+                slaveInfo.setup = res.data
+                for (const key in slaveInfo.setup) {
+                    let k = key
+                    let aa = (stitchSetupLines(k, (slaveInfo.setup)))
+                    if (aa) {
+                        ((slaveInfo.setup)[k]) = aa
+                    }
                 }
-            }
-            console.log("Setups loaded.");
-        })
-        .catch(err => {
-            console.error(err);
-        })
+                console.log("Setups loaded.");
+            })
+            .catch(err => {
+                console.error(err);
+            })
     },
-    scripts: async function() {
+    scripts: async function () {
         return axios.get(database.scripts)
-        .then(res => {
-            slaveInfo.scripts = res.data
-            console.log("Scripts loaded.");
-        })
-        .catch(err => {
-            console.error(err);
-        })
+            .then(res => {
+                slaveInfo.scripts = res.data
+                console.log("Scripts loaded.");
+            })
+            .catch(err => {
+                console.error(err);
+            })
     },
-    stats: async function() {
+    stats: async function () {
         return axios.get(database.stats)
-        .then(res => {
-            stats = res.data
-            console.log("Scripts loaded.");
-        })
-        .catch(err => {
-            console.error(err);
-        })
+            .then(res => {
+                stats = res.data
+                console.log("Scripts loaded.");
+            })
+            .catch(err => {
+                console.error(err);
+            })
     }
 }
 
@@ -673,7 +675,8 @@ app.post('/mgmt/vcontrol', (req, res) => {
 
 app.listen(80, () => console.log(`App listening on port ${"80"}!`))
 
-
-setInterval(() => {
+let dumpTimer = setTimeout(() => {
     dumpGlobals()
-}, 30000);
+    dumpStats()
+}, config.dumpTimerDelay);
+
