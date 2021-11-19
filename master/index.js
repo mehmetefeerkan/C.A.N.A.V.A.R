@@ -35,6 +35,7 @@ logger.init(initSign, "Called 'crypto'")
 logger.init(initSign, "Called 'caller-id'")
 const bodyParser = require('body-parser');
 const si = require('systeminformation');
+const { await } = require('signale');
 
 let config = {
     pk: [
@@ -439,6 +440,11 @@ function stitchSetupLines(asked, setup_) {
 }
 
 app.get('/globals', (req, res) => {
+    res.send(200, Globals)
+})
+
+app.get('/globalsd', async (req, res) => {
+    await delay(3000)
     res.send(200, Globals)
 })
 
