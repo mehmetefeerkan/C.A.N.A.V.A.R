@@ -286,9 +286,6 @@ let fetch = {
     }
 }
 
-
-
-
 async function dbMachineCleanup() {
     return axios.get(database.machines)
         .then(async (res) => {
