@@ -137,7 +137,7 @@ si.getDynamicData(function (data) {
     systemInfo.dynamic.all = data
 })
 
-let initiated = true
+let initiated = false
 
 const databaseInitiated = new EventEmitter()
 
@@ -213,6 +213,7 @@ databaseInitiated.on('true', async () => {
     await fetch.stats()
     updateMasterSubdomain()
     await dbMachineCleanup()
+    initiated = true
     console.log("End init.");
 })
 
