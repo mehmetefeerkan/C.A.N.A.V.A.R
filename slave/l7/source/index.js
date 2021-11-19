@@ -264,6 +264,7 @@ settingIntegrity.on('true', () => {
         }
     }
     async function simpleHeartbeat() {
+        console.log("HEARTBEAT");
         let zombiealt = {}
         zombiealt.port = zombie.port.number
         zombiealt.busy = zombie.busy

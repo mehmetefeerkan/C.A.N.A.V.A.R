@@ -1,3 +1,4 @@
 node_modules/
 .env
 redirect.js
+slave/l7/source/db.js
