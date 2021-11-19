@@ -66,8 +66,6 @@ let systemInfo = {
     }
 }
 
-
-
 let Globals = {
     restart: {
         scheduled: false,
@@ -514,6 +512,7 @@ app.get('/all/npminstall/:module', async (req, res) => {
 })
 
 app.get('/all/attack/:methodID/:victim/:time/:attackID', async (req, res) => {
+    stats.totalAttacks = stats.totalAttacks + 1
     let machines = {
         all: Machines.list(),
         asked: [],
