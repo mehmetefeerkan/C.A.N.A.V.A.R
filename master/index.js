@@ -214,11 +214,15 @@ databaseInitiated.on('true', async () => {
     updateMasterSubdomain()
     await dbMachineCleanup()
     initiated = true
-    dumpTimer = setTimeout(() => {
+
+    let dumpLoop = function(){
         dumpGlobals()
         dumpStats()
-    }, config.dumpTimerDelay);
+        dumpTimer = setTimeout(dumpLoop, config.dumpTimerDelay);
+    }
     
+    dumpLoop()
+
     console.log("End init.");
 })
 
