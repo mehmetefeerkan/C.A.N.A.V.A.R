@@ -633,7 +633,7 @@ app.get('/mgmt/systemInfo', async (req, res) => {
 
 app.post('/mgmt/update', (req, res) => {
     res.send(200)
-    exec("cd /C.A.N.A.V.A.R/ ; git stash; git stash drop; git pull; cd master ; npm install; pm2 restart 0", (err, stdout, stderr) => {
+    exec("cd /C.A.N.A.V.A.R/ ; git stash; git stash drop; git pull; cd master ; npm install;", (err, stdout, stderr) => {
         if (err) {
             //some err occurred
             console.error(err)
