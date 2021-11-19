@@ -467,12 +467,10 @@ app.patch('/heartbeat', (req, res) => {
     let machine = req.body.machine
     console.log(machine);
     if (Machines.all[ip]) {
-        /*
-        Machines.all[ip].port = machine.port
-        Machines.all[ip].busy = machine.busy
-        Machines.all[ip].init = machine.init
-        Machines.all[ip].currentAttack = machine.currentAttack
-        */
+        Machines.all[ip].machine.port = machine.port
+        Machines.all[ip].machine.busy = machine.busy
+        Machines.all[ip].machine.init = machine.init
+        Machines.all[ip].machine.currentAttack = machine.currentAttack
     } else {
         Machines.all[ip] = {
             id: ip,
