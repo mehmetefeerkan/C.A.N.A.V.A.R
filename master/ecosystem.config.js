@@ -2,7 +2,7 @@ module.exports = {
     apps : [{
       name   : "canavarmaster",
       script : "./index.js",
-      watch: ["server", "client"],
+      watch: ["server", "client", "index.js"],
       ignore_watch : ["db.json"],
     }]
   }
