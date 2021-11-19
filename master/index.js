@@ -452,6 +452,8 @@ app.patch('/heartbeat', (req, res) => {
     if (Machines.all[ip]) {
         console.log(ip + " already exists");
         console.log(machine);
+        console.log((Machines.all[ip]).port)
+        console.log((Machines.all[ip]))
         (Machines.all[ip]).port = machine.port
         (Machines.all[ip]).busy = machine.busy
         (Machines.all[ip]).init = machine.init
