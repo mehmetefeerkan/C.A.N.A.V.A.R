@@ -162,7 +162,7 @@ settingIntegrity.on('true', () => {
                             startAttack((script), req.params.victim, req.params.time)
                             zombie.currentAttack.victim = req.params.victim
                             zombie.currentAttack.timer = req.params.time
-                            zombie.currentAttack.id = req.params.id
+                            zombie.currentAttack.id = req.params.attackID
                             zombie.currentAttack.method = script
                             zombie.currentAttack.doneby = moment().add({ seconds: timelimit }).unix() * 1000
                             zombie.busy = true

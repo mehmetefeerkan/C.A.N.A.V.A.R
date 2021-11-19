@@ -1,4 +1,4 @@
-//npm install express json-server isomorphic-fetch axios events delay random-number-csprng moment crypto
+//npm install express json-server isomorphic-fetch axios events delay random-number-csprng moment crypto dotenv
 process.on('uncaughtException', function (err) {
     console.log('Caught exception: ' + err);
 });
@@ -9,7 +9,7 @@ const { exec } = require('child_process');
 let initSign = `${Date.now()}`
 const logger = require('./logger.js').log
 logger.init(initSign, "Initiating...")
-logger.init(initSign, "Environment variables recieved as : " + JSON.stringify(dotenv))
+//logger.init(initSign, "Environment variables recieved as : " + JSON.stringify(dotenv))
 const express = require('express')
 logger.init(initSign, "Called 'express'")
 const app = express()
