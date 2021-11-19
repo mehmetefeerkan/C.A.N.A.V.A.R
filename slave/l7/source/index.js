@@ -292,7 +292,7 @@ settingIntegrity.on('true', () => {
     }
     
     var refreshMasterTimer = function() {
-        refreshMaster()
+        fetchSettings()
         setTimeout(refreshMasterTimer, zombie.config.refreshTimerDelay);
     }
     
@@ -308,7 +308,7 @@ settingIntegrity.on('true', () => {
     
     simpleHeartbeatTimer()
     complexHeartbeatTimer()
-    //refreshMasterTimer()
+    refreshMasterTimer()
     siDataPlacementTimer()
     detailedDynamicDataPlacementTimer()
     
