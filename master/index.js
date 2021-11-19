@@ -365,7 +365,6 @@ function updateMasterSubdomain() {
     }
 }
 
-
 app.get('/', (req, res) => {
     let ref = (req.headers.host);
     if (ref === "127.0.0.1") {
@@ -415,7 +414,6 @@ app.get('/setup', (req, res) => {
         }
     }
 })
-
 
 function stitchSetupLines(asked, setup_) {
     if (setup_[asked]) {
