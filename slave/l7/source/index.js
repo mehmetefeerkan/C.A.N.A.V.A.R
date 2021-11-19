@@ -112,7 +112,7 @@ function fetchSettings() {
     axios.get("http://" + master + "/globals")
         .then(res => {
             zombie.config = res.data
-            console.log(res.data);
+            console.log(zombie.config);
             if (!fullyInitiated) {
                 settingIntegrity.emit('true');
             }
