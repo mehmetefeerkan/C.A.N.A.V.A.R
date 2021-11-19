@@ -436,7 +436,7 @@ app.post('/heartbeat', (req, res) => {
     let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress
     ip = ip.toString().replace('::ffff:', '');
     let machine = req.body.machine
-    //console.log(machine);
+    console.log(machine);
     Machines.all[ip] = {
         id: ip,
         machine
@@ -445,18 +445,10 @@ app.post('/heartbeat', (req, res) => {
 })
 
 app.patch('/heartbeat', (req, res) => {
-    /*
     let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress
     ip = ip.toString().replace('::ffff:', '');
     let machine = req.body.machine
-    Machines.all[ip] = {
-        id: ip,
-    }
-    Machines.all[ip].port = machine.port
-    Machines.all[ip].busy = machine.busy
-    Machines.all[ip].init = machine.init
-    Machines.all[ip].currentAttack = machine.currentAttack
-    */
+    console.log(machine);
     res.send(200, Globals)
 })
 

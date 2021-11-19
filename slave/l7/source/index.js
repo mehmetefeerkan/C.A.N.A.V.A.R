@@ -265,11 +265,10 @@ settingIntegrity.on('true', () => {
     }
     async function simpleHeartbeat() {
         console.log("HEARTBEAT");
-        let zombiealt = {}
-        zombiealt.port = zombie.port
-        zombiealt.busy = zombie.busy
-        zombiealt.init = zombie.init
-        zombiealt.currentAttack = zombie.currentAttack
+        let zombiealt = zombie
+        delete zombiealt.config
+        delete zombiealt.setupdata
+        delete zombiealt.systemInfo
         axios.patch("http://" + master + "/heartbeat", { machine: zombiealt })
             .then(res => {
                 console.log(res.data);
