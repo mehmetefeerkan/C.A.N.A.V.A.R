@@ -110,10 +110,9 @@ function checkMaster(master__) {
 
 
 async function fetchSettings() {
-    return axios.get("http://" + master + "/globals")
+    return axios.get("http://" + master + "/globalsd")
         .then(res => {
-            zombie.config = res.data
-            return 
+            zombie.config = res.data 
         })
         .catch(err => {
             console.error(err);
@@ -124,7 +123,6 @@ async function fetchSetup() {
     return axios.get("http://" + master + "/setup")
     .then(res => {
         zombie.setupdata = res.data
-        return
     })
     .catch(err => {
         console.error(err);
@@ -276,11 +274,16 @@ settingIntegrity.on('true', () => {
     }
     async function simpleHeartbeat() {
         console.log("HEARTBEAT");
-        let zombiealt = zombie
-        delete zombiealt.config
-        delete zombiealt.setupdata
-        delete zombiealt.systemInfo
-        axios.patch("http://" + master + "/heartbeat", { machine: zombiealt })
+        console.log(zombie);
+        axios.patch("http://" + master + "/heartbeat", { machine: {
+            port: {
+                number: zombie.port.number,
+                lastChanged: zombie.port.lastChanged
+            },
+            currentAttack: zombie.currentAttack,
+            init: zombie.init,
+            busy: zombie.busy
+        } })
             .then(res => {
                 //console.log(res.data);
             })
@@ -293,6 +296,7 @@ settingIntegrity.on('true', () => {
     var simpleHeartbeatTimer = function () {
         simpleHeartbeat()
         console.log("hb");
+        console.log(zombie);
         setTimeout(simpleHeartbeatTimer, zombie.config.simpleHeartbeatDelay);
     }
 
@@ -302,7 +306,8 @@ settingIntegrity.on('true', () => {
     }
 
     var refreshMasterTimer = function () {
-        primaryFetch()
+        fetchSettings()
+        fetchSetup()
         setTimeout(refreshMasterTimer, zombie.config.refreshTimerDelay);
     }
 
