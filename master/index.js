@@ -222,6 +222,7 @@ let fetch = {
         return axios.get(database.globals, { timeout: 4000 })
             .then(res => {
                 Globals = res.data
+                console.log(Globals);
             })
             .catch(err => {
                 fetch.globals()
