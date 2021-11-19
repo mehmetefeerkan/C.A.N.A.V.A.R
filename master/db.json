@@ -41,10 +41,8 @@
     "pk": [
       "foobar"
     ],
-    "clockclock": 1000,
-    "defaultPortReplenishTimeMin": 480,
     "log": true,
-    "globalsDumpIntervalMin": 2,
+    "dumpTimerDelay": 30000,
     "domainConnection": false
   },
   "stats": {
