@@ -47,6 +47,10 @@
     "globalsDumpIntervalMin": 2,
     "domainConnection": false
   },
+  "stats": {
+    "totalAttacks": 0,
+    "userCount": 0
+  },
   "global": {
     "restart": {
       "scheduled": false,

