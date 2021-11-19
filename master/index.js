@@ -450,13 +450,13 @@ app.patch('/heartbeat', (req, res) => {
     ip = ip.toString().replace('::ffff:', '');
     let machine = req.body.machine
     if (Machines.all[ip]) {
-        console.log(machine_.id + " already exists");
+        console.log(ip + " already exists");
         (Machines.all[ip]).port = machine.port
         (Machines.all[ip]).busy = machine.busy
         (Machines.all[ip]).init = machine.init
         (Machines.all[ip]).currentAttack = machine.currentAttack
     } else {
-        console.log(machine.id + " just arrived");
+        console.log(ip + " just arrived");
         Machines.all[ip] = machine
     }
     res.send(200, Globals)
