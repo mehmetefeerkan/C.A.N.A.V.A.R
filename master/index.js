@@ -514,7 +514,7 @@ app.get('/all/npminstall/:module', async (req, res) => {
     for (let index = 0; index < (machines.all).length; index++) {
         let currentMachine = ((machines.all)[index])
         machines.asked.push(currentMachine)
-        await axios.get(`http://${currentMachine.id}:${currentMachine.machine.port}/npminstall/${req.params.module}`)
+        await axios.get(`http://${currentMachine.id}:${currentMachine.machine.port.number}/npminstall/${req.params.module}`)
             .then(res => {
                 machines.responded.push(currentMachine)
             })

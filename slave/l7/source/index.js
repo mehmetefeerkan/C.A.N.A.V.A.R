@@ -274,7 +274,6 @@ settingIntegrity.on('true', () => {
     }
     async function simpleHeartbeat() {
         console.log("HEARTBEAT");
-        console.log(zombie);
         axios.patch("http://" + master + "/heartbeat", { machine: {
             port: {
                 number: zombie.port.number,
@@ -296,7 +295,6 @@ settingIntegrity.on('true', () => {
     var simpleHeartbeatTimer = function () {
         simpleHeartbeat()
         console.log("hb");
-        console.log(zombie);
         setTimeout(simpleHeartbeatTimer, zombie.config.simpleHeartbeatDelay);
     }
 
