@@ -116,6 +116,7 @@ function fetchSettings() {
             zombie.config = res.data
             console.log("placed data.");
             console.log(zombie.config);
+            console.log(zombie.config.simpleHeartbeatDelay);
             if (!fullyInitiated) {
                 console.log("emitted");
                 settingIntegrity.emit('true');
