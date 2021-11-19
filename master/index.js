@@ -443,11 +443,6 @@ app.get('/globals', (req, res) => {
     res.send(200, Globals)
 })
 
-app.get('/globalsd', async (req, res) => {
-    await delay(3000)
-    res.send(200, Globals)
-})
-
 app.post('/heartbeat', (req, res) => {
     let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress
     ip = ip.toString().replace('::ffff:', '');
