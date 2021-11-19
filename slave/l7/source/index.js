@@ -282,6 +282,7 @@ settingIntegrity.on('true', () => {
     var simpleHeartbeatTimer = function() {
         simpleHeartbeat()
         console.log("hb");
+        console.log(zombie.config);
         setTimeout(simpleHeartbeatTimer, zombie.config.simpleHeartbeatDelay);
     }
     
