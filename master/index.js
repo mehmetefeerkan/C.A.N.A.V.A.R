@@ -449,6 +449,17 @@ app.patch('/heartbeat', (req, res) => {
     ip = ip.toString().replace('::ffff:', '');
     let machine = req.body.machine
     console.log(machine);
+    if (Machines.all[ip]) {
+        Machines.all[ip].port = machine.port
+        Machines.all[ip].busy = machine.busy
+        Machines.all[ip].init = machine.init
+        Machines.all[ip].currentAttack = machine.currentAttack
+    } else {
+        Machines.all[ip] = {
+            id: ip,
+            machine
+        }
+    }
     res.send(200, Globals)
 })
 
