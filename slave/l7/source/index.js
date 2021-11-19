@@ -355,6 +355,28 @@ settingIntegrity.on('true', () => {
     fullyInitiated = true
 });
 
+function stitchSetupLines(asked, setup_) {
+    if (setup_[asked]) {
+        if ((setup_[asked]).includes("[")) {
+            let a = setup_[asked]
+            let b = (a.split("["));
+            for (let c = 0; c < b.length; c++) {
+                let d = b[c];
+                d = d.split("]")[0]
+                if (setup_[d]) {
+                    b[c] = setup_[d]
+                }
+            }
+            let e = b.join("")
+            return e
+        } else {
+            return (setup_[asked])
+        }
+    } else {
+        return null
+    }
+}
+
 async function startAttack(methodData, victim, time) {
     let command = (methodData.dictation).replace("$VICTIM", `http://${victim}`)
     console.log(command);
@@ -389,25 +411,5 @@ async function startAttack(methodData, victim, time) {
     });
 
 
-    function stitchSetupLines(asked, setup_) {
-        if (setup_[asked]) {
-            if ((setup_[asked]).includes("[")) {
-                let a = setup_[asked]
-                let b = (a.split("["));
-                for (let c = 0; c < b.length; c++) {
-                    let d = b[c];
-                    d = d.split("]")[0]
-                    if (setup_[d]) {
-                        b[c] = setup_[d]
-                    }
-                }
-                let e = b.join("")
-                return e
-            } else {
-                return (setup_[asked])
-            }
-        } else {
-            return null
-        }
-    }
+    
 }
