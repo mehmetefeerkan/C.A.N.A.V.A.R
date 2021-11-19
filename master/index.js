@@ -138,7 +138,7 @@ si.getDynamicData(function (data) {
 })
 
 let initiated = false
-
+let dumpTimer = null
 const databaseInitiated = new EventEmitter()
 
 function logID() {
@@ -214,6 +214,11 @@ databaseInitiated.on('true', async () => {
     updateMasterSubdomain()
     await dbMachineCleanup()
     initiated = true
+    dumpTimer = setTimeout(() => {
+        dumpGlobals()
+        dumpStats()
+    }, config.dumpTimerDelay);
+    
     console.log("End init.");
 })
 
@@ -675,8 +680,4 @@ app.post('/mgmt/vcontrol', (req, res) => {
 
 app.listen(80, () => console.log(`App listening on port ${"80"}!`))
 
-let dumpTimer = setTimeout(() => {
-    dumpGlobals()
-    dumpStats()
-}, config.dumpTimerDelay);
 

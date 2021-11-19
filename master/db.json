@@ -55,7 +55,7 @@
       "at": null,
       "last": null
     },
-    "lockdown": true,
+    "lockdown": true, 
     "allDynamicData": true,
     "staticData": true,
     "simpleHeartbeatDelay": 10000,
