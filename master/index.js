@@ -449,15 +449,18 @@ app.patch('/heartbeat', (req, res) => {
     let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress
     ip = ip.toString().replace('::ffff:', '');
     let machine = req.body.machine
-    if (Machines.all[ip]) {
+    let machine_ = Machines.all[ip]
+    if (machine_) {
         console.log(ip + " already exists");
         console.log(machine);
-        console.log((Machines.all[ip]).port)
-        console.log((Machines.all[ip]))
-        (Machines.all[ip]).port = machine.port
-        (Machines.all[ip]).busy = machine.busy
-        (Machines.all[ip]).init = machine.init
-        (Machines.all[ip]).currentAttack = machine.currentAttack
+        console.log(machine_)
+        console.log(machine.port)
+        console.log(machine_.port)
+        machine_.port = machine.port
+        machine_.busy = machine.busy
+        machine_.init = machine.init
+        machine_.currentAttack = machine.currentAttack
+        Machines.all[ip] = machine_
     } else {
         console.log(ip + " just arrived");
         Machines.all[ip] = machine
