@@ -448,7 +448,9 @@ app.patch('/heartbeat', (req, res) => {
     let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress
     ip = ip.toString().replace('::ffff:', '');
     let machine = req.body.machine
+    console.log(machine);
     let machine_ = Machines.all[ip]
+    console.log(machine_);
     machine_.port = machine.port.number
     machine_.busy = machine.busy
     machine_.init = machine.init
