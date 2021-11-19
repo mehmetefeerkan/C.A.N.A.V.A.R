@@ -109,11 +109,15 @@ function checkMaster(master__) {
 }
 
 function fetchSettings() {
+    console.log("fetching settings.");
     axios.get("http://" + master + "/globals")
-        .then(res => {
+    .then(res => {
+            console.log("reached settings.");
             zombie.config = res.data
+            console.log("placed data.");
             console.log(zombie.config);
             if (!fullyInitiated) {
+                console.log("emitted");
                 settingIntegrity.emit('true');
             }
         })
