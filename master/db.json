@@ -17,7 +17,7 @@
       "lang": "python",
       "process": "python2",
       "filename": "hulk.py",
-      "dictation": "python2 [scriptdir[hulk.py [victim[",
+      "dictation": "python2 [scriptdir[hulk.py http://[victim[",
       "description": "Basic L7 Script, Recommended",
       "source": "https://raw.githubusercontent.com/mehmetefeerkan/C.A.N.A.V.A.R/master/slave/l7/source/scripts/hulk.py"
     },
