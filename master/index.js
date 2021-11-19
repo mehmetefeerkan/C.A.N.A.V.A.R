@@ -452,8 +452,6 @@ app.post('/heartbeat', (req, res) => {
     let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress
     ip = ip.toString().replace('::ffff:', '');
     let machine = req.body.machine
-    console.log(machine);
-
     Machines.all[ip] = {
         id: ip,
         machine
@@ -465,7 +463,6 @@ app.patch('/heartbeat', (req, res) => {
     let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress
     ip = ip.toString().replace('::ffff:', '');
     let machine = req.body.machine
-    console.log(machine);
     if (Machines.all[ip]) {
         Machines.all[ip].machine.port = machine.port
         Machines.all[ip].machine.busy = machine.busy
