@@ -281,6 +281,7 @@ settingIntegrity.on('true', () => {
     
     var simpleHeartbeatTimer = function() {
         simpleHeartbeat()
+        console.log("hb");
         setTimeout(simpleHeartbeatTimer, zombie.config.simpleHeartbeatDelay);
     }
     
@@ -306,7 +307,7 @@ settingIntegrity.on('true', () => {
     
     simpleHeartbeatTimer()
     complexHeartbeatTimer()
-    refreshMasterTimer()
+    //refreshMasterTimer()
     siDataPlacementTimer()
     detailedDynamicDataPlacementTimer()
     
