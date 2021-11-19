@@ -451,10 +451,10 @@ app.patch('/heartbeat', (req, res) => {
     Machines.all[ip] = {
         id: ip,
     }
-    (Machines.all[ip]).port = machine.port
-    (Machines.all[ip]).busy = machine.busy
-    (Machines.all[ip]).init = machine.init
-    (Machines.all[ip]).currentAttack = machine.currentAttack
+    Machines.all[ip].port = machine.port
+    Machines.all[ip].busy = machine.busy
+    Machines.all[ip].init = machine.init
+    Machines.all[ip].currentAttack = machine.currentAttack
     res.send(200, Globals)
 })
 
