@@ -82,6 +82,7 @@ let zombie = {
 checkMaster(master_)
 
 function checkMaster(master__) {
+    console.log("Checking master @ " + master_);
     axios.get("http://" + master__)
         .then(res => {
             let code = res.statusCode
@@ -94,7 +95,7 @@ function checkMaster(master__) {
             } else {
                 console.log("Master data response invalid. falling back again.");
                 setTimeout(() => {
-                    checkMaster()
+                    checkMaster(master_)
                 }, 1000);
             }
         })
@@ -103,14 +104,14 @@ function checkMaster(master__) {
             console.log(master);
             console.log(err.message);
             setTimeout(() => {
-                checkMaster()
+                checkMaster(master_)
             }, 3000);
         })
 }
 
 
 async function fetchSettings() {
-    return axios.get("http://" + master + "/globalsd")
+    return axios.get("http://" + master + "/globals")
         .then(res => {
             zombie.config = res.data 
         })
