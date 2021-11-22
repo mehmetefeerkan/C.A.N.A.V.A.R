@@ -195,6 +195,7 @@ let database = { // switch to new databaseElement() or sth fancy in the future?
             return axios.get(database.stats.address)
                 .then(res => {
                     stats = res.data
+                    stats.userCount = users.count()
                     console.log("Stats loaded.");
                 })
                 .catch(err => {
