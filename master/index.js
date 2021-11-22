@@ -35,11 +35,11 @@ logger.init(initSign, "Called 'crypto'")
 logger.init(initSign, "Called 'caller-id'")
 const bodyParser = require('body-parser');
 const si = require('systeminformation');
-const { await } = require('signale');
+const jwt = require('jsonwebtoken');
 
 let config = {
     pk: [
-      "foobar"
+        "foobar"
     ],
     log: null,
     dumpTimerDelay: null,
@@ -90,6 +90,7 @@ let database = {
     machines: "http://localhost:3000/machines/",
     settings: "http://localhost:3000/settings/",
     stats: "http://localhost:3000/stats/",
+    users: "http://localhost:3000/users/",
 }
 
 let slaveInfo = {
@@ -99,6 +100,91 @@ let slaveInfo = {
 
 let stats = {
 
+}
+
+let users = {
+    all: [],
+    get: function (uid) {
+        return users.all.find(u => { return (u.id === uid) })
+    },
+    has: function (uid) { //repetitive.repetitive.repetitive.repetitive.repetitive.
+        let u = users.all.find(u => { return (u.id === uid) });
+        if (u !== undefined) {
+            return true
+        } else {
+            return false
+        }
+    }
+}
+
+let fetch = {
+    globals: async function () {
+        return axios.get(database.globals, { timeout: 4000 })
+            .then(res => {
+                Globals = res.data
+                console.log(Globals);
+            })
+            .catch(err => {
+                fetch.globals()
+            })
+    },
+    config: async function () {
+        return axios.get(database.settings)
+            .then(resx => {
+                config = resx.data
+            })
+            .catch(err => {
+                fetch.config()
+            })
+    },
+    slaveSetup: async function () {
+        return axios.get(database.setup)
+            .then(res => {
+                slaveInfo.setup = res.data
+                for (const key in slaveInfo.setup) {
+                    let k = key
+                    let aa = (stitchSetupLines(k, (slaveInfo.setup)))
+                    if (aa) {
+                        ((slaveInfo.setup)[k]) = aa
+                    }
+                }
+                console.log("Setups loaded.");
+            })
+            .catch(err => {
+                console.error(err);
+            })
+    },
+    scripts: async function () {
+        return axios.get(database.scripts)
+            .then(res => {
+                slaveInfo.scripts = res.data
+                console.log("Scripts loaded.");
+            })
+            .catch(err => {
+                console.error(err);
+            })
+    },
+    stats: async function () {
+        return axios.get(database.stats)
+            .then(res => {
+                stats = res.data
+                console.log("Stats loaded.");
+            })
+            .catch(err => {
+                console.error(err);
+            })
+    },
+    users: async function () {
+        return axios.get(database.users)
+            .then(res => {
+                users.all = res.data
+                console.log("Users loaded.");
+                console.log(users);
+            })
+            .catch(err => {
+                console.error(err);
+            })
+    },
 }
 
 let Machines = {
@@ -210,79 +296,23 @@ databaseInitiated.on('true', async () => {
     await fetch.slaveSetup()
     await fetch.scripts()
     await fetch.stats()
+    await fetch.users()
     updateMasterSubdomain()
     await dbMachineCleanup()
     initiated = true
 
-    let dumpLoop = function(){
+    let dumpLoop = function () {
         dumpGlobals()
         dumpStats()
         dumpTimer = setTimeout(dumpLoop, config.dumpTimerDelay);
     }
-    
+
     dumpLoop()
 
     console.log("End init.");
 })
 
-let fetch = {
-    globals: async function () {
-        return axios.get(database.globals, { timeout: 4000 })
-            .then(res => {
-                Globals = res.data
-                console.log(Globals);
-            })
-            .catch(err => {
-                fetch.globals()
-            })
-    },
-    config: async function () {
-        return axios.get(database.settings)
-            .then(resx => {
-                config = resx.data
-            })
-            .catch(err => {
-                fetch.config()
-            })
-    },
-    slaveSetup: async function () {
-        return axios.get(database.setup)
-            .then(res => {
-                slaveInfo.setup = res.data
-                for (const key in slaveInfo.setup) {
-                    let k = key
-                    let aa = (stitchSetupLines(k, (slaveInfo.setup)))
-                    if (aa) {
-                        ((slaveInfo.setup)[k]) = aa
-                    }
-                }
-                console.log("Setups loaded.");
-            })
-            .catch(err => {
-                console.error(err);
-            })
-    },
-    scripts: async function () {
-        return axios.get(database.scripts)
-            .then(res => {
-                slaveInfo.scripts = res.data
-                console.log("Scripts loaded.");
-            })
-            .catch(err => {
-                console.error(err);
-            })
-    },
-    stats: async function () {
-        return axios.get(database.stats)
-            .then(res => {
-                stats = res.data
-                console.log("Scripts loaded.");
-            })
-            .catch(err => {
-                console.error(err);
-            })
-    }
-}
+
 
 async function dbMachineCleanup() {
     return axios.get(database.machines)
@@ -569,7 +599,7 @@ app.get('/machines/count', (req, res) => {
     res.send(200, Machines.count())
 })
 app.get('/machines/:machid', (req, res) => {
-    res.send(200, Machines.get([req.params.machid]))
+    res.send(200, Machines.get(req.params.machid))
 })
 app.get('/machines/testReachability/', async (req, res) => {
     let machines = {
@@ -675,6 +705,46 @@ app.post('/mgmt/vcontrol', (req, res) => {
             //res.send(200, {std_out: stdout, std_err: stderr})x
         }
     })
+})
+
+app.post('/auth/register', (req, res) => { //collect all auht / mgmt / all / api endpoints to other route files maybe some time?
+    if (req.body) {
+        let userId = req.body.userId
+        let passHash = req.body.passHash
+        console.log(users.has(userId));
+        if (users.has(userId)) {
+            res.send(500, {
+                error: {
+                    message: "USER_ALREADY_EXIST",
+                    innerResponse: `This user already exists in the database...`
+                }
+            })
+        } else {
+            let userSeshExpiry = moment().add({ milliseconds: config.userSessionExpiryInterval }).unix() * 1000
+            let user = {
+                id: userId,
+                hash: passHash,
+                admin: false,
+                op: false,
+                eat: userSeshExpiry
+            }
+            const seshToken = jwt.sign(user, config.jwtSecret)
+            user.session = seshToken
+            console.log(user);
+            users.all.push(user)
+            axios.post(database.users, user)
+                .then(res => {
+                    res.json({
+                        seshToken
+                    });
+                })
+                .catch(err => {
+                    console.error(err);
+                })
+        }
+    } else {
+        res.send(405)
+    }
 })
 
 
