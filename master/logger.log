@@ -4724,3 +4724,835 @@
 2021-11-22T03:09:22+03:00 [1637539762658] INIT : Called 'caller-id'
 -
 2021-11-22T03:09:23+03:00 [dac78a596e] INFO : Updating Master Subdomain | Aborted because config prevents automatic subdomain heartbeats.
+-
+2021-11-22T03:10:23+03:00 [1637539823683] INIT : Initiating...
+2021-11-22T03:10:23+03:00 [1637539823683] INIT : Called 'express'
+2021-11-22T03:10:23+03:00 [1637539823683] INIT : Initiated 'express'
+2021-11-22T03:10:23+03:00 [1637539823683] INIT : Called 'json-server'
+2021-11-22T03:10:23+03:00 [1637539823683] INIT : Created 'json-server'
+2021-11-22T03:10:23+03:00 [1637539823683] INIT : Called 'json-server' router
+2021-11-22T03:10:23+03:00 [1637539823683] INIT : Called 'events'
+2021-11-22T03:10:24+03:00 [1637539823683] INIT : Called 'random-number-csprng'
+2021-11-22T03:10:24+03:00 [1637539823683] INIT : Called 'moment'
+2021-11-22T03:10:24+03:00 [1637539823683] INIT : Called 'caller-id'
+2021-11-22T03:10:23+03:00 [1637539823683] INIT : Called 'axios'
+2021-11-22T03:10:23+03:00 [1637539823683] INIT : Called 'delay'
+2021-11-22T03:10:24+03:00 [1637539823683] INIT : Called 'crypto'
+-
+2021-11-22T03:10:24+03:00 [162530f89a] INFO : Updating Master Subdomain | Aborted because config prevents automatic subdomain heartbeats.
+-
+2021-11-22T03:10:42+03:00 [1637539842276] INIT : Initiating...
+2021-11-22T03:10:42+03:00 [1637539842276] INIT : Called 'express'
+2021-11-22T03:10:42+03:00 [1637539842276] INIT : Initiated 'express'
+2021-11-22T03:10:42+03:00 [1637539842276] INIT : Called 'json-server' router
+2021-11-22T03:10:42+03:00 [1637539842276] INIT : Called 'json-server'
+2021-11-22T03:10:42+03:00 [1637539842276] INIT : Called 'events'
+2021-11-22T03:10:42+03:00 [1637539842276] INIT : Called 'delay'
+2021-11-22T03:10:42+03:00 [1637539842276] INIT : Called 'random-number-csprng'
+2021-11-22T03:10:42+03:00 [1637539842276] INIT : Called 'moment'
+2021-11-22T03:10:42+03:00 [1637539842276] INIT : Called 'crypto'
+2021-11-22T03:10:42+03:00 [1637539842276] INIT : Called 'caller-id'
+2021-11-22T03:10:42+03:00 [1637539842276] INIT : Created 'json-server'
+2021-11-22T03:10:42+03:00 [1637539842276] INIT : Called 'axios'
+-
+2021-11-22T03:10:43+03:00 [90e960a30b] INFO : Updating Master Subdomain | Aborted because config prevents automatic subdomain heartbeats.
+-
+2021-11-22T03:10:50+03:00 [1637539850112] INIT : Initiating...
+2021-11-22T03:10:50+03:00 [1637539850112] INIT : Called 'express'
+2021-11-22T03:10:50+03:00 [1637539850112] INIT : Initiated 'express'
+2021-11-22T03:10:50+03:00 [1637539850112] INIT : Called 'json-server'
+2021-11-22T03:10:50+03:00 [1637539850112] INIT : Created 'json-server'
+2021-11-22T03:10:50+03:00 [1637539850112] INIT : Called 'json-server' router
+2021-11-22T03:10:50+03:00 [1637539850112] INIT : Called 'axios'
+2021-11-22T03:10:50+03:00 [1637539850112] INIT : Called 'events'
+2021-11-22T03:10:50+03:00 [1637539850112] INIT : Called 'delay'
+2021-11-22T03:10:50+03:00 [1637539850112] INIT : Called 'random-number-csprng'
+2021-11-22T03:10:50+03:00 [1637539850112] INIT : Called 'moment'
+2021-11-22T03:10:50+03:00 [1637539850112] INIT : Called 'crypto'
+2021-11-22T03:10:50+03:00 [1637539850112] INIT : Called 'caller-id'
+2021-11-22T03:10:51+03:00 [0e58981aa4] INFO : Updating Master Subdomain | Aborted because config prevents automatic subdomain heartbeats.
+-
+-
+2021-11-22T03:12:22+03:00 [1637539942265] INIT : Called 'express'
+2021-11-22T03:12:22+03:00 [1637539942265] INIT : Called 'json-server'
+2021-11-22T03:12:22+03:00 [1637539942265] INIT : Initiating...
+2021-11-22T03:12:22+03:00 [1637539942265] INIT : Initiated 'express'
+2021-11-22T03:12:22+03:00 [1637539942265] INIT : Called 'events'
+2021-11-22T03:12:22+03:00 [1637539942265] INIT : Called 'delay'
+2021-11-22T03:12:22+03:00 [1637539942265] INIT : Called 'axios'
+2021-11-22T03:12:22+03:00 [1637539942265] INIT : Called 'random-number-csprng'
+2021-11-22T03:12:22+03:00 [1637539942265] INIT : Called 'moment'
+2021-11-22T03:12:22+03:00 [1637539942265] INIT : Called 'crypto'
+2021-11-22T03:12:22+03:00 [1637539942265] INIT : Called 'caller-id'
+2021-11-22T03:12:22+03:00 [1637539942265] INIT : Created 'json-server'
+2021-11-22T03:12:22+03:00 [1637539942265] INIT : Called 'json-server' router
+-
+2021-11-22T03:12:23+03:00 [72ac673014] INFO : Updating Master Subdomain | Aborted because config prevents automatic subdomain heartbeats.
+-
+2021-11-22T03:12:42+03:00 [1637539962545] INIT : Initiating...
+2021-11-22T03:12:42+03:00 [1637539962545] INIT : Called 'express'
+2021-11-22T03:12:42+03:00 [1637539962545] INIT : Initiated 'express'
+2021-11-22T03:12:42+03:00 [1637539962545] INIT : Called 'json-server'
+2021-11-22T03:12:42+03:00 [1637539962545] INIT : Created 'json-server'
+2021-11-22T03:12:42+03:00 [1637539962545] INIT : Called 'json-server' router
+2021-11-22T03:12:42+03:00 [1637539962545] INIT : Called 'axios'
+2021-11-22T03:12:42+03:00 [1637539962545] INIT : Called 'events'
+2021-11-22T03:12:42+03:00 [1637539962545] INIT : Called 'delay'
+2021-11-22T03:12:42+03:00 [1637539962545] INIT : Called 'random-number-csprng'
+2021-11-22T03:12:42+03:00 [1637539962545] INIT : Called 'moment'
+2021-11-22T03:12:42+03:00 [1637539962545] INIT : Called 'crypto'
+2021-11-22T03:12:42+03:00 [1637539962545] INIT : Called 'caller-id'
+-
+2021-11-22T03:12:43+03:00 [6efd3cb513] INFO : Updating Master Subdomain | Aborted because config prevents automatic subdomain heartbeats.
+-
+2021-11-22T03:12:54+03:00 [1637539974089] INIT : Initiating...
+2021-11-22T03:12:54+03:00 [1637539974089] INIT : Called 'express'
+2021-11-22T03:12:54+03:00 [1637539974089] INIT : Initiated 'express'
+2021-11-22T03:12:54+03:00 [1637539974089] INIT : Called 'json-server'
+2021-11-22T03:12:54+03:00 [1637539974089] INIT : Created 'json-server'
+2021-11-22T03:12:54+03:00 [1637539974089] INIT : Called 'json-server' router
+2021-11-22T03:12:54+03:00 [1637539974089] INIT : Called 'axios'
+2021-11-22T03:12:54+03:00 [1637539974089] INIT : Called 'events'
+2021-11-22T03:12:54+03:00 [1637539974089] INIT : Called 'delay'
+2021-11-22T03:12:54+03:00 [1637539974089] INIT : Called 'random-number-csprng'
+2021-11-22T03:12:54+03:00 [1637539974089] INIT : Called 'moment'
+2021-11-22T03:12:54+03:00 [1637539974089] INIT : Called 'crypto'
+2021-11-22T03:12:54+03:00 [1637539974089] INIT : Called 'caller-id'
+-
+2021-11-22T03:12:55+03:00 [f77ef4b9af] INFO : Updating Master Subdomain | Aborted because config prevents automatic subdomain heartbeats.
+-
+2021-11-22T03:23:47+03:00 [1637540627422] INIT : Initiating...
+2021-11-22T03:23:47+03:00 [1637540627422] INIT : Called 'express'
+2021-11-22T03:23:47+03:00 [1637540627422] INIT : Initiated 'express'
+2021-11-22T03:23:47+03:00 [1637540627422] INIT : Called 'json-server'
+2021-11-22T03:23:47+03:00 [1637540627422] INIT : Created 'json-server'
+2021-11-22T03:23:47+03:00 [1637540627422] INIT : Called 'json-server' router
+2021-11-22T03:23:47+03:00 [1637540627422] INIT : Called 'axios'
+2021-11-22T03:23:47+03:00 [1637540627422] INIT : Called 'events'
+2021-11-22T03:23:47+03:00 [1637540627422] INIT : Called 'delay'
+2021-11-22T03:23:47+03:00 [1637540627422] INIT : Called 'random-number-csprng'
+2021-11-22T03:23:47+03:00 [1637540627422] INIT : Called 'moment'
+2021-11-22T03:23:47+03:00 [1637540627422] INIT : Called 'crypto'
+2021-11-22T03:23:47+03:00 [1637540627422] INIT : Called 'caller-id'
+-
+2021-11-22T03:23:48+03:00 [062721e1fc] INFO : Updating Master Subdomain | Aborted because config prevents automatic subdomain heartbeats.
+-
+2021-11-22T03:24:11+03:00 [1637540651079] INIT : Initiating...
+2021-11-22T03:24:11+03:00 [1637540651079] INIT : Called 'express'
+2021-11-22T03:24:11+03:00 [1637540651079] INIT : Initiated 'express'
+2021-11-22T03:24:11+03:00 [1637540651079] INIT : Called 'json-server'
+2021-11-22T03:24:11+03:00 [1637540651079] INIT : Called 'json-server' router
+2021-11-22T03:24:11+03:00 [1637540651079] INIT : Created 'json-server'
+2021-11-22T03:24:11+03:00 [1637540651079] INIT : Called 'delay'
+2021-11-22T03:24:11+03:00 [1637540651079] INIT : Called 'events'
+2021-11-22T03:24:11+03:00 [1637540651079] INIT : Called 'random-number-csprng'
+2021-11-22T03:24:11+03:00 [1637540651079] INIT : Called 'moment'
+2021-11-22T03:24:11+03:00 [1637540651079] INIT : Called 'caller-id'
+2021-11-22T03:24:11+03:00 [1637540651079] INIT : Called 'axios'
+2021-11-22T03:24:11+03:00 [1637540651079] INIT : Called 'crypto'
+2021-11-22T03:24:11+03:00 [9434cba8c8] INFO : Updating Master Subdomain | Aborted because config prevents automatic subdomain heartbeats.
+-
+-
+2021-11-22T03:24:40+03:00 [1637540680931] INIT : Initiating...
+2021-11-22T03:24:41+03:00 [1637540680931] INIT : Called 'express'
+2021-11-22T03:24:41+03:00 [1637540680931] INIT : Initiated 'express'
+2021-11-22T03:24:41+03:00 [1637540680931] INIT : Called 'json-server'
+2021-11-22T03:24:41+03:00 [1637540680931] INIT : Called 'json-server' router
+2021-11-22T03:24:41+03:00 [1637540680931] INIT : Called 'delay'
+2021-11-22T03:24:41+03:00 [1637540680931] INIT : Called 'random-number-csprng'
+2021-11-22T03:24:41+03:00 [1637540680931] INIT : Called 'moment'
+2021-11-22T03:24:41+03:00 [1637540680931] INIT : Called 'crypto'
+2021-11-22T03:24:41+03:00 [1637540680931] INIT : Called 'caller-id'
+2021-11-22T03:24:41+03:00 [1637540680931] INIT : Called 'axios'
+2021-11-22T03:24:41+03:00 [1637540680931] INIT : Called 'events'
+2021-11-22T03:24:41+03:00 [1637540680931] INIT : Created 'json-server'
+-
+2021-11-22T03:24:41+03:00 [bbe61cc0b4] INFO : Updating Master Subdomain | Aborted because config prevents automatic subdomain heartbeats.
+-
+2021-11-22T03:24:54+03:00 [1637540694328] INIT : Initiating...
+2021-11-22T03:24:54+03:00 [1637540694328] INIT : Called 'express'
+2021-11-22T03:24:54+03:00 [1637540694328] INIT : Initiated 'express'
+2021-11-22T03:24:54+03:00 [1637540694328] INIT : Called 'json-server'
+2021-11-22T03:24:54+03:00 [1637540694328] INIT : Created 'json-server'
+2021-11-22T03:24:54+03:00 [1637540694328] INIT : Called 'json-server' router
+2021-11-22T03:24:54+03:00 [1637540694328] INIT : Called 'axios'
+2021-11-22T03:24:54+03:00 [1637540694328] INIT : Called 'random-number-csprng'
+2021-11-22T03:24:54+03:00 [1637540694328] INIT : Called 'moment'
+2021-11-22T03:24:54+03:00 [1637540694328] INIT : Called 'crypto'
+2021-11-22T03:24:54+03:00 [1637540694328] INIT : Called 'caller-id'
+2021-11-22T03:24:54+03:00 [1637540694328] INIT : Called 'delay'
+2021-11-22T03:24:54+03:00 [1637540694328] INIT : Called 'events'
+-
+2021-11-22T03:24:55+03:00 [b4a4081da9] INFO : Updating Master Subdomain | Aborted because config prevents automatic subdomain heartbeats.
+-
+2021-11-22T03:25:38+03:00 [1637540738471] INIT : Initiating...
+2021-11-22T03:25:38+03:00 [1637540738471] INIT : Called 'express'
+2021-11-22T03:25:38+03:00 [1637540738471] INIT : Initiated 'express'
+2021-11-22T03:25:38+03:00 [1637540738471] INIT : Called 'json-server'
+2021-11-22T03:25:38+03:00 [1637540738471] INIT : Created 'json-server'
+2021-11-22T03:25:38+03:00 [1637540738471] INIT : Called 'json-server' router
+2021-11-22T03:25:38+03:00 [1637540738471] INIT : Called 'axios'
+2021-11-22T03:25:38+03:00 [1637540738471] INIT : Called 'events'
+2021-11-22T03:25:38+03:00 [1637540738471] INIT : Called 'delay'
+2021-11-22T03:25:38+03:00 [1637540738471] INIT : Called 'random-number-csprng'
+2021-11-22T03:25:38+03:00 [1637540738471] INIT : Called 'moment'
+2021-11-22T03:25:38+03:00 [1637540738471] INIT : Called 'crypto'
+2021-11-22T03:25:38+03:00 [1637540738471] INIT : Called 'caller-id'
+-
+2021-11-22T03:25:39+03:00 [fd7b99dca7] INFO : Updating Master Subdomain | Aborted because config prevents automatic subdomain heartbeats.
+-
+2021-11-22T03:28:01+03:00 [1637540881258] INIT : Initiating...
+2021-11-22T03:28:01+03:00 [1637540881258] INIT : Called 'express'
+2021-11-22T03:28:01+03:00 [1637540881258] INIT : Initiated 'express'
+2021-11-22T03:28:01+03:00 [1637540881258] INIT : Called 'json-server'
+2021-11-22T03:28:01+03:00 [1637540881258] INIT : Created 'json-server'
+2021-11-22T03:28:01+03:00 [1637540881258] INIT : Called 'json-server' router
+2021-11-22T03:28:01+03:00 [1637540881258] INIT : Called 'axios'
+2021-11-22T03:28:01+03:00 [1637540881258] INIT : Called 'events'
+2021-11-22T03:28:01+03:00 [1637540881258] INIT : Called 'delay'
+2021-11-22T03:28:01+03:00 [1637540881258] INIT : Called 'random-number-csprng'
+2021-11-22T03:28:01+03:00 [1637540881258] INIT : Called 'moment'
+2021-11-22T03:28:01+03:00 [1637540881258] INIT : Called 'crypto'
+2021-11-22T03:28:01+03:00 [1637540881258] INIT : Called 'caller-id'
+-
+2021-11-22T03:28:02+03:00 [6f632dc3fd] INFO : Updating Master Subdomain | Aborted because config prevents automatic subdomain heartbeats.
+-
+2021-11-22T03:28:18+03:00 [1637540898641] INIT : Initiating...
+2021-11-22T03:28:18+03:00 [1637540898641] INIT : Called 'express'
+2021-11-22T03:28:18+03:00 [1637540898641] INIT : Initiated 'express'
+2021-11-22T03:28:18+03:00 [1637540898641] INIT : Called 'json-server'
+2021-11-22T03:28:18+03:00 [1637540898641] INIT : Created 'json-server'
+2021-11-22T03:28:18+03:00 [1637540898641] INIT : Called 'json-server' router
+2021-11-22T03:28:18+03:00 [1637540898641] INIT : Called 'axios'
+2021-11-22T03:28:18+03:00 [1637540898641] INIT : Called 'events'
+2021-11-22T03:28:18+03:00 [1637540898641] INIT : Called 'random-number-csprng'
+2021-11-22T03:28:18+03:00 [1637540898641] INIT : Called 'crypto'
+2021-11-22T03:28:18+03:00 [1637540898641] INIT : Called 'caller-id'
+2021-11-22T03:28:18+03:00 [1637540898641] INIT : Called 'moment'
+2021-11-22T03:28:18+03:00 [1637540898641] INIT : Called 'delay'
+-
+2021-11-22T03:28:19+03:00 [5628f368ce] INFO : Updating Master Subdomain | Aborted because config prevents automatic subdomain heartbeats.
+-
+2021-11-22T03:28:28+03:00 [1637540908386] INIT : Initiating...
+2021-11-22T03:28:28+03:00 [1637540908386] INIT : Called 'express'
+2021-11-22T03:28:28+03:00 [1637540908386] INIT : Created 'json-server'
+2021-11-22T03:28:28+03:00 [1637540908386] INIT : Called 'json-server' router
+2021-11-22T03:28:28+03:00 [1637540908386] INIT : Initiated 'express'
+2021-11-22T03:28:28+03:00 [1637540908386] INIT : Called 'json-server'
+2021-11-22T03:28:28+03:00 [1637540908386] INIT : Called 'delay'
+2021-11-22T03:28:28+03:00 [1637540908386] INIT : Called 'random-number-csprng'
+2021-11-22T03:28:28+03:00 [1637540908386] INIT : Called 'moment'
+2021-11-22T03:28:28+03:00 [1637540908386] INIT : Called 'crypto'
+2021-11-22T03:28:28+03:00 [1637540908386] INIT : Called 'caller-id'
+2021-11-22T03:28:28+03:00 [1637540908386] INIT : Called 'axios'
+2021-11-22T03:28:28+03:00 [1637540908386] INIT : Called 'events'
+-
+2021-11-22T03:28:29+03:00 [50130b42ef] INFO : Updating Master Subdomain | Aborted because config prevents automatic subdomain heartbeats.
+-
+2021-11-22T03:28:35+03:00 [1637540915147] INIT : Initiating...
+2021-11-22T03:28:35+03:00 [1637540915147] INIT : Called 'express'
+2021-11-22T03:28:35+03:00 [1637540915147] INIT : Initiated 'express'
+2021-11-22T03:28:35+03:00 [1637540915147] INIT : Called 'json-server'
+2021-11-22T03:28:35+03:00 [1637540915147] INIT : Created 'json-server'
+2021-11-22T03:28:35+03:00 [1637540915147] INIT : Called 'json-server' router
+2021-11-22T03:28:35+03:00 [1637540915147] INIT : Called 'axios'
+2021-11-22T03:28:35+03:00 [1637540915147] INIT : Called 'events'
+2021-11-22T03:28:35+03:00 [1637540915147] INIT : Called 'delay'
+2021-11-22T03:28:35+03:00 [1637540915147] INIT : Called 'random-number-csprng'
+2021-11-22T03:28:35+03:00 [1637540915147] INIT : Called 'moment'
+2021-11-22T03:28:35+03:00 [1637540915147] INIT : Called 'crypto'
+2021-11-22T03:28:35+03:00 [1637540915147] INIT : Called 'caller-id'
+-
+2021-11-22T03:28:36+03:00 [efda9299dc] INFO : Updating Master Subdomain | Aborted because config prevents automatic subdomain heartbeats.
+-
+2021-11-22T03:29:41+03:00 [1637540981210] INIT : Called 'express'
+2021-11-22T03:29:41+03:00 [1637540981210] INIT : Initiating...
+2021-11-22T03:29:41+03:00 [1637540981210] INIT : Initiated 'express'
+2021-11-22T03:29:41+03:00 [1637540981210] INIT : Created 'json-server'
+2021-11-22T03:29:41+03:00 [1637540981210] INIT : Called 'json-server'
+2021-11-22T03:29:41+03:00 [1637540981210] INIT : Called 'events'
+2021-11-22T03:29:41+03:00 [1637540981210] INIT : Called 'json-server' router
+2021-11-22T03:29:41+03:00 [1637540981210] INIT : Called 'random-number-csprng'
+2021-11-22T03:29:41+03:00 [1637540981210] INIT : Called 'delay'
+2021-11-22T03:29:41+03:00 [1637540981210] INIT : Called 'caller-id'
+2021-11-22T03:29:41+03:00 [1637540981210] INIT : Called 'crypto'
+2021-11-22T03:29:41+03:00 [1637540981210] INIT : Called 'moment'
+2021-11-22T03:29:41+03:00 [1637540981210] INIT : Called 'axios'
+-
+2021-11-22T03:29:42+03:00 [fae2048e16] INFO : Updating Master Subdomain | Aborted because config prevents automatic subdomain heartbeats.
+-
+2021-11-22T03:30:33+03:00 [1637541033505] INIT : Initiating...
+2021-11-22T03:30:33+03:00 [1637541033505] INIT : Called 'express'
+2021-11-22T03:30:33+03:00 [1637541033505] INIT : Initiated 'express'
+2021-11-22T03:30:33+03:00 [1637541033505] INIT : Called 'json-server'
+2021-11-22T03:30:33+03:00 [1637541033505] INIT : Created 'json-server'
+2021-11-22T03:30:33+03:00 [1637541033505] INIT : Called 'axios'
+2021-11-22T03:30:33+03:00 [1637541033505] INIT : Called 'events'
+2021-11-22T03:30:33+03:00 [1637541033505] INIT : Called 'random-number-csprng'
+2021-11-22T03:30:33+03:00 [1637541033505] INIT : Called 'moment'
+2021-11-22T03:30:33+03:00 [1637541033505] INIT : Called 'crypto'
+2021-11-22T03:30:33+03:00 [1637541033505] INIT : Called 'caller-id'
+2021-11-22T03:30:33+03:00 [1637541033505] INIT : Called 'delay'
+2021-11-22T03:30:33+03:00 [1637541033505] INIT : Called 'json-server' router
+-
+2021-11-22T03:30:34+03:00 [77e94ee6a2] INFO : Updating Master Subdomain | Aborted because config prevents automatic subdomain heartbeats.
+-
+2021-11-22T03:30:45+03:00 [1637541045553] INIT : Initiating...
+2021-11-22T03:30:45+03:00 [1637541045553] INIT : Called 'express'
+2021-11-22T03:30:45+03:00 [1637541045553] INIT : Initiated 'express'
+2021-11-22T03:30:45+03:00 [1637541045553] INIT : Called 'json-server'
+2021-11-22T03:30:45+03:00 [1637541045553] INIT : Created 'json-server'
+2021-11-22T03:30:45+03:00 [1637541045553] INIT : Called 'json-server' router
+2021-11-22T03:30:45+03:00 [1637541045553] INIT : Called 'axios'
+2021-11-22T03:30:45+03:00 [1637541045553] INIT : Called 'events'
+2021-11-22T03:30:45+03:00 [1637541045553] INIT : Called 'delay'
+2021-11-22T03:30:45+03:00 [1637541045553] INIT : Called 'random-number-csprng'
+2021-11-22T03:30:45+03:00 [1637541045553] INIT : Called 'moment'
+2021-11-22T03:30:45+03:00 [1637541045553] INIT : Called 'crypto'
+2021-11-22T03:30:45+03:00 [1637541045553] INIT : Called 'caller-id'
+2021-11-22T03:30:46+03:00 [5940d4f874] INFO : Updating Master Subdomain | Aborted because config prevents automatic subdomain heartbeats.
+-
+-
+2021-11-22T03:30:57+03:00 [1637541057213] INIT : Initiating...
+2021-11-22T03:30:57+03:00 [1637541057213] INIT : Called 'express'
+2021-11-22T03:30:57+03:00 [1637541057213] INIT : Created 'json-server'
+2021-11-22T03:30:57+03:00 [1637541057213] INIT : Called 'json-server' router
+2021-11-22T03:30:57+03:00 [1637541057213] INIT : Called 'axios'
+2021-11-22T03:30:57+03:00 [1637541057213] INIT : Called 'events'
+2021-11-22T03:30:57+03:00 [1637541057213] INIT : Called 'delay'
+2021-11-22T03:30:57+03:00 [1637541057213] INIT : Called 'random-number-csprng'
+2021-11-22T03:30:57+03:00 [1637541057213] INIT : Called 'json-server'
+2021-11-22T03:30:57+03:00 [1637541057213] INIT : Called 'crypto'
+2021-11-22T03:30:57+03:00 [1637541057213] INIT : Called 'caller-id'
+2021-11-22T03:30:57+03:00 [1637541057213] INIT : Called 'moment'
+2021-11-22T03:30:57+03:00 [1637541057213] INIT : Initiated 'express'
+-
+2021-11-22T03:30:58+03:00 [86cccb499f] INFO : Updating Master Subdomain | Aborted because config prevents automatic subdomain heartbeats.
+-
+2021-11-22T03:34:07+03:00 [1637541247561] INIT : Initiating...
+2021-11-22T03:34:07+03:00 [1637541247561] INIT : Called 'express'
+2021-11-22T03:34:07+03:00 [1637541247561] INIT : Initiated 'express'
+2021-11-22T03:34:07+03:00 [1637541247561] INIT : Called 'json-server'
+2021-11-22T03:34:07+03:00 [1637541247561] INIT : Created 'json-server'
+2021-11-22T03:34:07+03:00 [1637541247561] INIT : Called 'json-server' router
+2021-11-22T03:34:07+03:00 [1637541247561] INIT : Called 'axios'
+2021-11-22T03:34:07+03:00 [1637541247561] INIT : Called 'events'
+2021-11-22T03:34:07+03:00 [1637541247561] INIT : Called 'delay'
+2021-11-22T03:34:07+03:00 [1637541247561] INIT : Called 'random-number-csprng'
+2021-11-22T03:34:07+03:00 [1637541247561] INIT : Called 'crypto'
+2021-11-22T03:34:07+03:00 [1637541247561] INIT : Called 'caller-id'
+2021-11-22T03:34:07+03:00 [1637541247561] INIT : Called 'moment'
+-
+2021-11-22T03:34:08+03:00 [fb756037f5] INFO : Updating Master Subdomain | Aborted because config prevents automatic subdomain heartbeats.
+-
+2021-11-22T03:35:30+03:00 [1637541330741] INIT : Initiating...
+2021-11-22T03:35:30+03:00 [1637541330741] INIT : Called 'express'
+2021-11-22T03:35:30+03:00 [1637541330741] INIT : Initiated 'express'
+2021-11-22T03:35:30+03:00 [1637541330741] INIT : Called 'json-server'
+2021-11-22T03:35:31+03:00 [1637541330741] INIT : Called 'json-server' router
+2021-11-22T03:35:31+03:00 [1637541330741] INIT : Called 'events'
+2021-11-22T03:35:31+03:00 [1637541330741] INIT : Called 'delay'
+2021-11-22T03:35:31+03:00 [1637541330741] INIT : Called 'random-number-csprng'
+2021-11-22T03:35:30+03:00 [1637541330741] INIT : Created 'json-server'
+2021-11-22T03:35:31+03:00 [1637541330741] INIT : Called 'moment'
+2021-11-22T03:35:31+03:00 [1637541330741] INIT : Called 'axios'
+2021-11-22T03:35:31+03:00 [1637541330741] INIT : Called 'caller-id'
+2021-11-22T03:35:31+03:00 [1637541330741] INIT : Called 'crypto'
+-
+2021-11-22T03:35:31+03:00 [c64cdaedf1] INFO : Updating Master Subdomain | Aborted because config prevents automatic subdomain heartbeats.
+-
+2021-11-22T03:35:40+03:00 [1637541340270] INIT : Initiating...
+2021-11-22T03:35:40+03:00 [1637541340270] INIT : Called 'express'
+2021-11-22T03:35:40+03:00 [1637541340270] INIT : Initiated 'express'
+2021-11-22T03:35:40+03:00 [1637541340270] INIT : Called 'json-server'
+2021-11-22T03:35:40+03:00 [1637541340270] INIT : Created 'json-server'
+2021-11-22T03:35:40+03:00 [1637541340270] INIT : Called 'json-server' router
+2021-11-22T03:35:40+03:00 [1637541340270] INIT : Called 'axios'
+2021-11-22T03:35:40+03:00 [1637541340270] INIT : Called 'events'
+2021-11-22T03:35:40+03:00 [1637541340270] INIT : Called 'delay'
+2021-11-22T03:35:40+03:00 [1637541340270] INIT : Called 'random-number-csprng'
+2021-11-22T03:35:40+03:00 [1637541340270] INIT : Called 'moment'
+2021-11-22T03:35:40+03:00 [1637541340270] INIT : Called 'crypto'
+2021-11-22T03:35:40+03:00 [1637541340270] INIT : Called 'caller-id'
+-
+2021-11-22T03:35:41+03:00 [2beeb1a23e] INFO : Updating Master Subdomain | Aborted because config prevents automatic subdomain heartbeats.
+-
+2021-11-22T03:35:49+03:00 [1637541349628] INIT : Initiating...
+2021-11-22T03:35:49+03:00 [1637541349628] INIT : Called 'express'
+2021-11-22T03:35:49+03:00 [1637541349628] INIT : Initiated 'express'
+2021-11-22T03:35:49+03:00 [1637541349628] INIT : Called 'json-server'
+2021-11-22T03:35:49+03:00 [1637541349628] INIT : Created 'json-server'
+2021-11-22T03:35:49+03:00 [1637541349628] INIT : Called 'json-server' router
+2021-11-22T03:35:49+03:00 [1637541349628] INIT : Called 'axios'
+2021-11-22T03:35:49+03:00 [1637541349628] INIT : Called 'events'
+2021-11-22T03:35:49+03:00 [1637541349628] INIT : Called 'delay'
+2021-11-22T03:35:50+03:00 [1637541349628] INIT : Called 'random-number-csprng'
+2021-11-22T03:35:50+03:00 [1637541349628] INIT : Called 'moment'
+2021-11-22T03:35:50+03:00 [1637541349628] INIT : Called 'crypto'
+2021-11-22T03:35:50+03:00 [1637541349628] INIT : Called 'caller-id'
+-
+2021-11-22T03:35:50+03:00 [fb30827c17] INFO : Updating Master Subdomain | Aborted because config prevents automatic subdomain heartbeats.
+-
+2021-11-22T03:36:05+03:00 [1637541365922] INIT : Initiating...
+2021-11-22T03:36:06+03:00 [1637541365922] INIT : Called 'express'
+2021-11-22T03:36:06+03:00 [1637541365922] INIT : Initiated 'express'
+2021-11-22T03:36:06+03:00 [1637541365922] INIT : Called 'json-server'
+2021-11-22T03:36:06+03:00 [1637541365922] INIT : Created 'json-server'
+2021-11-22T03:36:06+03:00 [1637541365922] INIT : Called 'json-server' router
+2021-11-22T03:36:06+03:00 [1637541365922] INIT : Called 'axios'
+2021-11-22T03:36:06+03:00 [1637541365922] INIT : Called 'events'
+2021-11-22T03:36:06+03:00 [1637541365922] INIT : Called 'random-number-csprng'
+2021-11-22T03:36:06+03:00 [1637541365922] INIT : Called 'moment'
+2021-11-22T03:36:06+03:00 [1637541365922] INIT : Called 'crypto'
+2021-11-22T03:36:06+03:00 [1637541365922] INIT : Called 'caller-id'
+2021-11-22T03:36:06+03:00 [1637541365922] INIT : Called 'delay'
+-
+2021-11-22T03:36:07+03:00 [2769279863] INFO : Updating Master Subdomain | Aborted because config prevents automatic subdomain heartbeats.
+-
+2021-11-22T03:37:01+03:00 [1637541421919] INIT : Initiating...
+2021-11-22T03:37:02+03:00 [1637541421919] INIT : Called 'express'
+2021-11-22T03:37:02+03:00 [1637541421919] INIT : Initiated 'express'
+2021-11-22T03:37:02+03:00 [1637541421919] INIT : Called 'json-server'
+2021-11-22T03:37:02+03:00 [1637541421919] INIT : Called 'json-server' router
+2021-11-22T03:37:02+03:00 [1637541421919] INIT : Called 'events'
+2021-11-22T03:37:02+03:00 [1637541421919] INIT : Called 'delay'
+2021-11-22T03:37:02+03:00 [1637541421919] INIT : Called 'random-number-csprng'
+2021-11-22T03:37:02+03:00 [1637541421919] INIT : Created 'json-server'
+2021-11-22T03:37:02+03:00 [1637541421919] INIT : Called 'crypto'
+2021-11-22T03:37:02+03:00 [1637541421919] INIT : Called 'moment'
+2021-11-22T03:37:02+03:00 [1637541421919] INIT : Called 'caller-id'
+2021-11-22T03:37:02+03:00 [1637541421919] INIT : Called 'axios'
+-
+2021-11-22T03:37:02+03:00 [56cc43cbd0] INFO : Updating Master Subdomain | Aborted because config prevents automatic subdomain heartbeats.
+-
+2021-11-22T03:37:18+03:00 [1637541438631] INIT : Initiating...
+2021-11-22T03:37:18+03:00 [1637541438631] INIT : Called 'express'
+2021-11-22T03:37:18+03:00 [1637541438631] INIT : Called 'json-server'
+2021-11-22T03:37:18+03:00 [1637541438631] INIT : Created 'json-server'
+2021-11-22T03:37:18+03:00 [1637541438631] INIT : Called 'json-server' router
+2021-11-22T03:37:18+03:00 [1637541438631] INIT : Initiated 'express'
+2021-11-22T03:37:18+03:00 [1637541438631] INIT : Called 'axios'
+2021-11-22T03:37:18+03:00 [1637541438631] INIT : Called 'events'
+2021-11-22T03:37:18+03:00 [1637541438631] INIT : Called 'random-number-csprng'
+2021-11-22T03:37:18+03:00 [1637541438631] INIT : Called 'delay'
+2021-11-22T03:37:18+03:00 [1637541438631] INIT : Called 'crypto'
+2021-11-22T03:37:18+03:00 [1637541438631] INIT : Called 'caller-id'
+2021-11-22T03:37:18+03:00 [1637541438631] INIT : Called 'moment'
+-
+2021-11-22T03:37:19+03:00 [b319c6e17d] INFO : Updating Master Subdomain | Aborted because config prevents automatic subdomain heartbeats.
+-
+2021-11-22T03:40:42+03:00 [1637541642563] INIT : Initiating...
+2021-11-22T03:40:42+03:00 [1637541642563] INIT : Called 'express'
+2021-11-22T03:40:42+03:00 [1637541642563] INIT : Called 'json-server'
+2021-11-22T03:40:42+03:00 [1637541642563] INIT : Created 'json-server'
+2021-11-22T03:40:42+03:00 [1637541642563] INIT : Called 'json-server' router
+2021-11-22T03:40:42+03:00 [1637541642563] INIT : Called 'events'
+2021-11-22T03:40:42+03:00 [1637541642563] INIT : Initiated 'express'
+2021-11-22T03:40:42+03:00 [1637541642563] INIT : Called 'random-number-csprng'
+2021-11-22T03:40:42+03:00 [1637541642563] INIT : Called 'moment'
+2021-11-22T03:40:42+03:00 [1637541642563] INIT : Called 'crypto'
+2021-11-22T03:40:42+03:00 [1637541642563] INIT : Called 'caller-id'
+2021-11-22T03:40:42+03:00 [1637541642563] INIT : Called 'delay'
+2021-11-22T03:40:42+03:00 [1637541642563] INIT : Called 'axios'
+-
+2021-11-22T03:40:43+03:00 [7eec7703b4] INFO : Updating Master Subdomain | Aborted because config prevents automatic subdomain heartbeats.
+-
+2021-11-22T03:41:09+03:00 [1637541669879] INIT : Initiating...
+2021-11-22T03:41:10+03:00 [1637541669879] INIT : Called 'express'
+2021-11-22T03:41:10+03:00 [1637541669879] INIT : Initiated 'express'
+2021-11-22T03:41:10+03:00 [1637541669879] INIT : Called 'json-server' router
+2021-11-22T03:41:10+03:00 [1637541669879] INIT : Called 'json-server'
+2021-11-22T03:41:10+03:00 [1637541669879] INIT : Called 'events'
+2021-11-22T03:41:10+03:00 [1637541669879] INIT : Called 'random-number-csprng'
+2021-11-22T03:41:10+03:00 [1637541669879] INIT : Called 'delay'
+2021-11-22T03:41:10+03:00 [1637541669879] INIT : Called 'moment'
+2021-11-22T03:41:10+03:00 [1637541669879] INIT : Created 'json-server'
+2021-11-22T03:41:10+03:00 [1637541669879] INIT : Called 'crypto'
+2021-11-22T03:41:10+03:00 [1637541669879] INIT : Called 'caller-id'
+2021-11-22T03:41:10+03:00 [1637541669879] INIT : Called 'axios'
+-
+2021-11-22T03:41:10+03:00 [7704511d33] INFO : Updating Master Subdomain | Aborted because config prevents automatic subdomain heartbeats.
+-
+2021-11-22T03:45:05+03:00 [1637541905638] INIT : Initiating...
+2021-11-22T03:45:05+03:00 [1637541905638] INIT : Called 'express'
+2021-11-22T03:45:05+03:00 [1637541905638] INIT : Initiated 'express'
+2021-11-22T03:45:05+03:00 [1637541905638] INIT : Created 'json-server'
+2021-11-22T03:45:05+03:00 [1637541905638] INIT : Called 'json-server' router
+2021-11-22T03:45:05+03:00 [1637541905638] INIT : Called 'events'
+2021-11-22T03:45:05+03:00 [1637541905638] INIT : Called 'json-server'
+2021-11-22T03:45:05+03:00 [1637541905638] INIT : Called 'random-number-csprng'
+2021-11-22T03:45:05+03:00 [1637541905638] INIT : Called 'axios'
+2021-11-22T03:45:05+03:00 [1637541905638] INIT : Called 'moment'
+2021-11-22T03:45:05+03:00 [1637541905638] INIT : Called 'crypto'
+2021-11-22T03:45:05+03:00 [1637541905638] INIT : Called 'caller-id'
+2021-11-22T03:45:05+03:00 [1637541905638] INIT : Called 'delay'
+-
+2021-11-22T03:45:06+03:00 [759044ca78] INFO : Updating Master Subdomain | Aborted because config prevents automatic subdomain heartbeats.
+-
+2021-11-22T04:15:42+03:00 [1637543742882] INIT : Initiating...
+2021-11-22T04:15:43+03:00 [1637543742882] INIT : Called 'express'
+2021-11-22T04:15:43+03:00 [1637543742882] INIT : Initiated 'express'
+2021-11-22T04:15:43+03:00 [1637543742882] INIT : Called 'json-server'
+2021-11-22T04:15:43+03:00 [1637543742882] INIT : Created 'json-server'
+2021-11-22T04:15:43+03:00 [1637543742882] INIT : Called 'events'
+2021-11-22T04:15:43+03:00 [1637543742882] INIT : Called 'delay'
+2021-11-22T04:15:43+03:00 [1637543742882] INIT : Called 'random-number-csprng'
+2021-11-22T04:15:43+03:00 [1637543742882] INIT : Called 'axios'
+2021-11-22T04:15:43+03:00 [1637543742882] INIT : Called 'crypto'
+2021-11-22T04:15:43+03:00 [1637543742882] INIT : Called 'caller-id'
+2021-11-22T04:15:43+03:00 [1637543742882] INIT : Called 'moment'
+2021-11-22T04:15:43+03:00 [1637543742882] INIT : Called 'json-server' router
+-
+2021-11-22T04:15:43+03:00 [59f6a0d449] INFO : Updating Master Subdomain | Aborted because config prevents automatic subdomain heartbeats.
+-
+2021-11-22T04:16:41+03:00 [1637543801647] INIT : Initiating...
+2021-11-22T04:16:41+03:00 [1637543801647] INIT : Called 'express'
+2021-11-22T04:16:41+03:00 [1637543801647] INIT : Initiated 'express'
+2021-11-22T04:16:41+03:00 [1637543801647] INIT : Called 'json-server'
+2021-11-22T04:16:41+03:00 [1637543801647] INIT : Created 'json-server'
+2021-11-22T04:16:41+03:00 [1637543801647] INIT : Called 'delay'
+2021-11-22T04:16:41+03:00 [1637543801647] INIT : Called 'random-number-csprng'
+2021-11-22T04:16:41+03:00 [1637543801647] INIT : Called 'moment'
+2021-11-22T04:16:41+03:00 [1637543801647] INIT : Called 'crypto'
+2021-11-22T04:16:41+03:00 [1637543801647] INIT : Called 'caller-id'
+2021-11-22T04:16:41+03:00 [1637543801647] INIT : Called 'axios'
+2021-11-22T04:16:41+03:00 [1637543801647] INIT : Called 'json-server' router
+2021-11-22T04:16:41+03:00 [1637543801647] INIT : Called 'events'
+-
+2021-11-22T04:16:42+03:00 [a2a4c1532f] INFO : Updating Master Subdomain | Aborted because config prevents automatic subdomain heartbeats.
+-
+2021-11-22T04:17:09+03:00 [1637543829854] INIT : Initiating...
+2021-11-22T04:17:10+03:00 [1637543829854] INIT : Initiated 'express'
+2021-11-22T04:17:10+03:00 [1637543829854] INIT : Called 'json-server'
+2021-11-22T04:17:10+03:00 [1637543829854] INIT : Created 'json-server'
+2021-11-22T04:17:10+03:00 [1637543829854] INIT : Called 'json-server' router
+2021-11-22T04:17:10+03:00 [1637543829854] INIT : Called 'axios'
+2021-11-22T04:17:10+03:00 [1637543829854] INIT : Called 'express'
+2021-11-22T04:17:10+03:00 [1637543829854] INIT : Called 'delay'
+2021-11-22T04:17:10+03:00 [1637543829854] INIT : Called 'moment'
+2021-11-22T04:17:10+03:00 [1637543829854] INIT : Called 'random-number-csprng'
+2021-11-22T04:17:10+03:00 [1637543829854] INIT : Called 'caller-id'
+2021-11-22T04:17:10+03:00 [1637543829854] INIT : Called 'crypto'
+2021-11-22T04:17:10+03:00 [1637543829854] INIT : Called 'events'
+-
+2021-11-22T04:17:11+03:00 [4e5f66983c] INFO : Updating Master Subdomain | Aborted because config prevents automatic subdomain heartbeats.
+-
+2021-11-22T04:17:16+03:00 [1637543836699] INIT : Initiating...
+2021-11-22T04:17:16+03:00 [1637543836699] INIT : Called 'express'
+2021-11-22T04:17:16+03:00 [1637543836699] INIT : Initiated 'express'
+2021-11-22T04:17:16+03:00 [1637543836699] INIT : Called 'json-server'
+2021-11-22T04:17:16+03:00 [1637543836699] INIT : Created 'json-server'
+2021-11-22T04:17:16+03:00 [1637543836699] INIT : Called 'json-server' router
+2021-11-22T04:17:16+03:00 [1637543836699] INIT : Called 'axios'
+2021-11-22T04:17:17+03:00 [1637543836699] INIT : Called 'random-number-csprng'
+2021-11-22T04:17:17+03:00 [1637543836699] INIT : Called 'crypto'
+2021-11-22T04:17:17+03:00 [1637543836699] INIT : Called 'caller-id'
+2021-11-22T04:17:17+03:00 [1637543836699] INIT : Called 'moment'
+2021-11-22T04:17:16+03:00 [1637543836699] INIT : Called 'events'
+2021-11-22T04:17:17+03:00 [1637543836699] INIT : Called 'delay'
+-
+2021-11-22T04:17:17+03:00 [083c7ea51b] INFO : Updating Master Subdomain | Aborted because config prevents automatic subdomain heartbeats.
+-
+2021-11-22T04:17:29+03:00 [1637543849465] INIT : Initiating...
+2021-11-22T04:17:29+03:00 [1637543849465] INIT : Called 'express'
+2021-11-22T04:17:29+03:00 [1637543849465] INIT : Called 'json-server'
+2021-11-22T04:17:29+03:00 [1637543849465] INIT : Initiated 'express'
+2021-11-22T04:17:29+03:00 [1637543849465] INIT : Created 'json-server'
+2021-11-22T04:17:29+03:00 [1637543849465] INIT : Called 'axios'
+2021-11-22T04:17:29+03:00 [1637543849465] INIT : Called 'delay'
+2021-11-22T04:17:29+03:00 [1637543849465] INIT : Called 'random-number-csprng'
+2021-11-22T04:17:29+03:00 [1637543849465] INIT : Called 'moment'
+2021-11-22T04:17:29+03:00 [1637543849465] INIT : Called 'crypto'
+2021-11-22T04:17:29+03:00 [1637543849465] INIT : Called 'caller-id'
+2021-11-22T04:17:29+03:00 [1637543849465] INIT : Called 'json-server' router
+2021-11-22T04:17:29+03:00 [1637543849465] INIT : Called 'events'
+-
+2021-11-22T04:17:30+03:00 [61cf6bf114] INFO : Updating Master Subdomain | Aborted because config prevents automatic subdomain heartbeats.
+-
+2021-11-22T04:17:34+03:00 [1637543854523] INIT : Initiating...
+2021-11-22T04:17:34+03:00 [1637543854523] INIT : Called 'express'
+2021-11-22T04:17:34+03:00 [1637543854523] INIT : Initiated 'express'
+2021-11-22T04:17:34+03:00 [1637543854523] INIT : Called 'json-server'
+2021-11-22T04:17:34+03:00 [1637543854523] INIT : Created 'json-server'
+2021-11-22T04:17:34+03:00 [1637543854523] INIT : Called 'axios'
+2021-11-22T04:17:34+03:00 [1637543854523] INIT : Called 'json-server' router
+2021-11-22T04:17:34+03:00 [1637543854523] INIT : Called 'random-number-csprng'
+2021-11-22T04:17:34+03:00 [1637543854523] INIT : Called 'delay'
+2021-11-22T04:17:34+03:00 [1637543854523] INIT : Called 'crypto'
+2021-11-22T04:17:34+03:00 [1637543854523] INIT : Called 'caller-id'
+2021-11-22T04:17:34+03:00 [1637543854523] INIT : Called 'events'
+2021-11-22T04:17:34+03:00 [1637543854523] INIT : Called 'moment'
+-
+2021-11-22T04:17:35+03:00 [5d21995c09] INFO : Updating Master Subdomain | Aborted because config prevents automatic subdomain heartbeats.
+-
+2021-11-22T04:17:46+03:00 [1637543866751] INIT : Called 'express'
+2021-11-22T04:17:46+03:00 [1637543866751] INIT : Initiated 'express'
+2021-11-22T04:17:46+03:00 [1637543866751] INIT : Created 'json-server'
+2021-11-22T04:17:46+03:00 [1637543866751] INIT : Called 'json-server' router
+2021-11-22T04:17:47+03:00 [1637543866751] INIT : Called 'axios'
+2021-11-22T04:17:47+03:00 [1637543866751] INIT : Called 'events'
+2021-11-22T04:17:47+03:00 [1637543866751] INIT : Called 'delay'
+2021-11-22T04:17:47+03:00 [1637543866751] INIT : Called 'random-number-csprng'
+2021-11-22T04:17:47+03:00 [1637543866751] INIT : Called 'moment'
+2021-11-22T04:17:47+03:00 [1637543866751] INIT : Called 'crypto'
+2021-11-22T04:17:47+03:00 [1637543866751] INIT : Called 'caller-id'
+2021-11-22T04:17:46+03:00 [1637543866751] INIT : Called 'json-server'
+2021-11-22T04:17:46+03:00 [1637543866751] INIT : Initiating...
+-
+2021-11-22T04:17:47+03:00 [046fe8adf4] INFO : Updating Master Subdomain | Aborted because config prevents automatic subdomain heartbeats.
+-
+2021-11-22T04:31:36+03:00 [1637544696809] INIT : Initiating...
+2021-11-22T04:31:36+03:00 [1637544696809] INIT : Called 'express'
+2021-11-22T04:31:37+03:00 [1637544696809] INIT : Called 'json-server'
+2021-11-22T04:31:37+03:00 [1637544696809] INIT : Created 'json-server'
+2021-11-22T04:31:37+03:00 [1637544696809] INIT : Called 'json-server' router
+2021-11-22T04:31:37+03:00 [1637544696809] INIT : Called 'axios'
+2021-11-22T04:31:36+03:00 [1637544696809] INIT : Initiated 'express'
+2021-11-22T04:31:37+03:00 [1637544696809] INIT : Called 'events'
+2021-11-22T04:31:37+03:00 [1637544696809] INIT : Called 'random-number-csprng'
+2021-11-22T04:31:37+03:00 [1637544696809] INIT : Called 'moment'
+2021-11-22T04:31:37+03:00 [1637544696809] INIT : Called 'crypto'
+2021-11-22T04:31:37+03:00 [1637544696809] INIT : Called 'caller-id'
+2021-11-22T04:31:37+03:00 [1637544696809] INIT : Called 'delay'
+-
+2021-11-22T04:31:37+03:00 [0069ee5044] INFO : Updating Master Subdomain | Aborted because config prevents automatic subdomain heartbeats.
+-
+2021-11-22T04:32:09+03:00 [1637544728969] INIT : Initiating...
+2021-11-22T04:32:09+03:00 [1637544728969] INIT : Called 'express'
+2021-11-22T04:32:09+03:00 [1637544728969] INIT : Initiated 'express'
+2021-11-22T04:32:09+03:00 [1637544728969] INIT : Called 'json-server'
+2021-11-22T04:32:09+03:00 [1637544728969] INIT : Created 'json-server'
+2021-11-22T04:32:09+03:00 [1637544728969] INIT : Called 'json-server' router
+2021-11-22T04:32:09+03:00 [1637544728969] INIT : Called 'axios'
+2021-11-22T04:32:09+03:00 [1637544728969] INIT : Called 'random-number-csprng'
+2021-11-22T04:32:09+03:00 [1637544728969] INIT : Called 'moment'
+2021-11-22T04:32:09+03:00 [1637544728969] INIT : Called 'caller-id'
+2021-11-22T04:32:09+03:00 [1637544728969] INIT : Called 'events'
+2021-11-22T04:32:09+03:00 [1637544728969] INIT : Called 'delay'
+2021-11-22T04:32:09+03:00 [1637544728969] INIT : Called 'crypto'
+-
+2021-11-22T04:32:10+03:00 [2810f28dc5] INFO : Updating Master Subdomain | Aborted because config prevents automatic subdomain heartbeats.
+-
+2021-11-22T04:32:42+03:00 [1637544762195] INIT : Initiating...
+2021-11-22T04:32:42+03:00 [1637544762195] INIT : Called 'express'
+2021-11-22T04:32:42+03:00 [1637544762195] INIT : Called 'json-server'
+2021-11-22T04:32:42+03:00 [1637544762195] INIT : Created 'json-server'
+2021-11-22T04:32:42+03:00 [1637544762195] INIT : Initiated 'express'
+2021-11-22T04:32:42+03:00 [1637544762195] INIT : Called 'json-server' router
+2021-11-22T04:32:42+03:00 [1637544762195] INIT : Called 'events'
+2021-11-22T04:32:42+03:00 [1637544762195] INIT : Called 'random-number-csprng'
+2021-11-22T04:32:42+03:00 [1637544762195] INIT : Called 'moment'
+2021-11-22T04:32:42+03:00 [1637544762195] INIT : Called 'crypto'
+2021-11-22T04:32:42+03:00 [1637544762195] INIT : Called 'caller-id'
+2021-11-22T04:32:42+03:00 [1637544762195] INIT : Called 'axios'
+2021-11-22T04:32:42+03:00 [1637544762195] INIT : Called 'delay'
+-
+2021-11-22T04:32:43+03:00 [e70aa59997] INFO : Updating Master Subdomain | Aborted because config prevents automatic subdomain heartbeats.
+-
+2021-11-22T04:33:57+03:00 [1637544837675] INIT : Initiating...
+2021-11-22T04:33:57+03:00 [1637544837675] INIT : Called 'express'
+2021-11-22T04:33:57+03:00 [1637544837675] INIT : Called 'json-server'
+2021-11-22T04:33:57+03:00 [1637544837675] INIT : Initiated 'express'
+2021-11-22T04:33:57+03:00 [1637544837675] INIT : Created 'json-server'
+2021-11-22T04:33:57+03:00 [1637544837675] INIT : Called 'json-server' router
+2021-11-22T04:33:57+03:00 [1637544837675] INIT : Called 'axios'
+2021-11-22T04:33:58+03:00 [1637544837675] INIT : Called 'random-number-csprng'
+2021-11-22T04:33:58+03:00 [1637544837675] INIT : Called 'moment'
+2021-11-22T04:33:58+03:00 [1637544837675] INIT : Called 'crypto'
+2021-11-22T04:33:58+03:00 [1637544837675] INIT : Called 'caller-id'
+2021-11-22T04:33:57+03:00 [1637544837675] INIT : Called 'events'
+2021-11-22T04:33:57+03:00 [1637544837675] INIT : Called 'delay'
+-
+2021-11-22T04:33:58+03:00 [07e18e0dc1] INFO : Updating Master Subdomain | Aborted because config prevents automatic subdomain heartbeats.
+-
+2021-11-22T04:34:05+03:00 [1637544845300] INIT : Initiating...
+2021-11-22T04:34:05+03:00 [1637544845300] INIT : Called 'express'
+2021-11-22T04:34:05+03:00 [1637544845300] INIT : Initiated 'express'
+2021-11-22T04:34:05+03:00 [1637544845300] INIT : Called 'json-server'
+2021-11-22T04:34:05+03:00 [1637544845300] INIT : Created 'json-server'
+2021-11-22T04:34:05+03:00 [1637544845300] INIT : Called 'json-server' router
+2021-11-22T04:34:05+03:00 [1637544845300] INIT : Called 'axios'
+2021-11-22T04:34:05+03:00 [1637544845300] INIT : Called 'events'
+2021-11-22T04:34:05+03:00 [1637544845300] INIT : Called 'delay'
+2021-11-22T04:34:05+03:00 [1637544845300] INIT : Called 'random-number-csprng'
+2021-11-22T04:34:05+03:00 [1637544845300] INIT : Called 'moment'
+2021-11-22T04:34:05+03:00 [1637544845300] INIT : Called 'crypto'
+2021-11-22T04:34:05+03:00 [1637544845300] INIT : Called 'caller-id'
+-
+2021-11-22T04:34:06+03:00 [5da19f2a81] INFO : Updating Master Subdomain | Aborted because config prevents automatic subdomain heartbeats.
+-
+2021-11-22T04:39:00+03:00 [1637545140343] INIT : Initiating...
+2021-11-22T04:39:00+03:00 [1637545140343] INIT : Called 'express'
+2021-11-22T04:39:00+03:00 [1637545140343] INIT : Initiated 'express'
+2021-11-22T04:39:00+03:00 [1637545140343] INIT : Called 'json-server'
+2021-11-22T04:39:00+03:00 [1637545140343] INIT : Created 'json-server'
+2021-11-22T04:39:00+03:00 [1637545140343] INIT : Called 'json-server' router
+2021-11-22T04:39:00+03:00 [1637545140343] INIT : Called 'axios'
+2021-11-22T04:39:00+03:00 [1637545140343] INIT : Called 'events'
+2021-11-22T04:39:00+03:00 [1637545140343] INIT : Called 'delay'
+2021-11-22T04:39:00+03:00 [1637545140343] INIT : Called 'random-number-csprng'
+2021-11-22T04:39:00+03:00 [1637545140343] INIT : Called 'moment'
+2021-11-22T04:39:00+03:00 [1637545140343] INIT : Called 'crypto'
+2021-11-22T04:39:00+03:00 [1637545140343] INIT : Called 'caller-id'
+-
+2021-11-22T04:39:01+03:00 [d9918b112c] INFO : Updating Master Subdomain | Aborted because config prevents automatic subdomain heartbeats.
+-
+2021-11-22T04:39:28+03:00 [1637545167997] INIT : Initiating...
+2021-11-22T04:39:28+03:00 [1637545167997] INIT : Called 'express'
+2021-11-22T04:39:28+03:00 [1637545167997] INIT : Initiated 'express'
+2021-11-22T04:39:28+03:00 [1637545167997] INIT : Called 'json-server' router
+2021-11-22T04:39:28+03:00 [1637545167997] INIT : Called 'json-server'
+2021-11-22T04:39:28+03:00 [1637545167997] INIT : Created 'json-server'
+2021-11-22T04:39:28+03:00 [1637545167997] INIT : Called 'delay'
+2021-11-22T04:39:28+03:00 [1637545167997] INIT : Called 'random-number-csprng'
+2021-11-22T04:39:28+03:00 [1637545167997] INIT : Called 'moment'
+2021-11-22T04:39:28+03:00 [1637545167997] INIT : Called 'crypto'
+2021-11-22T04:39:28+03:00 [1637545167997] INIT : Called 'caller-id'
+2021-11-22T04:39:28+03:00 [1637545167997] INIT : Called 'events'
+2021-11-22T04:39:28+03:00 [1637545167997] INIT : Called 'axios'
+-
+2021-11-22T04:39:28+03:00 [b8594d7de2] INFO : Updating Master Subdomain | Aborted because config prevents automatic subdomain heartbeats.
+-
+2021-11-22T04:41:40+03:00 [1637545300211] INIT : Called 'express'
+2021-11-22T04:41:40+03:00 [1637545300211] INIT : Initiating...
+2021-11-22T04:41:40+03:00 [1637545300211] INIT : Initiated 'express'
+2021-11-22T04:41:40+03:00 [1637545300211] INIT : Created 'json-server'
+2021-11-22T04:41:40+03:00 [1637545300211] INIT : Called 'json-server' router
+2021-11-22T04:41:40+03:00 [1637545300211] INIT : Called 'axios'
+2021-11-22T04:41:40+03:00 [1637545300211] INIT : Called 'json-server'
+2021-11-22T04:41:40+03:00 [1637545300211] INIT : Called 'random-number-csprng'
+2021-11-22T04:41:40+03:00 [1637545300211] INIT : Called 'moment'
+2021-11-22T04:41:40+03:00 [1637545300211] INIT : Called 'delay'
+2021-11-22T04:41:40+03:00 [1637545300211] INIT : Called 'crypto'
+2021-11-22T04:41:40+03:00 [1637545300211] INIT : Called 'caller-id'
+2021-11-22T04:41:40+03:00 [1637545300211] INIT : Called 'events'
+2021-11-22T04:41:41+03:00 [243ffc4a7b] INFO : Updating Master Subdomain | Aborted because config prevents automatic subdomain heartbeats.
+-
+-
+2021-11-22T04:41:49+03:00 [1637545309767] INIT : Initiating...
+2021-11-22T04:41:49+03:00 [1637545309767] INIT : Called 'express'
+2021-11-22T04:41:49+03:00 [1637545309767] INIT : Called 'json-server'
+2021-11-22T04:41:49+03:00 [1637545309767] INIT : Initiated 'express'
+2021-11-22T04:41:49+03:00 [1637545309767] INIT : Created 'json-server'
+2021-11-22T04:41:49+03:00 [1637545309767] INIT : Called 'json-server' router
+2021-11-22T04:41:50+03:00 [1637545309767] INIT : Called 'events'
+2021-11-22T04:41:50+03:00 [1637545309767] INIT : Called 'delay'
+2021-11-22T04:41:50+03:00 [1637545309767] INIT : Called 'random-number-csprng'
+2021-11-22T04:41:50+03:00 [1637545309767] INIT : Called 'moment'
+2021-11-22T04:41:50+03:00 [1637545309767] INIT : Called 'crypto'
+2021-11-22T04:41:50+03:00 [1637545309767] INIT : Called 'caller-id'
+2021-11-22T04:41:50+03:00 [1637545309767] INIT : Called 'axios'
+-
+2021-11-22T04:41:50+03:00 [d1ec037963] INFO : Updating Master Subdomain | Aborted because config prevents automatic subdomain heartbeats.
+-
+2021-11-22T04:42:01+03:00 [1637545321534] INIT : Initiating...
+2021-11-22T04:42:01+03:00 [1637545321534] INIT : Called 'express'
+2021-11-22T04:42:01+03:00 [1637545321534] INIT : Initiated 'express'
+2021-11-22T04:42:01+03:00 [1637545321534] INIT : Called 'json-server'
+2021-11-22T04:42:01+03:00 [1637545321534] INIT : Created 'json-server'
+2021-11-22T04:42:01+03:00 [1637545321534] INIT : Called 'json-server' router
+2021-11-22T04:42:01+03:00 [1637545321534] INIT : Called 'delay'
+2021-11-22T04:42:01+03:00 [1637545321534] INIT : Called 'random-number-csprng'
+2021-11-22T04:42:01+03:00 [1637545321534] INIT : Called 'moment'
+2021-11-22T04:42:01+03:00 [1637545321534] INIT : Called 'caller-id'
+2021-11-22T04:42:01+03:00 [1637545321534] INIT : Called 'crypto'
+2021-11-22T04:42:01+03:00 [1637545321534] INIT : Called 'axios'
+2021-11-22T04:42:01+03:00 [1637545321534] INIT : Called 'events'
+-
+2021-11-22T04:42:02+03:00 [6f768dda70] INFO : Updating Master Subdomain | Aborted because config prevents automatic subdomain heartbeats.
+-
+2021-11-22T04:42:52+03:00 [1637545372793] INIT : Initiating...
+2021-11-22T04:42:52+03:00 [1637545372793] INIT : Called 'express'
+2021-11-22T04:42:52+03:00 [1637545372793] INIT : Initiated 'express'
+2021-11-22T04:42:53+03:00 [1637545372793] INIT : Called 'json-server'
+2021-11-22T04:42:53+03:00 [1637545372793] INIT : Created 'json-server'
+2021-11-22T04:42:53+03:00 [1637545372793] INIT : Called 'json-server' router
+2021-11-22T04:42:53+03:00 [1637545372793] INIT : Called 'axios'
+2021-11-22T04:42:53+03:00 [1637545372793] INIT : Called 'events'
+2021-11-22T04:42:53+03:00 [1637545372793] INIT : Called 'delay'
+2021-11-22T04:42:53+03:00 [1637545372793] INIT : Called 'random-number-csprng'
+2021-11-22T04:42:53+03:00 [1637545372793] INIT : Called 'moment'
+2021-11-22T04:42:53+03:00 [1637545372793] INIT : Called 'crypto'
+2021-11-22T04:42:53+03:00 [1637545372793] INIT : Called 'caller-id'
+-
+2021-11-22T04:42:53+03:00 [c9a1c786a0] INFO : Updating Master Subdomain | Aborted because config prevents automatic subdomain heartbeats.
+-
+2021-11-22T04:43:15+03:00 [1637545395574] INIT : Called 'express'
+2021-11-22T04:43:15+03:00 [1637545395574] INIT : Initiating...
+2021-11-22T04:43:15+03:00 [1637545395574] INIT : Called 'json-server'
+2021-11-22T04:43:15+03:00 [1637545395574] INIT : Initiated 'express'
+2021-11-22T04:43:15+03:00 [1637545395574] INIT : Created 'json-server'
+2021-11-22T04:43:15+03:00 [1637545395574] INIT : Called 'json-server' router
+2021-11-22T04:43:15+03:00 [1637545395574] INIT : Called 'delay'
+2021-11-22T04:43:15+03:00 [1637545395574] INIT : Called 'random-number-csprng'
+2021-11-22T04:43:15+03:00 [1637545395574] INIT : Called 'crypto'
+2021-11-22T04:43:15+03:00 [1637545395574] INIT : Called 'caller-id'
+2021-11-22T04:43:15+03:00 [1637545395574] INIT : Called 'events'
+2021-11-22T04:43:15+03:00 [1637545395574] INIT : Called 'axios'
+2021-11-22T04:43:15+03:00 [1637545395574] INIT : Called 'moment'
+-
+2021-11-22T04:43:16+03:00 [3c8d9469f0] INFO : Updating Master Subdomain | Aborted because config prevents automatic subdomain heartbeats.
+-
+2021-11-22T04:43:54+03:00 [1637545434755] INIT : Initiating...
+2021-11-22T04:43:54+03:00 [1637545434755] INIT : Called 'express'
+2021-11-22T04:43:54+03:00 [1637545434755] INIT : Initiated 'express'
+2021-11-22T04:43:54+03:00 [1637545434755] INIT : Called 'json-server'
+2021-11-22T04:43:54+03:00 [1637545434755] INIT : Created 'json-server'
+2021-11-22T04:43:55+03:00 [1637545434755] INIT : Called 'events'
+2021-11-22T04:43:55+03:00 [1637545434755] INIT : Called 'delay'
+2021-11-22T04:43:55+03:00 [1637545434755] INIT : Called 'random-number-csprng'
+2021-11-22T04:43:55+03:00 [1637545434755] INIT : Called 'moment'
+2021-11-22T04:43:55+03:00 [1637545434755] INIT : Called 'crypto'
+2021-11-22T04:43:55+03:00 [1637545434755] INIT : Called 'caller-id'
+2021-11-22T04:43:55+03:00 [1637545434755] INIT : Called 'axios'
+2021-11-22T04:43:54+03:00 [1637545434755] INIT : Called 'json-server' router
+-
+2021-11-22T04:43:55+03:00 [7687651f7a] INFO : Updating Master Subdomain | Aborted because config prevents automatic subdomain heartbeats.
+-
+2021-11-22T04:44:12+03:00 [1637545452888] INIT : Initiating...
+2021-11-22T04:44:13+03:00 [1637545452888] INIT : Called 'express'
+2021-11-22T04:44:13+03:00 [1637545452888] INIT : Initiated 'express'
+2021-11-22T04:44:13+03:00 [1637545452888] INIT : Called 'json-server'
+2021-11-22T04:44:13+03:00 [1637545452888] INIT : Created 'json-server'
+2021-11-22T04:44:13+03:00 [1637545452888] INIT : Called 'json-server' router
+2021-11-22T04:44:13+03:00 [1637545452888] INIT : Called 'axios'
+2021-11-22T04:44:13+03:00 [1637545452888] INIT : Called 'events'
+2021-11-22T04:44:13+03:00 [1637545452888] INIT : Called 'delay'
+2021-11-22T04:44:13+03:00 [1637545452888] INIT : Called 'random-number-csprng'
+2021-11-22T04:44:13+03:00 [1637545452888] INIT : Called 'moment'
+2021-11-22T04:44:13+03:00 [1637545452888] INIT : Called 'crypto'
+2021-11-22T04:44:13+03:00 [1637545452888] INIT : Called 'caller-id'
+-
+2021-11-22T04:44:13+03:00 [1949b91d00] INFO : Updating Master Subdomain | Aborted because config prevents automatic subdomain heartbeats.
+-
+2021-11-22T04:45:51+03:00 [1637545551275] INIT : Initiating...
+2021-11-22T04:45:51+03:00 [1637545551275] INIT : Called 'express'
+2021-11-22T04:45:51+03:00 [1637545551275] INIT : Initiated 'express'
+2021-11-22T04:45:51+03:00 [1637545551275] INIT : Called 'json-server'
+2021-11-22T04:45:51+03:00 [1637545551275] INIT : Created 'json-server'
+2021-11-22T04:45:51+03:00 [1637545551275] INIT : Called 'json-server' router
+2021-11-22T04:45:51+03:00 [1637545551275] INIT : Called 'axios'
+2021-11-22T04:45:51+03:00 [1637545551275] INIT : Called 'events'
+2021-11-22T04:45:51+03:00 [1637545551275] INIT : Called 'delay'
+2021-11-22T04:45:51+03:00 [1637545551275] INIT : Called 'random-number-csprng'
+2021-11-22T04:45:51+03:00 [1637545551275] INIT : Called 'moment'
+2021-11-22T04:45:51+03:00 [1637545551275] INIT : Called 'crypto'
+2021-11-22T04:45:51+03:00 [1637545551275] INIT : Called 'caller-id'
+-
+2021-11-22T04:45:52+03:00 [e498779ec7] INFO : Updating Master Subdomain | Aborted because config prevents automatic subdomain heartbeats.
+-
+2021-11-22T04:49:15+03:00 [1637545755159] INIT : Initiating...
+2021-11-22T04:49:15+03:00 [1637545755159] INIT : Called 'express'
+2021-11-22T04:49:15+03:00 [1637545755159] INIT : Created 'json-server'
+2021-11-22T04:49:15+03:00 [1637545755159] INIT : Called 'json-server' router
+2021-11-22T04:49:15+03:00 [1637545755159] INIT : Called 'json-server'
+2021-11-22T04:49:15+03:00 [1637545755159] INIT : Called 'events'
+2021-11-22T04:49:15+03:00 [1637545755159] INIT : Called 'random-number-csprng'
+2021-11-22T04:49:15+03:00 [1637545755159] INIT : Called 'delay'
+2021-11-22T04:49:15+03:00 [1637545755159] INIT : Called 'moment'
+2021-11-22T04:49:15+03:00 [1637545755159] INIT : Called 'caller-id'
+2021-11-22T04:49:15+03:00 [1637545755159] INIT : Called 'axios'
+2021-11-22T04:49:15+03:00 [1637545755159] INIT : Called 'crypto'
+2021-11-22T04:49:15+03:00 [1637545755159] INIT : Initiated 'express'
+2021-11-22T04:49:16+03:00 [17cd21b0c8] INFO : Updating Master Subdomain | Aborted because config prevents automatic subdomain heartbeats.
+-

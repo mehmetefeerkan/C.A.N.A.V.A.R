@@ -40,24 +40,16 @@
   "machines": [],
   "users": [
     {
-      "id": "ephesus",
-      "hash": "trial",
-      "admin": true,
-      "op": true,
-      "session": null
-    },
-    {
-      "id": "nightwish",
-      "hash": "deneme",
-      "admin": true,
-      "op": false,
-      "session": null
-    },
-    {
-      "id": "alessan",
-      "hash": "sans",
+      "id": "ephesuzxs",
+      "hash": "deneme2",
       "admin": false,
+      "tier": 2,
       "op": false,
+      "ip": "::1",
+      "lastLogin": 1637544848775,
+      "lastRequest": 1637544848775,
+      "fingerprint": null,
+      "eat": 1637546648000,
       "session": null
     }
   ],
@@ -69,7 +61,10 @@
     "dumpTimerDelay": 30000,
     "domainConnection": false,
     "userSessionExpiryInterval": 1800000,
-    "jwtSecret": "imnotchangingthislol"
+    "jwtSecret": "imnotchangingthislol",
+    "expiryMatters": true,
+    "authIpLock": false,
+    "authFpLock": false
   },
   "stats": {
     "totalAttacks": 0,
@@ -90,6 +85,6 @@
     "siDataPlacementDelay": 60000,
     "dynDataPlacementDelay": 30000,
     "maximumPortLife": 3600000,
-    "latestGlobalsDump": 1637539686618
+    "latestGlobalsDump": 1637545702369
   }
 }

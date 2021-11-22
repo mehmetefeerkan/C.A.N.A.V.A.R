@@ -114,6 +114,9 @@ let users = {
         } else {
             return false
         }
+    },
+    update: function (uid, area, data) {
+        users.all.find(u => { if (u.id === uid) { u[area] = data } })
     }
 }
 
@@ -627,6 +630,12 @@ app.post('/mgmt/database', async (req, res) => {
     res.sendFile(__dirname + '/db.json');
 })
 
+app.get('/mgmt/users', async (req, res) => {
+    res.send(200, users.all)
+})
+
+
+
 app.get('/mgmt/systemInfo', async (req, res) => {
     let systemInfo_ = systemInfo
     si.mem(function (memdata) {
@@ -711,11 +720,13 @@ app.post('/auth/register', (req, res) => { //collect all auht / mgmt / all / api
     if (req.body) {
         let userId = req.body.userId
         let passHash = req.body.passHash
-        console.log(users.has(userId));
+        let fingerprint = req.body.fingerprint || null
+        let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress
+        ip = ip.toString().replace('::ffff:', '');
         if (users.has(userId)) {
             res.send(500, {
                 error: {
-                    message: "USER_ALREADY_EXIST",
+                    message: "USER_ALREADY_EXISTS",
                     innerResponse: `This user already exists in the database...`
                 }
             })
@@ -725,7 +736,16 @@ app.post('/auth/register', (req, res) => { //collect all auht / mgmt / all / api
                 id: userId,
                 hash: passHash,
                 admin: false,
+                tier: 0,
                 op: false,
+                ip: ip,
+                lastLogin: Date.now(),
+                lastRequest: Date.now(),
+                fingerprint: fingerprint, //TODO
+                differentFingerprints: 0, //TODO
+                differentIps: 0, //TODO
+                passwordViolations: 0, //TODO
+                lastAuthenticatedAction: null,
                 eat: userSeshExpiry
             }
             const seshToken = jwt.sign(user, config.jwtSecret)
@@ -733,10 +753,8 @@ app.post('/auth/register', (req, res) => { //collect all auht / mgmt / all / api
             console.log(user);
             users.all.push(user)
             axios.post(database.users, user)
-                .then(res => {
-                    res.json({
-                        seshToken
-                    });
+                .then(resp => {
+                    res.json({ seshToken })
                 })
                 .catch(err => {
                     console.error(err);
@@ -745,6 +763,101 @@ app.post('/auth/register', (req, res) => { //collect all auht / mgmt / all / api
     } else {
         res.send(405)
     }
+})
+
+app.post('/auth/login', (req, res) => { // TODO: collect all auth / mgmt / all / api endpoints to other independent route files maybe some time?
+    if (req.body) {
+        let userId = req.body.userId
+        let passHash = req.body.passHash
+        console.log(users.has(userId)); //TODO: lightweightize checks and controls here, and make this thing FUCKING shorter. 
+        if (users.has(userId)) { //if user exists
+            let currentUser = users.get(userId)
+            if (currentUser.hash === passHash) { //AND if password matches
+                if (currentUser.session !== null) { //if there is a session provided
+                    let seshToken = currentUser.session
+                    jwt.verify(seshToken, config.jwtSecret, (err, user) => {
+                        if (err) {
+                            users.update(userId, "session", null)
+                            res.send(401, {
+                                error: {
+                                    message: "INVALID_TOKEN",
+                                    innerResponse: "Given token for the user was incorrect."
+                                }
+                            })
+                        } else {
+                            console.log(currentUser, user);
+                            res.send(200, { user: user, token: seshToken })
+                        }
+                    });
+                } else { //session is expired, refresh the token.
+                    let userSeshExpiry = moment().add({ milliseconds: config.userSessionExpiryInterval }).unix() * 1000
+                    currentUser.eat = userSeshExpiry
+                    const seshToken = jwt.sign(currentUser, config.jwtSecret)
+                    currentUser.session = seshToken
+                    users.update(userId, "session", seshToken)
+                    users.update(userId, "eat", userSeshExpiry)
+                    console.log(currentUser);
+                    res.send(200, { user: currentUser})
+                }
+            } else {
+                res.send(401, {
+                    error: {
+                        message: "INVALID_CREDENTIALS",
+                        innerResponse: "Given password for the user was incorrect."
+                    }
+                })
+            }
+        } else {
+            res.send(500, {
+                error: {
+                    message: "USER_DOESNT_EXIST",
+                    innerResponse: `A user with this username doesn't exist.`
+                }
+            })
+        }
+    } else {
+        res.send(405)
+    }
+})
+
+const authenticate = (req, res, next) => {
+    let authKey = req.headers["authorization"]
+    console.log(authKey);
+    if (authKey) {
+        jwt.verify(authKey, config.jwtSecret, (err, user) => {
+            if (err) {
+                console.log(err);
+            }
+            console.log(user);
+            if (user) {
+                users.update(user.id, "lastRequest", Date.now())
+                if (user.tier <= 0) {
+                    res.send(401, {
+                        error: "INSUFFICIENT_PRIVILEGES",
+                        innerResponse: "This user is not permitted to use any services. Please contact the administrator."
+                    })
+                } else {
+                    users.update(user.id, "lastAuthenticatedAction", `${Date.now()}`)
+                    req.userData = user
+                    next()
+                }
+            }
+        });
+    } else {
+        res.send(401, "FUCK OFF")
+    }
+}
+
+app.get('/auth/test', authenticate, (req , res)=>{
+
+   res.send('hello from simple server :)')
+   //ToDo: get all auth logic ready for prod. and minify it as much as you can.
+   //ToDo: create a function, possibly promise-based, in order to refresh user tokens.
+   //ToDo: first, move from array-based user data storage to object-based storage. arrays with user data are unbearable.
+   //ToDo: if ^ that doesn't work, move to fucking mongoose (please, god, please make this ^ work...)
+   //ToDo: make admins and OP's invul to /mgmt/ routes.
+   //ToDo: Integrate tier-checking abilities.
+
 })
 
 
