@@ -857,7 +857,8 @@ app.get('/auth/test', authenticate, (req , res)=>{
    //ToDo: if ^ that doesn't work, move to fucking mongoose (please, god, please make this ^ work...)
    //ToDo: make admins and OP's invul to /mgmt/ routes.
    //ToDo: Integrate tier-checking abilities.
-
+   //ToDo: Dumping users when neccessary has to be timer'ed :D
+   //ToDo: put user count to stats
 })
 
 
