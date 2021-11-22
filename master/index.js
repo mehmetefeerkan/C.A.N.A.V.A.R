@@ -307,6 +307,8 @@ jServer.use((req, res, next) => {
 
 })
 
+app.use(require('cors')())
+
 app.use((req, res, next) => {
     if (initiated) {
         let area = ((req.originalUrl).split("/")[1]);
