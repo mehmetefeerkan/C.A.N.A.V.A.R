@@ -26,8 +26,6 @@ const EventEmitter = require('events')
 logger.init(initSign, "Called 'events'")
 const delay = require('delay')
 logger.init(initSign, "Called 'delay'")
-const randomInt = require("random-number-csprng");
-logger.init(initSign, "Called 'random-number-csprng'")
 const moment = require('moment')
 logger.init(initSign, "Called 'moment'")
 const crypto = require('crypto')

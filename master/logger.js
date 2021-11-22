@@ -52,7 +52,7 @@ let log = {
         if ((write !== undefined) || (write !== null) || (write !== true)) {
             logged = false
         }
-        consoleLog(`Error - ${type} | ${data}`)
+        //consoleLog(`Error - ${type} | ${data}`)
         slog.error(`${type} | ${data}`)
         
         if (trace !== idcache) {
