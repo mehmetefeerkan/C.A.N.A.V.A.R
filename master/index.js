@@ -905,16 +905,23 @@ const authenticate = (req, res, next) => {
                 })
             }
             if (user) {
-                users.update(user.id, "lastRequest", Date.now())
-                if (user.tier <= 0) {
-                    res.send(401, {
-                        error: "INSUFFICIENT_PRIVILEGES",
-                        innerResponse: "This user is not permitted to use any services. Please contact the administrator."
-                    })
+                if (user.eat > Date.now()) {
+                    users.update(user.id, "lastRequest", Date.now())
+                    if (user.tier <= 0) {
+                        res.send(401, {
+                            error: "INSUFFICIENT_PRIVILEGES",
+                            innerResponse: "This user is not permitted to use any services. Please contact the administrator."
+                        })
+                    } else {
+                        users.update(user.id, "lastAuthenticatedAction", `${Date.now()}`)
+                        req.userData = user
+                        next()
+                    }
                 } else {
-                    users.update(user.id, "lastAuthenticatedAction", `${Date.now()}`)
-                    req.userData = user
-                    next()
+                    res.send(401, {
+                        error: "TOKEN_EXPIRED",
+                        innerResponse: "An expired token was provided."
+                    })
                 }
             }
         });
