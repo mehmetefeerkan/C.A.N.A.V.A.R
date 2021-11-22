@@ -196,6 +196,7 @@ let database = { // switch to new databaseElement() or sth fancy in the future?
                 .then(res => {
                     stats = res.data
                     stats.userCount = users.count()
+                    console.log(users.count());
                     console.log("Stats loaded.");
                 })
                 .catch(err => {
@@ -351,10 +352,10 @@ databaseInitiated.on('true', async () => {
     console.log("Begin init.");
     await database.globals.fetch()
     await database.config.fetch()
+    await database.users.fetch()
     await database.slaveSetup.fetch()
     await database.scripts.fetch()
     await database.stats.fetch()
-    await database.users.fetch()
     updateMasterSubdomain()
     await dbMachineCleanup()
     initiated = true
