@@ -1,6 +1,6 @@
 //npm install express json-server axios events delay random-number-csprng moment crypto dotenv
 process.on('uncaughtException', function (err) {
-    console.log('Caught exception: ' + err);
+    console.log(err);
 });
 process.chdir(__dirname)
 const dotenv_ = require('dotenv')
@@ -81,7 +81,7 @@ let Globals = {
     maximumPortLife: null
 }
 
-let database = {
+/* let database = {
     globals: "http://localhost:3000/global/",
     setup: "http://localhost:3000/setup/",
     scripts: "http://localhost:3000/scripts/",
@@ -89,7 +89,7 @@ let database = {
     settings: "http://localhost:3000/settings/",
     stats: "http://localhost:3000/stats/",
     users: "http://localhost:3000/users/",
-}
+} */
 
 let slaveInfo = {
     scripts: null,
@@ -115,78 +115,132 @@ let users = {
     },
     update: function (uid, area, data) {
         users.all.find(u => { if (u.id === uid) { u[area] = data } })
+    },
+    count: function () { return users.all.length }
+}
+
+let databaseAddress = "http://localhost:3000/";
+
+let database = { // switch to new databaseElement() or sth fancy in the future?
+    globals: {
+        fetch: async function () {
+            return axios.get(database.globals.address, { timeout: 4000 })
+                .then(res => {
+                    Globals = res.data
+                    console.log(Globals);
+                })
+                .catch(err => {
+                    database.globals.fetch()
+                })
+        },
+        dump: async function () {
+            return axios.patch(database.globals.address, Globals)
+                .then(res => {
+                    Globals.latestGlobalsDump = Date.now()
+                    console.log("Globals dumped.");
+                })
+                .catch(err => {
+                    console.error(err);
+                })
+        },
+        address: databaseAddress + "global/",
+    },
+    config: {
+        fetch: async function () {
+            return axios.get(database.config.address)
+                .then(resx => {
+                    config = resx.data
+                })
+                .catch(err => {
+                    database.config.fetch()
+                })
+        },
+        address: databaseAddress + "settings/"
+    },
+    slaveSetup: {
+        fetch: async function () {
+            return axios.get(database.slaveSetup.address)
+                .then(res => {
+                    slaveInfo.setup = res.data
+                    for (const key in slaveInfo.setup) {
+                        let k = key
+                        let aa = (stitchSetupLines(k, (slaveInfo.setup)))
+                        if (aa) {
+                            ((slaveInfo.setup)[k]) = aa
+                        }
+                    }
+                    console.log("Setups loaded.");
+                })
+                .catch(err => {
+                    console.error(err);
+                })
+        },
+        address: databaseAddress + "setup/"
+    },
+    scripts: {
+        fetch: async function () {
+            return axios.get(database.scripts.address)
+                .then(res => {
+                    slaveInfo.scripts = res.data
+                    console.log("Scripts loaded.");
+                })
+                .catch(err => {
+                    console.error(err);
+                })
+        },
+        address: databaseAddress + "scripts/"
+    },
+    stats: {
+        fetch: async function () {
+            return axios.get(database.stats.address)
+                .then(res => {
+                    stats = res.data
+                    console.log("Stats loaded.");
+                })
+                .catch(err => {
+                    console.error(err);
+                })
+        },
+        dump: async function () {
+            return axios.patch(database.stats.address, stats)
+                .then(res => {
+                    console.log("Stats dumped.");
+                })
+                .catch(err => {
+                    console.error(err);
+                })
+        },
+        address: databaseAddress + "stats/"
+    },
+    users: {
+        fetch: async function () {
+            return axios.get(database.users.address)
+                .then(res => {
+                    users.all = res.data.all
+                    console.log("Users loaded.");
+                    console.log(users);
+                })
+                .catch(err => {
+                    console.error(err);
+                })
+        },
+        dump: async function () {
+            return axios.patch(database.users.address, {all: users.all})
+                .then(res => {
+                    console.log("Users dumped.");
+                })
+                .catch(err => {
+                    console.error(err);
+                })
+        },
+        address: databaseAddress + "users/"
+    },
+    machines: {
+        address: databaseAddress + "machines/"
     }
 }
 
-let fetch = {
-    globals: async function () {
-        return axios.get(database.globals, { timeout: 4000 })
-            .then(res => {
-                Globals = res.data
-                console.log(Globals);
-            })
-            .catch(err => {
-                fetch.globals()
-            })
-    },
-    config: async function () {
-        return axios.get(database.settings)
-            .then(resx => {
-                config = resx.data
-            })
-            .catch(err => {
-                fetch.config()
-            })
-    },
-    slaveSetup: async function () {
-        return axios.get(database.setup)
-            .then(res => {
-                slaveInfo.setup = res.data
-                for (const key in slaveInfo.setup) {
-                    let k = key
-                    let aa = (stitchSetupLines(k, (slaveInfo.setup)))
-                    if (aa) {
-                        ((slaveInfo.setup)[k]) = aa
-                    }
-                }
-                console.log("Setups loaded.");
-            })
-            .catch(err => {
-                console.error(err);
-            })
-    },
-    scripts: async function () {
-        return axios.get(database.scripts)
-            .then(res => {
-                slaveInfo.scripts = res.data
-                console.log("Scripts loaded.");
-            })
-            .catch(err => {
-                console.error(err);
-            })
-    },
-    stats: async function () {
-        return axios.get(database.stats)
-            .then(res => {
-                stats = res.data
-                console.log("Stats loaded.");
-            })
-            .catch(err => {
-                console.error(err);
-            })
-    },
-    users: async function () {
-        return axios.get(database.users)
-            .then(res => {
-                users.all = res.data
-                console.log("Users loaded.");
-                console.log(users);
-            })
-            .catch(err => {
-                console.error(err);
-            })
-    },
-}
+console.log(database.globals.address);
 
 let Machines = {
     all: {
@@ -292,19 +346,20 @@ jServer.listen(3000, () => { console.log("dbok"); databaseInitiated.emit('true')
 
 databaseInitiated.on('true', async () => {
     console.log("Begin init.");
-    await fetch.globals()
-    await fetch.config()
-    await fetch.slaveSetup()
-    await fetch.scripts()
-    await fetch.stats()
-    await fetch.users()
+    await database.globals.fetch()
+    await database.config.fetch()
+    await database.slaveSetup.fetch()
+    await database.scripts.fetch()
+    await database.stats.fetch()
+    await database.users.fetch()
     updateMasterSubdomain()
     await dbMachineCleanup()
     initiated = true
 
     let dumpLoop = function () {
-        dumpGlobals()
-        dumpStats()
+        database.globals.dump()
+        database.stats.dump()
+        database.users.dump()
         dumpTimer = setTimeout(dumpLoop, config.dumpTimerDelay);
     }
 
@@ -316,13 +371,13 @@ databaseInitiated.on('true', async () => {
 
 
 async function dbMachineCleanup() {
-    return axios.get(database.machines)
+    return axios.get(database.machines.address)
         .then(async (res) => {
             let machines = res.data
             async function delall() {
                 for (let index = 0; index < machines.length; index++) {
                     const element = machines[index];
-                    await axios.delete(`${database.machines}${element.id}`)
+                    await axios.delete(`${database.machines.address}${element.id}`)
                         .then(res => {
                             //console.log(res)
                         })
@@ -341,7 +396,7 @@ async function dbMachineCleanup() {
 
 
 async function dumpGlobals() {
-    return axios.patch(database.globals, Globals)
+    return axios.patch(database.globals.address, Globals)
         .then(res => {
             Globals.latestGlobalsDump = Date.now()
             console.log("Globals dumped.");
@@ -352,7 +407,7 @@ async function dumpGlobals() {
 }
 
 async function dumpStats() {
-    return axios.patch(database.stats, stats)
+    return axios.patch(database.stats.address, stats)
         .then(res => {
             console.log("Stats dumped.");
         })
@@ -465,6 +520,10 @@ function stitchSetupLines(asked, setup_) {
 
 app.get('/globals', (req, res) => {
     res.send(200, Globals)
+})
+
+app.get('/stats', (req, res) => {
+    res.send(200, stats)
 })
 
 app.post('/heartbeat', (req, res) => {
@@ -750,7 +809,7 @@ app.post('/auth/register', (req, res) => { //collect all auht / mgmt / all / api
             user.session = seshToken
             console.log(user);
             users.all.push(user)
-            axios.post(database.users, user)
+            axios.post(database.users.address, user)
                 .then(resp => {
                     res.json({ seshToken })
                 })
@@ -795,7 +854,7 @@ app.post('/auth/login', (req, res) => { // TODO: collect all auth / mgmt / all /
                     users.update(userId, "session", seshToken)
                     users.update(userId, "eat", userSeshExpiry)
                     console.log(currentUser);
-                    res.send(200, { user: currentUser})
+                    res.send(200, { user: currentUser })
                 }
             } else {
                 res.send(401, {
@@ -822,11 +881,25 @@ const authenticate = (req, res, next) => {
     let authKey = req.headers["authorization"]
     console.log(authKey);
     if (authKey) {
+        if (authKey === config.jwtSecret) { 
+            req.userData = {
+                id: "dev",
+                hash: "dev",
+                admin: true,
+                tier: 3,
+                op: true
+            }
+            next(); return 
+        } //for development
         jwt.verify(authKey, config.jwtSecret, (err, user) => {
             if (err) {
-                console.log(err);
+                res.send(401, {
+                    error: {
+                        message: "INVALID_TOKEN",
+                        innerResponse: "Given token for the user was incorrect."
+                    }
+                })
             }
-            console.log(user);
             if (user) {
                 users.update(user.id, "lastRequest", Date.now())
                 if (user.tier <= 0) {
@@ -846,17 +919,17 @@ const authenticate = (req, res, next) => {
     }
 }
 
-app.get('/auth/test', authenticate, (req , res)=>{
-
-   res.send('hello from simple server :)')
-   //ToDo: get all auth logic ready for prod. and minify it as much as you can.
-   //ToDo: create a function, possibly promise-based, in order to refresh user tokens.
-   //ToDo: first, move from array-based user data storage to object-based storage. arrays with user data are unbearable.
-   //ToDo: if ^ that doesn't work, move to fucking mongoose (please, god, please make this ^ work...)
-   //ToDo: make admins and OP's invul to /mgmt/ routes.
-   //ToDo: Integrate tier-checking abilities.
-   //ToDo: Dumping users when neccessary has to be timer'ed :D
-   //ToDo: put user count to stats
+app.get('/auth/test', authenticate, (req, res) => {
+    console.log(req.userData);
+    res.send('hello from simple server :)')
+    //ToDo: get all auth logic ready for prod. and minify it as much as you can.
+    //ToDo: create a function, possibly promise-based, in order to refresh user tokens.
+    //ToDo: first, move from array-based user data storage to object-based storage. arrays with user data are unbearable.
+    //ToDo: if ^ that doesn't work, move to fucking mongoose (please, god, please make this ^ work...)
+    //ToDo: make admins and OP's invul to /mgmt/ routes.
+    //ToDo: Integrate tier-checking abilities.
+    //ToDo: Dumping users when neccessary has to be timer'ed :D
+    //ToDo: put user count to stats
 })
 
 

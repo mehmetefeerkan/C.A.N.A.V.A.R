@@ -38,21 +38,36 @@
     }
   ],
   "machines": [],
-  "users": [
-    {
-      "id": "ephesuzxs",
-      "hash": "deneme2",
-      "admin": false,
-      "tier": 2,
-      "op": false,
-      "ip": "::1",
-      "lastLogin": 1637544848775,
-      "lastRequest": 1637544848775,
-      "fingerprint": null,
-      "eat": 1637546648000,
-      "session": null
-    }
-  ],
+  "users": {
+    "all": [
+      {
+        "id": "ephesuzxs",
+        "hash": "deneme2",
+        "admin": false,
+        "tier": 2,
+        "op": false,
+        "ip": "::1",
+        "lastLogin": 1637544848775,
+        "lastRequest": 1637544848775,
+        "fingerprint": null,
+        "eat": 1637546648000,
+        "session": null
+      },
+      {
+        "id": "ephesuzxxs",
+        "hash": "deneme3",
+        "admin": false,
+        "tier": 1,
+        "op": false,
+        "ip": "::1",
+        "lastLogin": 1637544848775,
+        "lastRequest": 1637544848775,
+        "fingerprint": null,
+        "eat": 1637546648000,
+        "session": null
+      }
+    ]
+  },
   "settings": {
     "pk": [
       "foobar"
@@ -85,6 +100,6 @@
     "siDataPlacementDelay": 60000,
     "dynDataPlacementDelay": 30000,
     "maximumPortLife": 3600000,
-    "latestGlobalsDump": 1637545702369
+    "latestGlobalsDump": 1637619115717
   }
 }
