@@ -3,8 +3,7 @@ process.on('uncaughtException', function (err) {
     console.log(err);
 });
 process.chdir(__dirname)
-const dotenv_ = require('dotenv')
-const dotenv = dotenv_.config().parsed
+
 const { exec } = require('child_process');
 let initSign = `${Date.now()}`
 const logger = require('./logger.js').log
@@ -34,6 +33,10 @@ logger.init(initSign, "Called 'caller-id'")
 const bodyParser = require('body-parser');
 const si = require('systeminformation');
 const jwt = require('jsonwebtoken');
+const admin = require('firebase-admin');
+const serviceAccount = require('./canavar-access-firebase-adminsdk-4z8ul-9ba89aaa5e.json')
+admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
+getAuth = admin.auth
 
 let config = {
     pk: [
@@ -214,29 +217,6 @@ let database = { // switch to new databaseElement() or sth fancy in the future?
         },
         address: databaseAddress + "stats/"
     },
-    users: {
-        fetch: async function () {
-            return axios.get(database.users.address)
-                .then(res => {
-                    users.all = res.data.all
-                    console.log("Users loaded.");
-                    console.log(users);
-                })
-                .catch(err => {
-                    console.error(err);
-                })
-        },
-        dump: async function () {
-            return axios.patch(database.users.address, {all: users.all})
-                .then(res => {
-                    console.log("Users dumped.");
-                })
-                .catch(err => {
-                    console.error(err);
-                })
-        },
-        address: databaseAddress + "users/"
-    },
     machines: {
         address: databaseAddress + "machines/"
     }
@@ -343,6 +323,43 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(bodyParser.raw());
 
+const authenticate = (req, res, next) => {
+    let authKey = req.headers["authorization"]
+    if (!authKey) {
+        res.send(401, {
+            error: {
+                message: "NO_TOKEN_PROVIDED",
+                innerResponse: "A token was not given for authorization."
+            }
+        })
+        return
+    }
+    getAuth()
+        .verifyIdToken(authKey)
+        .then((decodedToken) => {
+            const uid = decodedToken.uid;
+            console.log(uid);
+            console.log(decodedToken);
+            getAuth()
+                .getUser(uid)
+                .then((userRecord) => {
+                    req.userData = {
+                        tokenData: decodedToken,
+                        userClaims: userRecord.customClaims
+                    }
+                    next()
+                });
+        })
+        .catch((error) => {
+            res.send(401, {
+                error: {
+                    message: "INVALID_TOKEN",
+                    innerResponse: "Given token for the user was incorrect."
+                }
+            })
+        });
+}
+
 jServer.use(middlewares)
 jServer.use(router)
 
@@ -352,7 +369,6 @@ databaseInitiated.on('true', async () => {
     console.log("Begin init.");
     await database.globals.fetch()
     await database.config.fetch()
-    await database.users.fetch()
     await database.slaveSetup.fetch()
     await database.scripts.fetch()
     await database.stats.fetch()
@@ -363,7 +379,6 @@ databaseInitiated.on('true', async () => {
     let dumpLoop = function () {
         database.globals.dump()
         database.stats.dump()
-        database.users.dump()
         dumpTimer = setTimeout(dumpLoop, config.dumpTimerDelay);
     }
 
@@ -659,7 +674,7 @@ app.get('/machines/list', (req, res) => {
     for (const key in Machines.all) { macar.push(Machines.all[key]) }
     res.send(200, macar)
 })
-app.get('/machines/count', (req, res) => {
+app.get('/machines/count', authenticate, (req, res) => {
     res.send(200, Machines.count())
 })
 app.get('/machines/:machid', (req, res) => {
@@ -691,9 +706,6 @@ app.post('/mgmt/database', async (req, res) => {
     res.sendFile(__dirname + '/db.json');
 })
 
-app.get('/mgmt/users', async (req, res) => {
-    res.send(200, users.all)
-})
 
 
 
@@ -777,162 +789,10 @@ app.post('/mgmt/vcontrol', (req, res) => {
     })
 })
 
-app.post('/auth/register', (req, res) => { //collect all auht / mgmt / all / api endpoints to other route files maybe some time?
-    if (req.body) {
-        let userId = req.body.userId
-        let passHash = req.body.passHash
-        let fingerprint = req.body.fingerprint || null
-        let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress
-        ip = ip.toString().replace('::ffff:', '');
-        if (users.has(userId)) {
-            res.send(500, {
-                error: {
-                    message: "USER_ALREADY_EXISTS",
-                    innerResponse: `This user already exists in the database...`
-                }
-            })
-        } else {
-            let userSeshExpiry = moment().add({ milliseconds: config.userSessionExpiryInterval }).unix() * 1000
-            let user = {
-                id: userId,
-                hash: passHash,
-                admin: false,
-                tier: 0,
-                op: false,
-                ip: ip,
-                lastLogin: Date.now(),
-                lastRequest: Date.now(),
-                fingerprint: fingerprint, //TODO
-                differentFingerprints: 0, //TODO
-                differentIps: 0, //TODO
-                passwordViolations: 0, //TODO
-                lastAuthenticatedAction: null,
-                eat: userSeshExpiry
-            }
-            const seshToken = jwt.sign(user, config.jwtSecret)
-            user.session = seshToken
-            console.log(user);
-            users.all.push(user)
-            axios.post(database.users.address, user)
-                .then(resp => {
-                    res.json({ seshToken })
-                })
-                .catch(err => {
-                    console.error(err);
-                })
-        }
-    } else {
-        res.send(405)
-    }
-})
 
-app.post('/auth/login', (req, res) => { // TODO: collect all auth / mgmt / all / api endpoints to other independent route files maybe some time?
-    if (req.body) {
-        let userId = req.body.userId
-        let passHash = req.body.passHash
-        console.log(users.has(userId)); //TODO: lightweightize checks and controls here, and make this thing FUCKING shorter. 
-        if (users.has(userId)) { //if user exists
-            let currentUser = users.get(userId)
-            if (currentUser.hash === passHash) { //AND if password matches
-                if (currentUser.session !== null) { //if there is a session provided
-                    let seshToken = currentUser.session
-                    jwt.verify(seshToken, config.jwtSecret, (err, user) => {
-                        if (err) {
-                            users.update(userId, "session", null)
-                            res.send(401, {
-                                error: {
-                                    message: "INVALID_TOKEN",
-                                    innerResponse: "Given token for the user was incorrect."
-                                }
-                            })
-                        } else {
-                            console.log(currentUser, user);
-                            res.send(200, { user: user, token: seshToken })
-                        }
-                    });
-                } else { //session is expired, refresh the token.
-                    let userSeshExpiry = moment().add({ milliseconds: config.userSessionExpiryInterval }).unix() * 1000
-                    currentUser.eat = userSeshExpiry
-                    const seshToken = jwt.sign(currentUser, config.jwtSecret)
-                    currentUser.session = seshToken
-                    users.update(userId, "session", seshToken)
-                    users.update(userId, "eat", userSeshExpiry)
-                    console.log(currentUser);
-                    res.send(200, { user: currentUser })
-                }
-            } else {
-                res.send(401, {
-                    error: {
-                        message: "INVALID_CREDENTIALS",
-                        innerResponse: "Given password for the user was incorrect."
-                    }
-                })
-            }
-        } else {
-            res.send(500, {
-                error: {
-                    message: "USER_DOESNT_EXIST",
-                    innerResponse: `A user with this username doesn't exist.`
-                }
-            })
-        }
-    } else {
-        res.send(405)
-    }
-})
-
-const authenticate = (req, res, next) => {
-    let authKey = req.headers["authorization"]
-    console.log(authKey);
-    if (authKey) {
-        if (authKey === config.jwtSecret) { 
-            req.userData = {
-                id: "dev",
-                hash: "dev",
-                admin: true,
-                tier: 3,
-                op: true
-            }
-            next(); return 
-        } //for development
-        jwt.verify(authKey, config.jwtSecret, (err, user) => {
-            if (err) {
-                res.send(401, {
-                    error: {
-                        message: "INVALID_TOKEN",
-                        innerResponse: "Given token for the user was incorrect."
-                    }
-                })
-            }
-            if (user) {
-                if (user.eat > Date.now()) {
-                    users.update(user.id, "lastRequest", Date.now())
-                    if (user.tier <= 0) {
-                        res.send(401, {
-                            error: "INSUFFICIENT_PRIVILEGES",
-                            innerResponse: "This user is not permitted to use any services. Please contact the administrator."
-                        })
-                    } else {
-                        users.update(user.id, "lastAuthenticatedAction", `${Date.now()}`)
-                        req.userData = user
-                        next()
-                    }
-                } else {
-                    res.send(401, {
-                        error: "TOKEN_EXPIRED",
-                        innerResponse: "An expired token was provided."
-                    })
-                }
-            }
-        });
-    } else {
-        res.send(401, "FUCK OFF")
-    }
-}
 
 app.get('/auth/test', authenticate, (req, res) => {
-    console.log(req.userData);
-    res.send('hello from simple server :)')
+    res.send(req.userData)
     //ToDo: get all auth logic ready for prod. and minify it as much as you can.
     //ToDo: create a function, possibly promise-based, in order to refresh user tokens.
     //ToDo: first, move from array-based user data storage to object-based storage. arrays with user data are unbearable.

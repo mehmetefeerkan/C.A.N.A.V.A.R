@@ -79,7 +79,9 @@
     "jwtSecret": "imnotchangingthislol",
     "expiryMatters": true,
     "authIpLock": false,
-    "authFpLock": false
+    "authFpLock": false,
+    "nativeAuth": false,
+    "firebaseAuth": true
   },
   "stats": {
     "totalAttacks": 0,
@@ -100,6 +102,6 @@
     "siDataPlacementDelay": 60000,
     "dynDataPlacementDelay": 30000,
     "maximumPortLife": 3600000,
-    "latestGlobalsDump": 1637619156197
+    "latestGlobalsDump": 1639054324362
   }
 }
