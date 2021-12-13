@@ -707,16 +707,26 @@ app.post('/mgmt/database', async (req, res) => {
 })
 
 app.get('/mgmt/getUsers', async (req, res) => {
+    let usersl = []
     getAuth()
-      .listUsers(1000)
-      .then((listUsersResult) => {
-          res.send(200, listUsersResult.users)
-      })
-      .catch((error) => {
-        console.log('Error listing users:', error);
-        res.send(500, error)
-      });
-  // Start listing users from the beginning, 1000 at a time.
+        .listUsers(1000)
+        .then(async function (listUsersResult) {
+            for await (const i of listUsersResult.users) {
+                await getAuth()
+                    .getUser(i.uid)
+                    .then(async function (userRecord) {
+                        usersl.push(userRecord)
+                    });
+            };
+
+            res.send(200, usersl)
+        })
+        .catch((error) => {
+            console.log('Error listing users:', error);
+            res.send(500, error)
+        });
+
+    // Start listing users from the beginning, 1000 at a time.
 })
 
 
@@ -747,7 +757,7 @@ app.get('/mgmt/systemInfo', async (req, res) => {
 
 app.post('/mgmt/update', (req, res) => {
     res.send(200)
-    exec("cd /C.A.N.A.V.A.R/ ; git stash; git stash drop; git pull; cd master ; npm install;", (err, stdout, stderr) => {
+    exec("cd /C.A.N.A.V.A.R/ ; git stash; git stash drop; git pull; cd master ; npm install; pm2 restart all", (err, stdout, stderr) => {
         if (err) {
             //some err occurred
             console.error(err)
