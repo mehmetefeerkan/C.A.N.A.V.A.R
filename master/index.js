@@ -379,6 +379,9 @@ databaseInitiated.on('true', async () => {
     let dumpLoop = function () {
         database.globals.dump()
         database.stats.dump()
+        if (githubratelimitcooldown < Date.now()) {
+            githubratelimitcooldown = 0
+        }
         dumpTimer = setTimeout(dumpLoop, config.dumpTimerDelay);
     }
 
@@ -769,7 +772,7 @@ app.post('/mgmt/update', (req, res) => {
         }
     })
 })
-
+let githubratelimitcooldown = 0
 app.post('/mgmt/vcontrol', (req, res) => {
     exec("cd /C.A.N.A.V.A.R/ ; git show -1 --stat  ", (err, stdout, stderr) => {
         if (err) {
@@ -777,38 +780,47 @@ app.post('/mgmt/vcontrol', (req, res) => {
             console.error(err)
             res.send(200, { std_err: err })
         } else {
-            // the *entire* stdout and stderr (buffered)
-            let stdout_ = stdout
-            if (stdout.length > 10) {
-                var options = {
-                    method: 'GET',
-                    url: 'https://api.github.com/repos/mehmetefeerkan/C.A.N.A.V.A.R/commits',
-                    headers: { Accept: 'application/vnd.github.v3+json' }
-                };
-
-                axios.request(options).then(function (response) {
-                    let resp = response.data
-                    let latestCommitSHA = resp[0].sha
-                    if ((latestCommitSHA === (null || undefined || ""))) {
-                        res.send(500, {
-                            error: {
-                                message: "INVALID_COMMIT_SHA_RECIEVED",
-                                innerResponse: `Given SHA was${latestCommitSHA}`
-                            }
-                        })
-                    } else {
-                        if (stdout_.includes(latestCommitSHA)) {
-                            res.send(200, { upToDate: true, latestCommit: resp[0], currentCommitData: stdout_ })
+            if (githubratelimitcooldown === 0) {
+                // the *entire* stdout and stderr (buffered) 
+                let stdout_ = stdout
+                if (stdout.length > 10) {
+                    var options = {
+                        method: 'GET',
+                        url: 'https://api.github.com/repos/mehmetefeerkan/C.A.N.A.V.A.R/commits',
+                        headers: { Accept: 'application/vnd.github.v3+json' }
+                    };
+                    axios.request(options).then(function (response) {
+                        let resp = response.data
+                        let latestCommitSHA = resp[0].sha
+                        if ((latestCommitSHA === (null || undefined || ""))) {
+                            res.send(500, {
+                                error: {
+                                    message: "INVALID_COMMIT_SHA_RECIEVED",
+                                    innerResponse: `Given SHA was${latestCommitSHA}`
+                                }
+                            })
                         } else {
-                            res.send(200, { upToDate: false, latestCommit: resp[0], currentCommitData: stdout_ })
+                            if (stdout_.includes(latestCommitSHA)) {
+                                res.send(200, { upToDate: true, latestCommit: resp[0], currentCommitData: stdout_ })
+                            } else {
+                                res.send(200, { upToDate: false, latestCommit: resp[0], currentCommitData: stdout_ })
+                            }
                         }
+                    }).catch(function (error) {
+                        console.error(error);
+                        res.send(error)
+                        githubratelimitcooldown = Date.now()
+                    });
+                }
+                //res.send(200, {std_out: stdout, std_err: stderr})x
+            } else {
+                res.send(403, {
+                    error: {
+                        message: "GITHUB_RATE_LIMIT_REACHED",
+                        innerResponse: `Cooldown started at ${githubratelimitcooldown}`
                     }
-                }).catch(function (error) {
-                    console.error(error);
-                    res.send(error)
-                });
+                })
             }
-            //res.send(200, {std_out: stdout, std_err: stderr})x
         }
     })
 })
