@@ -808,8 +808,13 @@ app.post('/mgmt/vcontrol', (req, res) => {
                         }
                     }).catch(function (error) {
                         console.error(error);
-                        res.send(error.response.headers)
-                        githubratelimitcooldown = Date.now()
+                        githubratelimitcooldown = (parseInt(error.response.headers["x-ratelimit-reset"])) * 1000
+                        res.send(500, {
+                            error: {
+                                message: "GITHUB_RATE_LIMIT_REACHED",
+                                innerResponse: `Cooldown ends at ${githubratelimitcooldown}`
+                            }
+                        })
                     });
                 }
                 //res.send(200, {std_out: stdout, std_err: stderr})x
@@ -817,7 +822,7 @@ app.post('/mgmt/vcontrol', (req, res) => {
                 res.send(500, {
                     error: {
                         message: "GITHUB_RATE_LIMIT_REACHED",
-                        innerResponse: `Cooldown started at ${githubratelimitcooldown}`
+                        innerResponse: `Cooldown ends at ${githubratelimitcooldown}`
                     }
                 })
             }
