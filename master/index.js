@@ -805,6 +805,7 @@ app.post('/mgmt/vcontrol', (req, res) => {
                     }
                 }).catch(function (error) {
                     console.error(error);
+                    res.send(error)
                 });
             }
             //res.send(200, {std_out: stdout, std_err: stderr})x
