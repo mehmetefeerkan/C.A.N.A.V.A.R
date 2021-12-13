@@ -772,6 +772,18 @@ app.post('/mgmt/update', (req, res) => {
         }
     })
 })
+
+app.post('/mgmt/restart', (req, res) => {
+    res.send(200)
+    exec("pm2 restart all", (err, stdout, stderr) => {
+        if (err) {
+            console.error(err)
+            res.send(500, { std_err: err })
+        } else {
+            res.send(200, { std_out: stdout, std_err: stderr })
+        }
+    })
+})
 let githubratelimitcooldown = 0
 app.post('/mgmt/vcontrol', (req, res) => {
     exec("cd /C.A.N.A.V.A.R/ ; git show -1 --stat  ", (err, stdout, stderr) => {
