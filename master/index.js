@@ -814,7 +814,7 @@ app.post('/mgmt/vcontrol', (req, res) => {
                 }
                 //res.send(200, {std_out: stdout, std_err: stderr})x
             } else {
-                res.send(403, {
+                res.send(500, {
                     error: {
                         message: "GITHUB_RATE_LIMIT_REACHED",
                         innerResponse: `Cooldown started at ${githubratelimitcooldown}`
