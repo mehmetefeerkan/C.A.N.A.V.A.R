@@ -808,7 +808,7 @@ app.post('/mgmt/vcontrol', (req, res) => {
                         }
                     }).catch(function (error) {
                         console.error(error);
-                        res.send(error.response)
+                        res.send(error.response.headers)
                         githubratelimitcooldown = Date.now()
                     });
                 }
