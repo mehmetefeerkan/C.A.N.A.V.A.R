@@ -198,8 +198,8 @@ let database = { // switch to new databaseElement() or sth fancy in the future?
             return axios.get(database.stats.address)
                 .then(res => {
                     stats = res.data
-                    stats.userCount = users.count()
-                    console.log(users.count());
+                    // stats.userCount = users.count()
+                    // console.log(users.count());
                     console.log("Stats loaded.");
                 })
                 .catch(err => {
@@ -706,6 +706,19 @@ app.post('/mgmt/database', async (req, res) => {
     res.sendFile(__dirname + '/db.json');
 })
 
+app.get('/mgmt/getUsers', async (req, res) => {
+    getAuth()
+      .listUsers(1000)
+      .then((listUsersResult) => {
+          res.send(200, listUsersResult.users)
+      })
+      .catch((error) => {
+        console.log('Error listing users:', error);
+        res.send(500, error)
+      });
+  // Start listing users from the beginning, 1000 at a time.
+})
+
 
 
 
@@ -805,5 +818,4 @@ app.get('/auth/test', authenticate, (req, res) => {
 
 
 app.listen(80, () => console.log(`App listening on port ${"80"}!`))
-
 
