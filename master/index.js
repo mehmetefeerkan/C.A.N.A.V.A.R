@@ -749,6 +749,7 @@ app.get('/mgmt/systemInfo', async (req, res) => {
             systemInfo_.dynamic.cpu.brand = cpudata.brand
             si.currentLoad(function (data) {
                 systemInfo_.dynamic.load = data
+                systemInfo_.uptime = process.uptime()
                 si.networkStats(function (data) {
                     systemInfo_.dynamic.net = data
                     res.send(200, systemInfo_)
