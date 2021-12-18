@@ -34,6 +34,8 @@ const bodyParser = require('body-parser');
 const si = require('systeminformation');
 const jwt = require('jsonwebtoken');
 const admin = require('firebase-admin');
+const fs = require('fs')
+const https = require('https')
 const serviceAccount = require('./canavar-access-firebase-adminsdk-4z8ul-9ba89aaa5e.json')
 admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
 getAuth = admin.auth
@@ -198,8 +200,6 @@ let database = { // switch to new databaseElement() or sth fancy in the future?
             return axios.get(database.stats.address)
                 .then(res => {
                     stats = res.data
-                    // stats.userCount = users.count()
-                    // console.log(users.count());
                     console.log("Stats loaded.");
                 })
                 .catch(err => {
@@ -260,7 +260,6 @@ si.getDynamicData(function (data) {
 })
 
 let initiated = false
-let dumpTimer = null
 const databaseInitiated = new EventEmitter()
 
 function logID() {
@@ -274,7 +273,6 @@ jServer.use((req, res, next) => {
         if (req.method === "POST") {
             if ((req.headers.accesskey)) {
                 if ((config.pk).includes(req.headers.accesskey)) {
-                    //console.log("approve");
                     next()
                 } else {
                     res.send(403)
@@ -728,8 +726,6 @@ app.get('/mgmt/getUsers', async (req, res) => {
             console.log('Error listing users:', error);
             res.send(500, error)
         });
-
-    // Start listing users from the beginning, 1000 at a time.
 })
 
 
@@ -763,12 +759,9 @@ app.post('/mgmt/update', (req, res) => {
     res.send(200)
     exec("cd /C.A.N.A.V.A.R/ ; git stash; git stash drop; git pull; cd master ; npm install; pm2 restart all", (err, stdout, stderr) => {
         if (err) {
-            //some err occurred
             console.error(err)
             res.send(500, { std_err: err })
         } else {
-            // the *entire* stdout and stderr (buffered)
-
             res.send(200, { std_out: stdout, std_err: stderr })
         }
     })
@@ -789,12 +782,10 @@ let githubratelimitcooldown = 0
 app.post('/mgmt/vcontrol', (req, res) => {
     exec("cd /C.A.N.A.V.A.R/ ; git show -1 --stat  ", (err, stdout, stderr) => {
         if (err) {
-            //some err occurred
             console.error(err)
             res.send(200, { std_err: err })
         } else {
             if (githubratelimitcooldown === 0) {
-                // the *entire* stdout and stderr (buffered) 
                 let stdout_ = stdout
                 if (stdout.length > 10) {
                     var options = {
@@ -830,7 +821,6 @@ app.post('/mgmt/vcontrol', (req, res) => {
                         })
                     });
                 }
-                //res.send(200, {std_out: stdout, std_err: stderr})x
             } else {
                 res.send(500, {
                     error: {
@@ -848,15 +838,20 @@ app.post('/mgmt/vcontrol', (req, res) => {
 app.get('/auth/test', authenticate, (req, res) => {
     res.send(req.userData)
     //ToDo: get all auth logic ready for prod. and minify it as much as you can.
-    //ToDo: create a function, possibly promise-based, in order to refresh user tokens.
-    //ToDo: first, move from array-based user data storage to object-based storage. arrays with user data are unbearable.
-    //ToDo: if ^ that doesn't work, move to fucking mongoose (please, god, please make this ^ work...)
+    //DONE: create a function, possibly promise-based, in order to refresh user tokens. | Handled by firebase
+    //DONE: first, move from array-based user data storage to object-based storage. arrays with user data are unbearable. | Handled by firebase
+    //DONE: if ^ that doesn't work, move to fucking mongoose (please, god, please make this ^ work...) | Handled by firebase
     //ToDo: make admins and OP's invul to /mgmt/ routes.
     //ToDo: Integrate tier-checking abilities.
-    //ToDo: Dumping users when neccessary has to be timer'ed :D
+    //DONE: Dumping users when neccessary has to be timer'ed :D | Handled by firebase
     //ToDo: put user count to stats
 })
 
 
 app.listen(80, () => console.log(`App listening on port ${"80"}!`))
 
+const htsoptions = {
+    key: fs.readFileSync("./certs/privkey.pem"),
+    cert: fs.readFileSync("./certs/fullchain.pem")
+  };  
+  https.createServer(htsoptions, app).listen(443);
