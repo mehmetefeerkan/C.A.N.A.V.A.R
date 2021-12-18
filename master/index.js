@@ -849,9 +849,8 @@ app.get('/auth/test', authenticate, (req, res) => {
 
 
 app.listen(80, () => console.log(`App listening on port ${"80"}!`))
-console.log(fs.readFileSync("./certs/privkey.pem"));
 const htsoptions = {
-    key: fs.readFileSync("./certs/privkey.pem"),
-    cert: fs.readFileSync("./certs/fullchain.pem")
+    key: fs.readFileSync("./certs/privkey.pem", 'utf8'),
+    cert: fs.readFileSync("./certs/fullchain.pem", 'utf8')
   };  
-  https.createServer(htsoptions, app).listen(443);
+  https.createServer(htsoptions, app).listen(4430);
