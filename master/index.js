@@ -3,7 +3,7 @@ process.on('uncaughtException', function (err) {
     console.log(err);
 });
 process.chdir(__dirname)
-
+require('tls').DEFAULT_MIN_VERSION = 'TLSv1'
 const { exec } = require('child_process');
 let initSign = `${Date.now()}`
 const logger = require('./logger.js').log
