@@ -850,7 +850,7 @@ app.get('/auth/test', authenticate, (req, res) => {
 
 app.listen(80, () => console.log(`App listening on port ${"80"}!`))
 const httpsServer = https.createServer({
-    key: fs.readFileSync('privkey.pem'),
+    key: fs.readFileSync('privkey.key'),
     cert: fs.readFileSync('fullchain.pem'),
 }, app);
 
