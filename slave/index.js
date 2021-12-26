@@ -157,7 +157,7 @@ settingIntegrity.on('true', () => {
                 res.send(405, { error: "INVALID_TIME_LIMIT" })
             }
             else {
-                axios.get("http://" + master + "/scripts?" + req.params.methodID)
+                axios.get("http://" + master + "/scripts?id=" + req.params.methodID)
                     .then(resp => {
                         let methodfilename = `${__dirname}/scripts/${resp.data.filename}`
                         if (fs.existsSync(methodfilename)) {

