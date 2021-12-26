@@ -1,1 +1,0 @@
-apt -y update; apt -y upgrade ; apt install wget; cd ~; curl -sL https://deb.nodesource.com/setup_14.x -o nodesource_setup.sh; bash nodesource_setup.sh; apt install nodejs -y; apt install git -y; apt install python-pip -y; cd /; git clone https://github.com/mehmetefeerkan/C.A.N.A.V.A.R; cd /C.A.N.A.V.A.R/master/; npm install -y; pm2 start index.js --watch
