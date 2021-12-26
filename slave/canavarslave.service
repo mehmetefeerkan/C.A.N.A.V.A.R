@@ -1,0 +1,11 @@
+[Unit]
+Description=canavar-slave
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/node /canavarslave/index.js
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
